@@ -1,53 +1,38 @@
 language: android
 dist: trusty
-
 before_cache:
-  # Do not cache a few Gradle files/directories (see https://docs.travis-ci.com/user/languages/java/#Caching)
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-    # Android SDK
-    - $HOME/android-sdk-dl
-    - $HOME/android-sdk
-
-    # Gradle dependencies
-    - $HOME/.gradle/caches/
-    - $HOME/.gradle/wrapper/
-
-    # Android build cache (see http://tools.android.com/tech-docs/build-cache)
-    - $HOME/.android/build-cache
-
+  - "$HOME/android-sdk-dl"
+  - "$HOME/android-sdk"
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
+  - "$HOME/.android/build-cache"
 android:
   components:
-    # Uncomment the lines below if you want to
-    # use the latest revision of Android SDK Tools
-    # - tools
-    # - platform-tools
-
-    # The BuildTools version used by your project
-    - build-tools-28.0.3
-    - build-tools-29.0.3
-
-    # The SDK version used to compile your project
-    - android-28
-    - android-29
-
-    # Additional components
-    - extra-google-google_play_services
-    - extra-google-m2repository
-    - extra-android-m2repository
-
+  - build-tools-28.0.3
+  - build-tools-29.0.3
+  - android-28
+  - android-29
+  - extra-google-google_play_services
+  - extra-google-m2repository
+  - extra-android-m2repository
 jobs:
   include:
-    - name: unit_test
-      before_install:
-        - chmod +x ./gradle/wrapper/gradle-wrapper.jar
-        - chmod +x ./gradlew
-      script: ./gradlew lint test
-    - name: android_test
-      if: (type = push AND branch IN (master, dev)) OR (type = pull_request)
-      before_install:
-        - openssl aes-256-cbc -K $encrypted_e11d0b55d6dd_key -iv $encrypted_e11d0b55d6dd_iv -in gcloud-service-key.json.enc -out gcloud-service-key.json -d
-        - chmod +x ./run_tests_on_firebase_test_lab.sh
-      script: ./run_tests_on_firebase_test_lab.sh
+  - name: unit_test
+    before_install:
+    - chmod +x ./gradle/wrapper/gradle-wrapper.jar
+    - chmod +x ./gradlew
+    script: "./gradlew lint test"
+  - name: android_test
+    if: "(type = push AND branch IN (master, dev)) OR (type = pull_request)"
+    before_install:
+    - openssl aes-256-cbc -K $encrypted_e11d0b55d6dd_key -iv $encrypted_e11d0b55d6dd_iv
+      -in gcloud-service-key.json.enc -out gcloud-service-key.json -d
+    - chmod +x ./run_tests_on_firebase_test_lab.sh
+    script: "./run_tests_on_firebase_test_lab.sh"
+before_install:
+- openssl aes-256-cbc -K $encrypted_e11d0b55d6dd_key -iv $encrypted_e11d0b55d6dd_iv
+  -in gcloud-service-key.json.enc -out gcloud-service-key.json -d
