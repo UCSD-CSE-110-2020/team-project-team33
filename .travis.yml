@@ -41,6 +41,8 @@ android:
 jobs:
   include:
     - name: unit_test
+      before_install:
+        - chmod +x ./gradle/wrapper/gradle-wrapper.jar
       script: ./gradlew lint test
     - name: android_test
       if: (type = push AND branch IN (master, dev)) OR (type = pull_request)
