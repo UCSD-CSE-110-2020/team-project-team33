@@ -37,12 +37,14 @@ android:
     - extra-google-google_play_services
     - extra-google-m2repository
     - extra-android-m2repository
-before_script:
-  - chmod +x ./run_tests_on_firebase_test_lab.sh
+
 jobs:
   include:
     - name: unit_test
       script: ./gradlew lint test
     - name: android_test
       if: (type = push AND branch IN (master, dev)) OR (type = pull_request)
+      before_install:
+        - openssl aes-256-cbc -K $encrypted_e11d0b55d6dd_key -iv $encrypted_e11d0b55d6dd_iv -in gcloud-service-key.json.enc -out gcloud-service-key.json -d
+        - chmod +x ./run_tests_on_firebase_test_lab.sh
       script: ./run_tests_on_firebase_test_lab.sh
