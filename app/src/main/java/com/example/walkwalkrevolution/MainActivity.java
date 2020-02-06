@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
                 return new GoogleFitAdapter(stepCountActivity);
             }
         });
+
+        launchStepCountActivity();
     }
 
     public void launchStepCountActivity() {

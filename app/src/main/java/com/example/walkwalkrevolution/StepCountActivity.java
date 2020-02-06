@@ -3,6 +3,7 @@ package com.example.walkwalkrevolution;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
@@ -10,7 +11,6 @@ import android.view.View;
 import android.view.contentcapture.ContentCaptureCondition;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.walkwalkrevolution.fitness.FitnessService;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
@@ -23,25 +23,35 @@ public class StepCountActivity extends AppCompatActivity {
 
     private TextView textSteps;
     private FitnessService fitnessService;
+    private TextView count;
+    private StepCount stepCounter = new StepCount();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_count);
+
+        // Set id of text where step count should go.
         textSteps = findViewById(R.id.textSteps);
+
+        count = findViewById(R.id.counter);
 
         String fitnessServiceKey = getIntent().getStringExtra(FITNESS_SERVICE_KEY);
         fitnessService = FitnessServiceFactory.create(fitnessServiceKey, this);
+
+
 
         Button btnUpdateSteps = findViewById(R.id.buttonUpdateSteps);
         btnUpdateSteps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fitnessService.updateStepCount();
+                stepCounter.cancel(true);
             }
         });
 
         fitnessService.setup();
+
+        stepCounter.execute();
 
     }
 
@@ -64,17 +74,28 @@ public class StepCountActivity extends AppCompatActivity {
         textSteps.setText(String.valueOf(stepCount));
     }
 
-    public void showEncouragement() {
-        Context context = getApplicationContext();
-        long numSteps = Integer.valueOf(textSteps.getText().toString());
-        long percent = numSteps/10000;
-        CharSequence text = "Good job! You're already at " + percent + "% of the daily recommended number of steps.";
-        int duration = Toast.LENGTH_SHORT;
+    private class StepCount extends AsyncTask<String, String, String> {
+        private String resp = "";
+        int i = 0;
 
-        if(numSteps >= 1000) {
-            Toast toast = Toast.makeText(context, text, duration);
-            toast.show();
+        @Override
+        protected String doInBackground(String... params) {
+
+            try{
+                while(i > -1) {
+                    i++;
+                    Thread.sleep(1000);
+                    publishProgress(String.valueOf(i));
+                    if(isCancelled()) break;
+                }
+            } catch (Exception e) {
+                resp = e.getMessage();
+            }
+            return resp;
+        }
+        @Override
+        protected void onProgressUpdate(String... text) {
+            count.setText(text[0]);
         }
     }
-
 }
