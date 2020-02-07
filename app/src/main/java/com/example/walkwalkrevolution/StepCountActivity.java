@@ -22,13 +22,18 @@ public class StepCountActivity extends AppCompatActivity {
     private static final String TAG = "StepCountActivity";
 
     private TextView textSteps;
+    private TextView overallDist;
     private TextView walkSteps;
+    private TextView walkDist;
+
     private FitnessService fitnessService;
     private TextView count;
     private long overallSteps;
     private OverallStepCountTask overallStepsTask = new OverallStepCountTask();
     private WalkStepsTask walkStepsTask;
     private int numPresses = 0;
+    private static int userHeight = 63;  // have to set this later
+    private Distance dist = new Distance(userHeight);
 
 
     @Override
@@ -37,7 +42,9 @@ public class StepCountActivity extends AppCompatActivity {
         setContentView(R.layout.activity_step_count);
 
         textSteps = findViewById(R.id.overall_steps);
+        overallDist = findViewById(R.id.overall_dist);
         walkSteps = findViewById(R.id.walk_steps);
+        walkDist = findViewById(R.id.walk_dist);
 
         count = findViewById(R.id.counter);
 
@@ -106,6 +113,7 @@ public class StepCountActivity extends AppCompatActivity {
         @Override
         protected void onProgressUpdate(String... text) {
             textSteps.setText(String.valueOf(overallSteps));
+            overallDist.setText(String.format("%.1f miles", dist.calculateDistance(overallSteps)));
         }
     }
 
@@ -113,13 +121,15 @@ public class StepCountActivity extends AppCompatActivity {
         private String resp = "";
         int i = 0;
         long baseSteps = overallSteps;
+        long mySteps = 0;
 
         @Override
         protected String doInBackground(String... params) {
             try {
                 while (!isCancelled()) {
+                    mySteps = overallSteps - baseSteps;
+                    publishProgress("");
                     Thread.sleep(1000);
-                    publishProgress(String.valueOf(overallSteps-baseSteps));
                     i++;
                 }
             } catch (Exception e) {
@@ -130,9 +140,9 @@ public class StepCountActivity extends AppCompatActivity {
 
         @Override
         protected void onProgressUpdate(String... text) {
-            walkSteps.setText(text[0]);
+            walkSteps.setText(String.valueOf(mySteps));
+            walkDist.setText(String.format("%.1f miles", dist.calculateDistance(mySteps)));
             count.setText(String.valueOf(i));
-            System.out.println("published progress");
         }
     }
 }
