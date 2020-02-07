@@ -22,37 +22,49 @@ public class StepCountActivity extends AppCompatActivity {
     private static final String TAG = "StepCountActivity";
 
     private TextView textSteps;
+    private TextView walkSteps;
     private FitnessService fitnessService;
     private TextView count;
-    private StepCount stepCounter = new StepCount();
+    private long overallSteps;
+    private OverallStepCountTask overallStepsTask = new OverallStepCountTask();
+    private WalkStepsTask walkStepsTask;
+    private int numPresses = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_step_count);
 
-        // Set id of text where step count should go.
-        textSteps = findViewById(R.id.textSteps);
+        textSteps = findViewById(R.id.overall_steps);
+        walkSteps = findViewById(R.id.walk_steps);
 
         count = findViewById(R.id.counter);
 
         String fitnessServiceKey = getIntent().getStringExtra(FITNESS_SERVICE_KEY);
         fitnessService = FitnessServiceFactory.create(fitnessServiceKey, this);
 
-
-
-        Button btnUpdateSteps = findViewById(R.id.buttonUpdateSteps);
-        btnUpdateSteps.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                stepCounter.cancel(true);
-            }
-        });
-
         fitnessService.setup();
 
-        stepCounter.execute();
+        overallStepsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
+        final Button btnStartWalk = findViewById(R.id.startWalk_Button);
+        btnStartWalk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (numPresses == 0) {
+                    walkStepsTask = new WalkStepsTask();
+                    walkStepsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    btnStartWalk.setText("Stop walk/run");
+                    numPresses++;
+                }
+                else {
+                    walkStepsTask.cancel(true);
+                    btnStartWalk.setText("Start new walk/run");
+                    numPresses--;
+                }
+            }
+        });
     }
 
 
@@ -71,31 +83,56 @@ public class StepCountActivity extends AppCompatActivity {
     }
 
     public void setStepCount(long stepCount) {
-        textSteps.setText(String.valueOf(stepCount));
+        this.overallSteps = stepCount;
     }
 
-    private class StepCount extends AsyncTask<String, String, String> {
+    private class OverallStepCountTask extends AsyncTask<String, String, String> {
         private String resp = "";
-        int i = 0;
 
         @Override
         protected String doInBackground(String... params) {
-
             try{
-                while(i > -1) {
-                    i++;
+                while(!isCancelled()) {
                     Thread.sleep(1000);
-                    publishProgress(String.valueOf(i));
-                    if(isCancelled()) break;
+                    fitnessService.updateStepCount();
+                    publishProgress("");
                 }
             } catch (Exception e) {
                 resp = e.getMessage();
             }
             return resp;
         }
+
         @Override
         protected void onProgressUpdate(String... text) {
-            count.setText(text[0]);
+            textSteps.setText(String.valueOf(overallSteps));
+        }
+    }
+
+    private class WalkStepsTask extends AsyncTask<String, String, String> {
+        private String resp = "";
+        int i = 0;
+        long baseSteps = overallSteps;
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                while (!isCancelled()) {
+                    Thread.sleep(1000);
+                    publishProgress(String.valueOf(overallSteps-baseSteps));
+                    i++;
+                }
+            } catch (Exception e) {
+                resp = e.getMessage();
+            }
+            return resp;
+        }
+
+        @Override
+        protected void onProgressUpdate(String... text) {
+            walkSteps.setText(text[0]);
+            count.setText(String.valueOf(i));
+            System.out.println("published progress");
         }
     }
 }
