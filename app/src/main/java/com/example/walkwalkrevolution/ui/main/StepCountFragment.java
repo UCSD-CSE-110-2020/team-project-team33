@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.walkwalkrevolution.Distance;
 import com.example.walkwalkrevolution.EnterRouteInfo;
-import com.example.walkwalkrevolution.HeightActivity;
 import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.fitness.FitnessService;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
@@ -53,9 +52,9 @@ public class StepCountFragment extends Fragment {
         userHeight = sharedPreferences.getInt("height", -1);
 
         textSteps = view.findViewById(R.id.overall_steps);
-        overallDist = view.findViewById(R.id.overall_dist);
+        overallDist = view.findViewById(R.id.walk_dist);
         walkSteps = view.findViewById(R.id.walk_steps);
-        walkDist = view.findViewById(R.id.walk_dist);
+        walkDist = view.findViewById(R.id.overall_dist);
 
         String fitnessServiceKey = getActivity().getIntent().getStringExtra(FITNESS_SERVICE_KEY);
         fitnessService = FitnessServiceFactory.create(fitnessServiceKey, this);
