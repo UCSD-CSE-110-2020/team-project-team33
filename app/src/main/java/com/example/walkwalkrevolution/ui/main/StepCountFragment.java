@@ -29,6 +29,7 @@ public class StepCountFragment extends Fragment {
     private TextView overallDist;
     private TextView walkSteps;
     private TextView walkDist;
+    private TextView timer;
 
     private FitnessService fitnessService;
     private long overallSteps;
@@ -37,6 +38,7 @@ public class StepCountFragment extends Fragment {
     private int numPresses = 0;
     private static int userHeight = 63;  // have to set this later
     private Distance dist = new Distance(userHeight);
+
 
     @Nullable
     @Override
@@ -47,6 +49,8 @@ public class StepCountFragment extends Fragment {
         overallDist = view.findViewById(R.id.overall_dist);
         walkSteps = view.findViewById(R.id.walk_steps);
         walkDist = view.findViewById(R.id.walk_dist);
+        timer = view.findViewById(R.id.walk_time);
+
 
         String fitnessServiceKey = getActivity().getIntent().getStringExtra(FITNESS_SERVICE_KEY);
         fitnessService = FitnessServiceFactory.create(fitnessServiceKey, this);
@@ -105,6 +109,24 @@ public class StepCountFragment extends Fragment {
         int i = 0;
         long baseSteps = overallSteps;
         long mySteps = 0;
+        private long startTime;
+
+        WalkStepsTask(){
+            startTime = System.currentTimeMillis();
+        }
+
+        private String formatTime(int x){
+            return x < 10 ? "0" + x : String.valueOf(x);
+        }
+
+        String getTimeElapsed(){
+            long currentTime = System.currentTimeMillis();
+            long duration = (currentTime - startTime) / 1000;
+            int hours = (int)(duration / 3600);
+            int minutes = (int)((duration % 3600) / 60);
+            int seconds = (int)(duration % 60);
+            return formatTime(hours) + ":" + formatTime(minutes) + ":" + formatTime(seconds);
+        }
 
         @Override
         protected String doInBackground(String... params) {
@@ -125,6 +147,7 @@ public class StepCountFragment extends Fragment {
         protected void onProgressUpdate(String... text) {
             walkSteps.setText(String.valueOf(mySteps));
             walkDist.setText(String.format(getString(R.string.dist_format), dist.calculateDistance(mySteps)));
+            timer.setText(getTimeElapsed());
         }
     }
 
