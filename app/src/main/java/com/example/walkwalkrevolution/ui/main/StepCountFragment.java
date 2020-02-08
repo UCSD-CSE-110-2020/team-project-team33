@@ -19,11 +19,6 @@ import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.fitness.FitnessService;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
 
-<<<<<<< HEAD
-import java.util.Calendar;
-
-=======
->>>>>>> master
 public class StepCountFragment extends Fragment {
 
     public static final String FITNESS_SERVICE_KEY = "FITNESS_SERVICE_KEY";
@@ -36,10 +31,6 @@ public class StepCountFragment extends Fragment {
     private TextView walkDist;
 
     private FitnessService fitnessService;
-<<<<<<< HEAD
-=======
-    private TextView count;
->>>>>>> master
     private long overallSteps;
     private OverallStepCountTask overallStepsTask = new OverallStepCountTask();
     private WalkStepsTask walkStepsTask;
@@ -105,10 +96,6 @@ public class StepCountFragment extends Fragment {
         @Override
         protected void onProgressUpdate(String... text) {
             textSteps.setText(String.valueOf(overallSteps));
-<<<<<<< HEAD
-
-=======
->>>>>>> master
             overallDist.setText(String.format(getString(R.string.dist_format), dist.calculateDistance(overallSteps)));
         }
     }
@@ -138,10 +125,6 @@ public class StepCountFragment extends Fragment {
         protected void onProgressUpdate(String... text) {
             walkSteps.setText(String.valueOf(mySteps));
             walkDist.setText(String.format(getString(R.string.dist_format), dist.calculateDistance(mySteps)));
-<<<<<<< HEAD
-=======
-            count.setText(String.valueOf(i));
->>>>>>> master
         }
     }
 
