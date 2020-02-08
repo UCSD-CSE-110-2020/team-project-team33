@@ -35,9 +35,6 @@ android {
             storeFile file("./debug.keystore")
         }
     }
-    task wrapper(type: Wrapper) {
-        gradleVersion = '4.1'
-    }
 }
 
 dependencies {
