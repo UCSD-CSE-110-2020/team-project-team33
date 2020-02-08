@@ -10,56 +10,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dd135970-93be-4a17-91ef-0e56201e1dcf" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_cardview_cardview_1_0_0_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_extensions_2_0_0_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_process_2_0_0_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_lifecycle_lifecycle_service_2_0_0_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_recyclerview_recyclerview_1_0_0_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__androidx_transition_transition_1_0_0_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_material_material_1_0_0_aar.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/walkwalkrevolution/BadActivity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/walkwalkrevolution/ui/main/MainFragment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/walkwalkrevolution/ui/main/PageViewModel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/walkwalkrevolution/ui/main/RoutesFragment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/example/walkwalkrevolution/ui/main/SectionsPagerAdapter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_bad.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_main.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_routes.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/values-w820dp/dimens.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/values/dimens.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/executionHistory/executionHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/javaCompile/classAnalysis.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/javaCompile/javaCompile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/javaCompile/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/gradle_models.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/gradle_models.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_gms_play_services_basement_17_0_0_aar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Gradle__com_google_android_gms_play_services_basement_17_0_0_aar.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/app/app.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/walkwalkrevolution/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/walkwalkrevolution/MainActivity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_step_count.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_step_count.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_launcher.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_launcher_round.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_launcher_round.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/ic_launcher.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/ic_launcher_round.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/ic_launcher_round.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/ic_launcher.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/dimens.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/dimens.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/local.properties" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -81,135 +41,87 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/walkwalkrevolution/MainActivity.java">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/walkwalkrevolution/BadActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="522">
-              <caret line="34" column="48" selection-start-line="34" selection-start-column="48" selection-end-line="34" selection-end-column="76" />
+            <state relative-caret-position="484">
+              <caret line="29" column="63" selection-start-line="29" selection-start-column="63" selection-end-line="29" selection-end-column="63" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1219#1247#0" expanded="true" />
-                <element signature="e#1289#1319#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/walkwalkrevolution/BadActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="396">
-              <caret line="29" column="63" lean-forward="true" selection-start-line="29" selection-start-column="63" selection-end-line="29" selection-end-column="63" />
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
+          <provider selected="true" editor-type-id="android-designer2" />
+          <provider editor-type-id="text-editor">
+            <state relative-caret-position="770">
+              <caret line="36" column="43" lean-forward="true" selection-start-line="36" selection-start-column="43" selection-end-line="36" selection-end-column="43" />
               <folding>
-                <element signature="imports" expanded="true" />
+                <element signature="e#991#1014#0" expanded="true" />
+                <element signature="e#1044#1062#0" expanded="true" />
+                <element signature="e#1696#1736#0" expanded="true" />
+                <element signature="e#1951#1973#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
-          <provider editor-type-id="text-editor">
-            <state relative-caret-position="154">
-              <caret line="8" column="4" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
-            </state>
-          </provider>
-          <provider selected="true" editor-type-id="android-designer2" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_main.xml">
+          <provider selected="true" editor-type-id="android-designer2" />
           <provider editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="146" column="46" selection-start-line="146" selection-start-column="46" selection-end-line="146" selection-end-column="46" />
+            <state relative-caret-position="462">
+              <caret line="42" column="63" lean-forward="true" selection-start-line="42" selection-start-column="63" selection-end-line="42" selection-end-column="63" />
               <folding>
-                <element signature="e#875#897#0" expanded="true" />
-                <element signature="e#1363#1390#0" expanded="true" />
-                <element signature="e#1832#1858#0" expanded="true" />
-                <element signature="e#2390#2415#0" expanded="true" />
-                <element signature="e#2904#2930#0" expanded="true" />
-                <element signature="e#3437#3465#0" expanded="true" />
-                <element signature="e#3913#3940#0" expanded="true" />
-                <element signature="e#4381#4406#0" expanded="true" />
-                <element signature="e#4892#4918#0" expanded="true" />
-                <element signature="e#5425#5446#0" expanded="true" />
-                <element signature="e#5932#5958#0" expanded="true" />
-                <element signature="e#6508#6534#0" expanded="true" />
+                <element signature="e#792#827#0" expanded="true" />
+                <element signature="e#873#906#0" expanded="true" />
+                <element signature="e#952#987#0" expanded="true" />
+                <element signature="e#1036#1069#0" expanded="true" />
+                <element signature="e#1106#1133#0" expanded="true" />
+                <element signature="e#1913#1936#0" expanded="true" />
+                <element signature="e#2593#2620#0" expanded="true" />
+                <element signature="e#2674#2697#0" expanded="true" />
+                <element signature="e#3071#3097#0" expanded="true" />
+                <element signature="e#3151#3174#0" expanded="true" />
+                <element signature="e#3687#3712#0" expanded="true" />
+                <element signature="e#3766#3789#0" expanded="true" />
+                <element signature="e#4162#4188#0" expanded="true" />
+                <element signature="e#4242#4265#0" expanded="true" />
+                <element signature="e#4772#4800#0" expanded="true" />
+                <element signature="e#4854#4877#0" expanded="true" />
+                <element signature="e#5391#5418#0" expanded="true" />
+                <element signature="e#5472#5495#0" expanded="true" />
+                <element signature="e#5866#5892#0" expanded="true" />
+                <element signature="e#5946#5969#0" expanded="true" />
+                <element signature="e#6482#6507#0" expanded="true" />
+                <element signature="e#6561#6584#0" expanded="true" />
+                <element signature="e#6954#6980#0" expanded="true" />
+                <element signature="e#7034#7057#0" expanded="true" />
+                <element signature="e#7570#7591#0" expanded="true" />
+                <element signature="e#7645#7668#0" expanded="true" />
+                <element signature="e#8038#8064#0" expanded="true" />
+                <element signature="e#8118#8141#0" expanded="true" />
               </folding>
             </state>
           </provider>
-          <provider selected="true" editor-type-id="android-designer2" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/walkwalkrevolution/StepCountActivity.java">
+        <entry file="file://$PROJECT_DIR$/app/src/main/res/values/dimens.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="457">
-              <caret line="92" column="13" selection-start-line="92" selection-start-column="13" selection-end-line="92" selection-end-column="13" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="132">
+              <caret line="6" column="48" lean-forward="true" selection-start-line="6" selection-start-column="48" selection-end-line="6" selection-end-column="48" />
             </state>
           </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_step_count.xml">
-          <provider editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="15" column="33" selection-start-line="15" selection-start-column="33" selection-end-line="15" selection-end-column="33" />
-            </state>
-          </provider>
-          <provider selected="true" editor-type-id="android-designer2" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="15" column="46" selection-start-line="15" selection-start-column="46" selection-end-line="15" selection-end-column="46" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/walkwalkrevolution/ui/main/SectionsPagerAdapter.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="418">
-              <caret line="25" column="37" selection-start-line="25" selection-start-column="37" selection-end-line="25" selection-end-column="37" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#357#367#0" expanded="true" />
-                <element signature="e#435#443#0" expanded="true" />
-                <element signature="e#500#501#0" expanded="true" />
-                <element signature="e#525#526#0" expanded="true" />
-                <element signature="e#737#738#0" expanded="true" />
-                <element signature="e#788#789#0" expanded="true" />
-                <element signature="e#847#848#0" expanded="true" />
-                <element signature="e#896#897#0" expanded="true" />
-                <element signature="e#939#940#0" expanded="true" />
-                <element signature="e#981#982#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/walkwalkrevolution/ui/main/MainFragment.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="264">
-              <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/walkwalkrevolution/ui/main/RoutesFragment.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="88">
-              <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
+            <state relative-caret-position="132">
+              <caret line="6" column="36" selection-start-line="6" selection-start-column="36" selection-end-line="6" selection-end-column="36" />
             </state>
           </provider>
         </entry>
@@ -226,6 +138,12 @@
   <component name="FindInProjectRecents">
     <findStrings>
       <find>content</find>
+      <find>walk</find>
+      <find>walk_dist</find>
+      <find>today</find>
+      <find>overall</find>
+      <find>button</find>
+      <find>overal</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -249,9 +167,10 @@
         <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/walkwalkrevolution/MainActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/walkwalkrevolution/ui/main/SectionsPagerAdapter.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_main.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/values/dimens.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/fragment_main.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
       </list>
     </option>
   </component>
@@ -269,65 +188,44 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="AndroidView">
         <subPane>
           <expand>
             <path>
-              <item name="WalkWalkRevolution" type="1abcf292:AndroidViewProjectNode" />
+              <item name="team-project-team33" type="1abcf292:AndroidViewProjectNode" />
               <item name="app" type="feadf853:AndroidModuleNode" />
             </path>
             <path>
-              <item name="WalkWalkRevolution" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="manifests" type="f94875db:AndroidManifestsGroupNode" />
-            </path>
-            <path>
-              <item name="WalkWalkRevolution" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
-            </path>
-            <path>
-              <item name="WalkWalkRevolution" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
-              <item name="walkwalkrevolution" type="cbb59c9e:AndroidPsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="WalkWalkRevolution" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
-              <item name="walkwalkrevolution" type="cbb59c9e:AndroidPsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="WalkWalkRevolution" type="1abcf292:AndroidViewProjectNode" />
-              <item name="app" type="feadf853:AndroidModuleNode" />
-              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
-              <item name="main" type="cbb59c9e:AndroidPsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="WalkWalkRevolution" type="1abcf292:AndroidViewProjectNode" />
+              <item name="team-project-team33" type="1abcf292:AndroidViewProjectNode" />
               <item name="app" type="feadf853:AndroidModuleNode" />
               <item name="res" type="d4f16f75:AndroidResFolderNode" />
             </path>
             <path>
-              <item name="WalkWalkRevolution" type="1abcf292:AndroidViewProjectNode" />
+              <item name="team-project-team33" type="1abcf292:AndroidViewProjectNode" />
               <item name="app" type="feadf853:AndroidModuleNode" />
               <item name="res" type="d4f16f75:AndroidResFolderNode" />
               <item name="layout" type="ddeffd01:AndroidResFolderTypeNode" />
             </path>
             <path>
-              <item name="WalkWalkRevolution" type="1abcf292:AndroidViewProjectNode" />
+              <item name="team-project-team33" type="1abcf292:AndroidViewProjectNode" />
               <item name="app" type="feadf853:AndroidModuleNode" />
               <item name="res" type="d4f16f75:AndroidResFolderNode" />
               <item name="values" type="ddeffd01:AndroidResFolderTypeNode" />
+            </path>
+            <path>
+              <item name="team-project-team33" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="res" type="d4f16f75:AndroidResFolderNode" />
+              <item name="values" type="ddeffd01:AndroidResFolderTypeNode" />
+              <item name="dimens" type="c431d0b8:AndroidResGroupNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="ProjectPane" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -453,7 +351,7 @@
     <editor active="true" />
     <layout>
       <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
-      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.33467096" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.33467096" />
       <window_info id="Structure" order="2" side_tool="true" />
       <window_info id="Favorites" order="3" side_tool="true" />
       <window_info id="Build Variants" order="4" side_tool="true" />
@@ -464,7 +362,7 @@
       <window_info anchor="bottom" id="Version Control" order="0" />
       <window_info anchor="bottom" id="Logcat" order="1" weight="0.32894737" />
       <window_info anchor="bottom" id="TODO" order="2" weight="0.32936078" />
-      <window_info anchor="bottom" id="Terminal" order="3" sideWeight="0.49946696" weight="0.32894737" />
+      <window_info anchor="bottom" id="Terminal" order="3" sideWeight="0.49946696" weight="0.32868853" />
       <window_info anchor="bottom" id="Event Log" order="4" sideWeight="0.50053304" side_tool="true" weight="0.32936078" />
       <window_info anchor="bottom" id="Build" order="5" weight="0.328125" />
       <window_info anchor="bottom" id="Android Profiler" order="6" />
@@ -540,20 +438,66 @@
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_routes.xml">
+      <provider editor-type-id="android-designer2" />
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="440">
           <caret line="20" column="49" lean-forward="true" selection-start-line="20" selection-start-column="49" selection-end-line="20" selection-end-column="49" />
         </state>
       </provider>
-      <provider editor-type-id="android-designer2" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/walkwalkrevolution/SectionsPageAdapater.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/walkwalkrevolution/SectionsPageAdapater.java" />
+    <entry file="file://$USER_HOME$/Android/Sdk/sources/android-29/android/app/Activity.java">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1182">
+          <caret line="7008" selection-start-line="7008" selection-end-line="7008" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+      <provider editor-type-id="android-manifest" />
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="462">
+          <caret line="21" column="48" selection-start-line="21" selection-start-column="48" selection-end-line="21" selection-end-column="48" />
+          <folding>
+            <element signature="e#506#535#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_bad.xml">
+      <provider selected="true" editor-type-id="android-designer2" />
+      <provider editor-type-id="text-editor">
         <state>
-          <caret selection-end-line="38" />
+          <caret column="38" lean-forward="true" selection-start-column="38" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/walkwalkrevolution/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="550">
+          <caret line="34" column="48" selection-start-line="34" selection-start-column="48" selection-end-line="34" selection-end-column="76" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#435#443#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/walkwalkrevolution/ui/main/SectionsPagerAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="25" column="37" selection-start-line="25" selection-start-column="37" selection-end-line="25" selection-end-column="37" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/walkwalkrevolution/ui/main/MainFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -565,92 +509,19 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/Android/Sdk/sources/android-29/android/app/Activity.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/walkwalkrevolution/BadActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1182">
-          <caret line="7008" selection-start-line="7008" selection-end-line="7008" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="462">
-          <caret line="21" column="48" selection-start-line="21" selection-start-column="48" selection-end-line="21" selection-end-column="48" />
-          <folding>
-            <element signature="e#506#535#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-      <provider editor-type-id="android-manifest" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_bad.xml">
-      <provider editor-type-id="text-editor">
-        <state>
-          <caret column="38" lean-forward="true" selection-start-column="38" selection-end-column="38" />
-        </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer2" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/walkwalkrevolution/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="522">
-          <caret line="34" column="48" selection-start-line="34" selection-start-column="48" selection-end-line="34" selection-end-column="76" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1219#1247#0" expanded="true" />
-            <element signature="e#1289#1319#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/walkwalkrevolution/ui/main/SectionsPagerAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="25" column="37" selection-start-line="25" selection-start-column="37" selection-end-line="25" selection-end-column="37" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#357#367#0" expanded="true" />
-            <element signature="e#435#443#0" expanded="true" />
-            <element signature="e#500#501#0" expanded="true" />
-            <element signature="e#525#526#0" expanded="true" />
-            <element signature="e#737#738#0" expanded="true" />
-            <element signature="e#788#789#0" expanded="true" />
-            <element signature="e#847#848#0" expanded="true" />
-            <element signature="e#896#897#0" expanded="true" />
-            <element signature="e#939#940#0" expanded="true" />
-            <element signature="e#981#982#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/walkwalkrevolution/ui/main/MainFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
+        <state relative-caret-position="484">
+          <caret line="29" column="63" selection-start-line="29" selection-start-column="63" selection-end-line="29" selection-end-column="63" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="15" column="46" selection-start-line="15" selection-start-column="46" selection-end-line="15" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_step_count.xml">
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="15" column="33" selection-start-line="15" selection-start-column="33" selection-end-line="15" selection-end-column="33" />
-        </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer2" />
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/walkwalkrevolution/StepCountActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="457">
+        <state relative-caret-position="856">
           <caret line="92" column="13" selection-start-line="92" selection-start-column="13" selection-end-line="92" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -658,45 +529,79 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_main.xml">
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_step_count.xml">
+      <provider selected="true" editor-type-id="android-designer2" />
       <provider editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="146" column="46" selection-start-line="146" selection-start-column="46" selection-end-line="146" selection-end-column="46" />
-          <folding>
-            <element signature="e#875#897#0" expanded="true" />
-            <element signature="e#1363#1390#0" expanded="true" />
-            <element signature="e#1832#1858#0" expanded="true" />
-            <element signature="e#2390#2415#0" expanded="true" />
-            <element signature="e#2904#2930#0" expanded="true" />
-            <element signature="e#3437#3465#0" expanded="true" />
-            <element signature="e#3913#3940#0" expanded="true" />
-            <element signature="e#4381#4406#0" expanded="true" />
-            <element signature="e#4892#4918#0" expanded="true" />
-            <element signature="e#5425#5446#0" expanded="true" />
-            <element signature="e#5932#5958#0" expanded="true" />
-            <element signature="e#6508#6534#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="330">
+          <caret line="15" column="33" selection-start-line="15" selection-start-column="33" selection-end-line="15" selection-end-column="33" />
         </state>
       </provider>
-      <provider selected="true" editor-type-id="android-designer2" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/walkwalkrevolution/BadActivity.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/dimens.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="29" column="63" lean-forward="true" selection-start-line="29" selection-start-column="63" selection-end-line="29" selection-end-column="63" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="132">
+          <caret line="6" column="48" lean-forward="true" selection-start-line="6" selection-start-column="48" selection-end-line="6" selection-end-column="48" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
+      <provider selected="true" editor-type-id="android-designer2" />
       <provider editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="8" column="4" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
+        <state relative-caret-position="770">
+          <caret line="36" column="43" lean-forward="true" selection-start-line="36" selection-start-column="43" selection-end-line="36" selection-end-column="43" />
+          <folding>
+            <element signature="e#991#1014#0" expanded="true" />
+            <element signature="e#1044#1062#0" expanded="true" />
+            <element signature="e#1696#1736#0" expanded="true" />
+            <element signature="e#1951#1973#0" expanded="true" />
+          </folding>
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="6" column="36" selection-start-line="6" selection-start-column="36" selection-end-line="6" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_main.xml">
       <provider selected="true" editor-type-id="android-designer2" />
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="462">
+          <caret line="42" column="63" lean-forward="true" selection-start-line="42" selection-start-column="63" selection-end-line="42" selection-end-column="63" />
+          <folding>
+            <element signature="e#792#827#0" expanded="true" />
+            <element signature="e#873#906#0" expanded="true" />
+            <element signature="e#952#987#0" expanded="true" />
+            <element signature="e#1036#1069#0" expanded="true" />
+            <element signature="e#1106#1133#0" expanded="true" />
+            <element signature="e#1913#1936#0" expanded="true" />
+            <element signature="e#2593#2620#0" expanded="true" />
+            <element signature="e#2674#2697#0" expanded="true" />
+            <element signature="e#3071#3097#0" expanded="true" />
+            <element signature="e#3151#3174#0" expanded="true" />
+            <element signature="e#3687#3712#0" expanded="true" />
+            <element signature="e#3766#3789#0" expanded="true" />
+            <element signature="e#4162#4188#0" expanded="true" />
+            <element signature="e#4242#4265#0" expanded="true" />
+            <element signature="e#4772#4800#0" expanded="true" />
+            <element signature="e#4854#4877#0" expanded="true" />
+            <element signature="e#5391#5418#0" expanded="true" />
+            <element signature="e#5472#5495#0" expanded="true" />
+            <element signature="e#5866#5892#0" expanded="true" />
+            <element signature="e#5946#5969#0" expanded="true" />
+            <element signature="e#6482#6507#0" expanded="true" />
+            <element signature="e#6561#6584#0" expanded="true" />
+            <element signature="e#6954#6980#0" expanded="true" />
+            <element signature="e#7034#7057#0" expanded="true" />
+            <element signature="e#7570#7591#0" expanded="true" />
+            <element signature="e#7645#7668#0" expanded="true" />
+            <element signature="e#8038#8064#0" expanded="true" />
+            <element signature="e#8118#8141#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
     </entry>
   </component>
 </project>

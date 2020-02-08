@@ -1,156 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/constraintLayout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.main.MainFragment">
-        <TextView
-            android:id="@+id/today_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:text="@string/Today_string"
-            android:textSize="20dp"
-            android:textStyle="italic"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:layout_editor_absoluteY="88dp" />
+    android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/today_steps_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="12dp"
-            android:text="@string/step_count_string"
-            android:textSize="24dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/today_label" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".ui.main.MainFragment">
 
 
-        <TextView
-            android:id="@+id/overall_steps"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="150dp"
-            android:layout_marginEnd="50dp"
-            android:text="@string/step_placeholder"
-            android:textSize="24dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/today_steps_label"
-            tools:layout_editor_absoluteY="132dp" />
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:padding="@dimen/table_text_padding"
+                    android:stretchColumns="1"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/today_dist_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1"
-            android:text="@string/distance_string"
-            android:textSize="24dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/today_steps_label" />
-
-        <TextView
-            android:id="@+id/overall_dist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="104dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="50dp"
-            android:text="@string/dist_placeholder"
-            android:textSize="24dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/today_dist_label"
-            app:layout_constraintTop_toBottomOf="@+id/overall_steps" />
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
 
 
-        <TextView
-            android:id="@+id/walk_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="28dp"
-            android:text="@string/intent_walk_string"
-            android:textSize="20dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/today_dist_label" />
+                                <TextView
+                                    android:id="@+id/today_label"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="@dimen/home_text_size"
+                                    android:textStyle="bold"
+                                    android:text="@string/Today_string" />
+                        </TableRow>
 
-        <TextView
-            android:id="@+id/walk_steps_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="12dp"
-            android:text="@string/step_count_string"
-            android:textSize="24dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/walk_label" />
+                        <TableRow
+                            android:layout_width="fill_parent"
+                            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/walk_dist_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="20dp"
-            android:text="@string/distance_string"
-            android:textSize="24dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/walk_steps_label" />
+                                <TextView
+                                    android:id="@+id/today_steps_label"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/step_count_string"
+                                    android:textSize="@dimen/home_text_size" />
 
-        <TextView
-            android:id="@+id/walk_dist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="104dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="50dp"
-            android:text="@string/dist_placeholder"
-            android:textSize="24dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/walk_dist_label"
-            app:layout_constraintTop_toBottomOf="@+id/walk_steps" />
+                                <TextView
+                                    android:id="@+id/overall_steps"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="end"
+                                    android:text="@string/step_placeholder"
+                                    android:textSize="@dimen/home_text_size" />
+                        </TableRow>
 
-        <TextView
-            android:id="@+id/walk_time_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="12dp"
-            android:text="@string/Time_string"
-            android:textSize="24dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/walk_dist_label" />
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/walk_steps"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="150dp"
-            android:layout_marginTop="60dp"
-            android:layout_marginEnd="50dp"
-            android:text="@string/step_placeholder"
-            android:textSize="24dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/walk_steps_label"
-            app:layout_constraintTop_toBottomOf="@+id/overall_dist" />
+                                <TextView
+                                    android:id="@+id/today_dist_label"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/distance_string"
+                                    android:textSize="@dimen/home_text_size" />
+
+                                <TextView
+                                    android:id="@+id/overall_dist"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="end"
+                                    android:text="@string/dist_placeholder"
+                                    android:textSize="@dimen/home_text_size" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                                <TextView
+                                    android:id="@+id/walk_label"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/intent_walk_string"
+                                    android:textSize="@dimen/home_text_size" />
+
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:id="@+id/walk_steps_label"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/step_count_string"
+                                    android:textSize="@dimen/home_text_size" />
+
+                                <TextView
+                                    android:id="@+id/walk_steps"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="end"
+                                    android:text="@string/step_placeholder"
+                                    android:textSize="@dimen/home_text_size" />
+
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                                <TextView
+                                    android:id="@+id/walk_dist_label"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/distance_string"
+                                    android:textSize="@dimen/home_text_size" />
+
+                                <TextView
+                                    android:id="@+id/walk_dist"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="end"
+                                    android:text="@string/dist_placeholder"
+                                    android:textSize="@dimen/home_text_size" />
+
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                                <TextView
+                                    android:id="@+id/walk_time_label"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/Time_string"
+                                    android:textSize="@dimen/home_text_size" />
+
+                                <TextView
+                                    android:id="@+id/walk_time"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="end"
+                                    android:text="@string/time_placeholder"
+                                    android:textSize="@dimen/home_text_size" />
+                        </TableRow>
+                </TableLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        <TextView
-            android:id="@+id/walk_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="150dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="50dp"
-            android:text="@string/time_placeholder"
-            android:textSize="24dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/walk_time_label"
-            app:layout_constraintTop_toBottomOf="@+id/walk_dist" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
