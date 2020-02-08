@@ -33,7 +33,6 @@ public class Route {
     public String setStartLoc() {
         return this.startLoc;
     }
-
     // favorite setter
     public void setFavorite(boolean fav) {
         this.favorite = fav;

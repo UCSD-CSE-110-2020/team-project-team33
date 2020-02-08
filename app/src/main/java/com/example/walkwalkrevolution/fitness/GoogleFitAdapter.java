@@ -3,6 +3,8 @@ package com.example.walkwalkrevolution.fitness;
 import androidx.annotation.NonNull;
 import android.util.Log;
 
+import com.example.walkwalkrevolution.TabActivity;
+import com.example.walkwalkrevolution.ui.main.StepCountFragment;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.fitness.Fitness;
@@ -13,17 +15,15 @@ import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import com.example.walkwalkrevolution.StepCountActivity;
-
 public class GoogleFitAdapter implements FitnessService {
     private final int GOOGLE_FIT_PERMISSIONS_REQUEST_CODE = System.identityHashCode(this) & 0xFFFF;
     private final String TAG = "GoogleFitAdapter";
     private GoogleSignInAccount account;
 
-    private StepCountActivity activity;
+    private StepCountFragment fragment;
 
-    public GoogleFitAdapter(StepCountActivity activity) {
-        this.activity = activity;
+    public GoogleFitAdapter(StepCountFragment frag) {
+        this.fragment = frag;
     }
 
 
@@ -34,10 +34,10 @@ public class GoogleFitAdapter implements FitnessService {
                 .build();
 
 
-        account = GoogleSignIn.getAccountForExtension(activity, fitnessOptions);
+        account = GoogleSignIn.getAccountForExtension(fragment.getContext(), fitnessOptions);
         if (!GoogleSignIn.hasPermissions(account, fitnessOptions)) {
             GoogleSignIn.requestPermissions(
-                    activity, // your activity
+                    fragment, // your activity
                     GOOGLE_FIT_PERMISSIONS_REQUEST_CODE,
                     account,
                     fitnessOptions);
@@ -52,7 +52,7 @@ public class GoogleFitAdapter implements FitnessService {
             return;
         }
 
-        Fitness.getRecordingClient(activity, account)
+        Fitness.getRecordingClient(fragment.getContext(), account)
                 .subscribe(DataType.TYPE_STEP_COUNT_CUMULATIVE)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -78,7 +78,7 @@ public class GoogleFitAdapter implements FitnessService {
             return;
         }
 
-        Fitness.getHistoryClient(activity, account)
+        Fitness.getHistoryClient(fragment.getContext(), account)
                 .readDailyTotal(DataType.TYPE_STEP_COUNT_DELTA)
                 .addOnSuccessListener(
                         new OnSuccessListener<DataSet>() {
@@ -90,7 +90,7 @@ public class GoogleFitAdapter implements FitnessService {
                                                 ? 0
                                                 : dataSet.getDataPoints().get(0).getValue(Field.FIELD_STEPS).asInt();
 
-                                activity.setStepCount(total);
+                                fragment.setStepCount(total);
                                 Log.d(TAG, "Total steps: " + total);
                             }
                         })

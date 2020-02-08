@@ -1,21 +1,20 @@
 <resources>
-    <string name="app_name">WALK WALK REVOLUTION</string>
+    <string name="app_name">WalkWalkRevolution</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="home_tab">Home</string>
+    <string name="routes_tab">Routes</string>
 
-    <string name="home_label">HOME</string>
-    <string name="routes_label">ROUTES</string>
+    <string name="step_placeholder">5000</string>
+    <string name="dist_placeholder">3.5 mi</string>
+    <string name="time_placeholder">1:30:20</string>
 
-    <string name="step_placeholder"> 5000 </string>
-    <string name="dist_placeholder"> 3.5 miles</string>
-    <string name="time_placeholder"> 1:30:20</string>
-
-    <string name="step_count_string"> Steps: </string>
-    <string name="distance_string"> Distance:</string>
-    <string name="Today_string"> <u>Today</u> </string>
+    <string name="step_count_string">Steps: </string>
+    <string name="distance_string">Distance:</string>
+    <string name="Today_string">Today</string>
     <string name="start_string">Start new walk/run</string>
     <string name="stop_string">Stop walk/run</string>
-    <string name="intent_walk_string"> Current/last walk</string>
-    <string name="Time_string"> Time:</string>
+    <string name="intent_walk_string">Current/last walk</string>
+    <string name="time_string">Time:</string>
 
-
-    g>
+    <string name="dist_format">"%.1f miles"</string>
 </resources>

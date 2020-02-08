@@ -1,12 +1,13 @@
 package com.example.walkwalkrevolution;
 
-import android.content.Intent;
-import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
+
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
 
 import com.example.walkwalkrevolution.fitness.*;
+import com.example.walkwalkrevolution.ui.main.StepCountFragment;
 
 public class MainActivity extends AppCompatActivity {
     private String fitnessServiceKey = "GOOGLE_FIT";
@@ -16,18 +17,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button btnGoToSteps = findViewById(R.id.buttonGoToSteps);
-        btnGoToSteps.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                launchStepCountActivity();
-            }
-        });
-
         FitnessServiceFactory.put(fitnessServiceKey, new FitnessServiceFactory.BluePrint() {
             @Override
-            public FitnessService create(StepCountActivity stepCountActivity) {
-                return new GoogleFitAdapter(stepCountActivity);
+            public FitnessService create(StepCountFragment stepCountFragment) {
+                return new GoogleFitAdapter(stepCountFragment);
             }
         });
 
@@ -35,8 +28,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void launchStepCountActivity() {
-        Intent intent = new Intent(this, StepCountActivity.class);
-        intent.putExtra(StepCountActivity.FITNESS_SERVICE_KEY, fitnessServiceKey);
+        Intent intent = new Intent(this, TabActivity.class);
+        intent.putExtra(StepCountFragment.FITNESS_SERVICE_KEY, fitnessServiceKey);
         startActivity(intent);
     }
 
