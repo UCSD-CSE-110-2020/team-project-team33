@@ -30,6 +30,9 @@ android {
     lintOptions {
         disable 'InvalidPackage'
     }
+    aaptOptions {
+        cruncherEnabled = false
+    }
     signingConfigs {
         debug {
             storeFile file("./debug.keystore")
