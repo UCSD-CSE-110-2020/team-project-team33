@@ -1,5 +1,7 @@
 package com.example.walkwalkrevolution;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,14 +18,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button btnGoToSteps = findViewById(R.id.buttonGoToSteps);
-        btnGoToSteps.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                launchStepCountActivity();
-            }
-        });
-
         FitnessServiceFactory.put(fitnessServiceKey, new FitnessServiceFactory.BluePrint() {
             @Override
             public FitnessService create(StepCountActivity stepCountActivity) {
@@ -31,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        launchHeightActivity();
         launchStepCountActivity();
     }
 
@@ -42,5 +37,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void setFitnessServiceKey(String fitnessServiceKey) {
         this.fitnessServiceKey = fitnessServiceKey;
+    }
+
+    public void launchHeightActivity() {
+        Intent intent = new Intent(this, HeightActivity.class);
+        startActivity(intent);
     }
 }
