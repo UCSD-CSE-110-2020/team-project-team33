@@ -8,12 +8,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.walkwalkrevolution.Distance;
+import com.example.walkwalkrevolution.HeightActivity;
 import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.fitness.FitnessService;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
@@ -25,12 +26,18 @@ public class StepCountFragment extends Fragment {
     private static final String TAG = "StepCountFragment";
 
     private TextView textSteps;
+    private TextView overallDist;
     private TextView walkSteps;
+    private TextView walkDist;
+
     private FitnessService fitnessService;
+    private TextView count;
     private long overallSteps;
     private OverallStepCountTask overallStepsTask = new OverallStepCountTask();
     private WalkStepsTask walkStepsTask;
     private int numPresses = 0;
+    private static int userHeight = 63;  // have to set this later
+    private Distance dist = new Distance(userHeight);
 
     @Nullable
     @Override
@@ -38,7 +45,9 @@ public class StepCountFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_step_count, container, false);
 
         textSteps = view.findViewById(R.id.overall_steps);
+        overallDist = view.findViewById(R.id.overall_dist);
         walkSteps = view.findViewById(R.id.walk_steps);
+        walkDist = view.findViewById(R.id.walk_dist);
 
         String fitnessServiceKey = getActivity().getIntent().getStringExtra(FITNESS_SERVICE_KEY);
         fitnessService = FitnessServiceFactory.create(fitnessServiceKey, this);
@@ -88,6 +97,7 @@ public class StepCountFragment extends Fragment {
         @Override
         protected void onProgressUpdate(String... text) {
             textSteps.setText(String.valueOf(overallSteps));
+            overallDist.setText(String.format(getString(R.string.dist_format), dist.calculateDistance(overallSteps)));
         }
     }
 
@@ -95,13 +105,15 @@ public class StepCountFragment extends Fragment {
         private String resp = "";
         int i = 0;
         long baseSteps = overallSteps;
+        long mySteps = 0;
 
         @Override
         protected String doInBackground(String... params) {
             try {
                 while (!isCancelled()) {
+                    mySteps = overallSteps - baseSteps;
+                    publishProgress("");
                     Thread.sleep(1000);
-                    publishProgress(String.valueOf(overallSteps-baseSteps));
                     i++;
                 }
             } catch (Exception e) {
@@ -112,7 +124,9 @@ public class StepCountFragment extends Fragment {
 
         @Override
         protected void onProgressUpdate(String... text) {
-            walkSteps.setText(text[0]);
+            walkSteps.setText(String.valueOf(mySteps));
+            walkDist.setText(String.format(getString(R.string.dist_format), dist.calculateDistance(mySteps)));
+            count.setText(String.valueOf(i));
         }
     }
 
@@ -129,4 +143,5 @@ public class StepCountFragment extends Fragment {
             return getString(R.string.start_string);
         }
     }
+
 }

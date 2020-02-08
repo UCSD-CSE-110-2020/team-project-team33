@@ -3,6 +3,7 @@ package com.example.walkwalkrevolution;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.example.walkwalkrevolution.fitness.*;
@@ -23,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        launchHeightActivity();
         launchStepCountActivity();
     }
 
@@ -35,10 +35,5 @@ public class MainActivity extends AppCompatActivity {
 
     public void setFitnessServiceKey(String fitnessServiceKey) {
         this.fitnessServiceKey = fitnessServiceKey;
-    }
-
-    public void launchHeightActivity() {
-        Intent intent = new Intent(this, HeightActivity.class);
-        startActivity(intent);
     }
 }

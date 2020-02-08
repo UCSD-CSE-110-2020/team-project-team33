@@ -1,5 +1,7 @@
 package com.example.walkwalkrevolution;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -37,6 +39,12 @@ public class TabActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
+        SharedPreferences sharedPreferences = getSharedPreferences("height", MODE_PRIVATE);
+        int userHeight = sharedPreferences.getInt("height", -1);
+        if (userHeight == -1) {
+            launchHeightActivity();
+        }
+
         final Button btnStartWalk = findViewById(R.id.buttonStartWalk);
         btnStartWalk.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,5 +61,10 @@ public class TabActivity extends AppCompatActivity {
         routesFragment = new RoutesFragment();
         adapter.addFragment(routesFragment, getString(R.string.routes_tab));
         viewPager.setAdapter(adapter);
+    }
+
+    public void launchHeightActivity() {
+        Intent intent = new Intent(this, HeightActivity.class);
+        startActivity(intent);
     }
 }

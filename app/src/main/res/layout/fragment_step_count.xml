@@ -146,7 +146,7 @@
                                     android:id="@+id/walk_time_label"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="@string/Time_string"
+                                    android:text="@string/time_string"
                                     android:textSize="@dimen/home_text_size" />
 
                                 <TextView
