@@ -35,4 +35,8 @@ public class RoutesManager {
         routes.add(mid, route);
          */
     }
+
+    public int getNumRoutes() {
+        return routes.size();
+    }
 }
