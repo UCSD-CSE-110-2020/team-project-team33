@@ -1,39 +1,44 @@
 package com.example.walkwalkrevolution;
 
-import android.os.Bundle;
-
-import com.example.walkwalkrevolution.ui.main.MainFragment;
-import com.example.walkwalkrevolution.ui.main.RoutesFragment;
-import com.google.android.material.tabs.TabLayout;
-
-import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.walkwalkrevolution.ui.main.SectionsPagerAdapter;
+import android.content.Intent;
+import android.os.Bundle;
+
+import com.example.walkwalkrevolution.fitness.*;
+import com.example.walkwalkrevolution.ui.main.StepCountFragment;
 
 public class MainActivity extends AppCompatActivity {
-
-    private SectionsPagerAdapter sectionsPagerAdapter;
-    private ViewPager viewPager;
+    private String fitnessServiceKey = "GOOGLE_FIT";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        FitnessServiceFactory.put(fitnessServiceKey, new FitnessServiceFactory.BluePrint() {
+            @Override
+            public FitnessService create(StepCountFragment stepCountFragment) {
+                return new GoogleFitAdapter(stepCountFragment);
+            }
+        });
 
-        viewPager = (ViewPager) findViewById(R.id.view_pager);
-        setupViewPager(viewPager);
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
+        launchHeightActivity();
+        launchStepCountActivity();
     }
 
-    private void setupViewPager(ViewPager viewPager) {
-        SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new MainFragment(), getString(R.string.home_tab));
-        adapter.addFragment(new RoutesFragment(), getString(R.string.routes_tab));
-        viewPager.setAdapter(adapter);
+    public void launchStepCountActivity() {
+        Intent intent = new Intent(this, TabActivity.class);
+        intent.putExtra(StepCountFragment.FITNESS_SERVICE_KEY, fitnessServiceKey);
+        startActivity(intent);
+    }
+
+    public void setFitnessServiceKey(String fitnessServiceKey) {
+        this.fitnessServiceKey = fitnessServiceKey;
+    }
+
+    public void launchHeightActivity() {
+        Intent intent = new Intent(this, HeightActivity.class);
+        startActivity(intent);
     }
 }

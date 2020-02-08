@@ -2,10 +2,10 @@ package com.example.walkwalkrevolution.fitness;
 
 import android.util.Log;
 
+import com.example.walkwalkrevolution.ui.main.StepCountFragment;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import com.example.walkwalkrevolution.StepCountActivity;
 
 public class FitnessServiceFactory {
 
@@ -17,12 +17,12 @@ public class FitnessServiceFactory {
         blueprints.put(key, bluePrint);
     }
 
-    public static FitnessService create(String key, StepCountActivity stepCountActivity) {
+    public static FitnessService create(String key, StepCountFragment stepCountFragment) {
         Log.i(TAG, String.format("creating FitnessService with key %s", key));
-        return blueprints.get(key).create(stepCountActivity);
+        return blueprints.get(key).create(stepCountFragment);
     }
 
     public interface BluePrint {
-        FitnessService create(StepCountActivity stepCountActivity);
+        FitnessService create(StepCountFragment stepCountFragment);
     }
 }
