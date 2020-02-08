@@ -52,9 +52,9 @@ public class StepCountFragment extends Fragment {
         userHeight = sharedPreferences.getInt("height", -1);
 
         textSteps = view.findViewById(R.id.overall_steps);
-        overallDist = view.findViewById(R.id.walk_dist);
+        overallDist = view.findViewById(R.id.overall_dist);
         walkSteps = view.findViewById(R.id.walk_steps);
-        walkDist = view.findViewById(R.id.overall_dist);
+        walkDist = view.findViewById(R.id.walk_dist);
 
         String fitnessServiceKey = getActivity().getIntent().getStringExtra(FITNESS_SERVICE_KEY);
         fitnessService = FitnessServiceFactory.create(fitnessServiceKey, this);
