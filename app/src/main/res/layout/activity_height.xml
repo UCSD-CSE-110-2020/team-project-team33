@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HeightActivity">
+
+    <TextView
+        android:id="@+id/heightPrompt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="127dp"
+        android:layout_marginTop="84dp"
+        android:layout_marginEnd="127dp"
+        android:layout_marginBottom="20dp"
+        android:text="Please enter your height:"
+        app:layout_constraintBottom_toTopOf="@+id/ftOptions"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/ftOptions"
+        android:layout_width="93dp"
+        android:layout_height="19dp"
+        android:layout_marginStart="127dp"
+        android:layout_marginTop="20dp"
+        android:spinnerMode="dropdown"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/heightPrompt" />
+
+    <Spinner
+        android:id="@+id/inOptions"
+        android:layout_width="93dp"
+        android:layout_height="19dp"
+        android:layout_marginStart="127dp"
+        android:layout_marginTop="36dp"
+        android:spinnerMode="dropdown"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ftOptions" />
+
+    <TextView
+        android:id="@+id/ftText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="153dp"
+        android:text="ft"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ftOptions"
+        app:layout_constraintTop_toBottomOf="@+id/heightPrompt" />
+
+    <TextView
+        android:id="@+id/inText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="36dp"
+        android:layout_marginEnd="152dp"
+        android:text="in"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/inOptions"
+        app:layout_constraintTop_toBottomOf="@+id/ftText" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
