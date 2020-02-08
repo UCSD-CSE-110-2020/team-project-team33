@@ -79,7 +79,7 @@
                     android:textSize="@dimen/home_text_size" />
 
                 <TextView
-                    android:id="@+id/walk_dist"
+                    android:id="@+id/overall_dist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
@@ -154,7 +154,7 @@
                     android:textSize="@dimen/home_text_size" />
 
                 <TextView
-                    android:id="@+id/overall_dist"
+                    android:id="@+id/walk_dist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
