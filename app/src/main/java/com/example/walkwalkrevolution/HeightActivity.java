@@ -2,18 +2,20 @@ package com.example.walkwalkrevolution;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 public class HeightActivity extends AppCompatActivity {
 
     private String heightFeet;
     private String heightInches;
-    private boolean getInches;
-    private boolean getFeet;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +64,30 @@ public class HeightActivity extends AppCompatActivity {
             }
         });
 
+        Button saveBtn = findViewById(R.id.saveBtn);
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                save(view);
+                finish();
 
+            }
+        });
+
+
+    }
+
+    public void save(View view) {
+
+        SharedPreferences sharedPreferences = getSharedPreferences("user_name", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        int totalHeight = (Integer.parseInt(heightFeet) * 12) + Integer.parseInt(heightInches);
+
+        editor.putInt("height", totalHeight);
+
+        editor.apply();
+        Toast.makeText(HeightActivity.this, "Saved", Toast.LENGTH_LONG).show();
     }
 
 }

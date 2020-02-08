@@ -64,4 +64,16 @@
         app:layout_constraintStart_toEndOf="@+id/inOptions"
         app:layout_constraintTop_toBottomOf="@+id/ftText" />
 
+    <Button
+        android:id="@+id/saveBtn"
+        android:layout_width="72dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="169dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="170dp"
+        android:text="Save"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/inOptions" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
