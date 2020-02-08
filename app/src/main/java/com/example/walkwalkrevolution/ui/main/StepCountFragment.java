@@ -31,7 +31,6 @@ public class StepCountFragment extends Fragment {
     private TextView walkDist;
 
     private FitnessService fitnessService;
-    private TextView count;
     private long overallSteps;
     private OverallStepCountTask overallStepsTask = new OverallStepCountTask();
     private WalkStepsTask walkStepsTask;
@@ -103,7 +102,6 @@ public class StepCountFragment extends Fragment {
 
     private class WalkStepsTask extends AsyncTask<String, String, String> {
         private String resp = "";
-        int i = 0;
         long baseSteps = overallSteps;
         long mySteps = 0;
 
@@ -114,7 +112,6 @@ public class StepCountFragment extends Fragment {
                     mySteps = overallSteps - baseSteps;
                     publishProgress("");
                     Thread.sleep(1000);
-                    i++;
                 }
             } catch (Exception e) {
                 resp = e.getMessage();
@@ -126,7 +123,6 @@ public class StepCountFragment extends Fragment {
         protected void onProgressUpdate(String... text) {
             walkSteps.setText(String.valueOf(mySteps));
             walkDist.setText(String.format(getString(R.string.dist_format), dist.calculateDistance(mySteps)));
-            count.setText(String.valueOf(i));
         }
     }
 

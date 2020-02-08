@@ -39,7 +39,7 @@ public class TabActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("height", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("user_name", MODE_PRIVATE);
         int userHeight = sharedPreferences.getInt("height", -1);
         if (userHeight == -1) {
             launchHeightActivity();
