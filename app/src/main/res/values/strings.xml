@@ -16,5 +16,5 @@
     <string name="intent_walk_string">Current/last walk</string>
     <string name="time_string">Time:</string>
 
-    <string name="dist_format">"%.1f miles"</string>
+    <string name="dist_format">"%.1f mi"</string>
 </resources>

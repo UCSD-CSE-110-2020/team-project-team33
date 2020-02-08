@@ -41,16 +41,19 @@ public class StepCountFragment extends Fragment {
     private static int userHeight;  // have to set this later
     private Distance dist = new Distance(userHeight);
 
-    public long baseSteps = overallSteps;
-    public long mySteps = 0;
+    private long baseSteps = overallSteps;
+    private long mySteps = 0;
 
-    SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("user_name", Context.MODE_PRIVATE);
-    SharedPreferences.Editor editor     = sharedPreferences.edit();
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_step_count, container, false);
+
+        sharedPreferences = this.getActivity().getSharedPreferences("user_name", Context.MODE_PRIVATE);
+        editor            = sharedPreferences.edit();
 
         userHeight = sharedPreferences.getInt("height", -1);
 
@@ -182,9 +185,10 @@ public class StepCountFragment extends Fragment {
             walkDist.setText(String.format(getString(R.string.dist_format), dist.calculateDistance(mySteps)));
 
             // get values for walk and store in most recent walk data
-            editor.putString("recentWalk", walkSteps.getText().toString());
+            editor.putString("recentSteps", walkSteps.getText().toString());
             editor.putString("recentDist", walkDist.getText().toString());
             editor.putString("recentTime", timer.getText().toString());
+            editor.apply();
 
             // enter activity to let user save walk
             launchEnterRouteInfoActivity();
