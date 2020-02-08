@@ -16,7 +16,10 @@
 
 
                 <TableLayout
+<<<<<<< HEAD
                     android:id="@+id/tableLayout"
+=======
+>>>>>>> master
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/activity_horizontal_margin"
@@ -25,11 +28,18 @@
                     android:layout_marginBottom="@dimen/activity_vertical_margin"
                     android:padding="@dimen/table_text_padding"
                     android:stretchColumns="1"
+<<<<<<< HEAD
                     app:layout_constraintBottom_toTopOf="@+id/tableLayout2"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.45">
+=======
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+>>>>>>> master
 
                         <TableRow
                             android:layout_width="match_parent"
@@ -40,9 +50,15 @@
                                     android:id="@+id/today_label"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+<<<<<<< HEAD
                                     android:text="@string/Today_string"
                                     android:textSize="@dimen/home_text_size"
                                     android:textStyle="bold" />
+=======
+                                    android:textSize="@dimen/home_text_size"
+                                    android:textStyle="bold"
+                                    android:text="@string/Today_string" />
+>>>>>>> master
                         </TableRow>
 
                         <TableRow
@@ -70,19 +86,28 @@
                             android:layout_height="match_parent">
 
                                 <TextView
+<<<<<<< HEAD
                                     android:id="@+id/walk_dist_label"
+=======
+                                    android:id="@+id/today_dist_label"
+>>>>>>> master
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/distance_string"
                                     android:textSize="@dimen/home_text_size" />
 
                                 <TextView
+<<<<<<< HEAD
                                     android:id="@+id/walk_dist"
+=======
+                                    android:id="@+id/overall_dist"
+>>>>>>> master
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="end"
                                     android:text="@string/dist_placeholder"
                                     android:textSize="@dimen/home_text_size" />
+<<<<<<< HEAD
 
                         </TableRow>
 
@@ -104,6 +129,10 @@
                     app:layout_constraintTop_toBottomOf="@+id/tableLayout"
                     app:layout_constraintVertical_bias="0.0">
 
+=======
+                        </TableRow>
+
+>>>>>>> master
                         <TableRow
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
@@ -113,14 +142,23 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/intent_walk_string"
+<<<<<<< HEAD
                                     android:textSize="@dimen/home_text_size"
                                     android:textStyle="bold" />
+=======
+                                    android:textSize="@dimen/home_text_size" />
+>>>>>>> master
 
                         </TableRow>
 
                         <TableRow
+<<<<<<< HEAD
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
+=======
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+>>>>>>> master
 
                                 <TextView
                                     android:id="@+id/walk_steps_label"
@@ -144,19 +182,31 @@
                             android:layout_height="match_parent">
 
                                 <TextView
+<<<<<<< HEAD
                                     android:id="@+id/today_dist_label"
+=======
+                                    android:id="@+id/walk_dist_label"
+>>>>>>> master
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/distance_string"
                                     android:textSize="@dimen/home_text_size" />
 
                                 <TextView
+<<<<<<< HEAD
                                     android:id="@+id/overall_dist"
+=======
+                                    android:id="@+id/walk_dist"
+>>>>>>> master
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="end"
                                     android:text="@string/dist_placeholder"
                                     android:textSize="@dimen/home_text_size" />
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
                         </TableRow>
 
                         <TableRow
@@ -178,7 +228,10 @@
                                     android:text="@string/time_placeholder"
                                     android:textSize="@dimen/home_text_size" />
                         </TableRow>
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
                 </TableLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
