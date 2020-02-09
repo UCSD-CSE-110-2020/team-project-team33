@@ -39,8 +39,8 @@ public class DistanceUnitTest {
     public void setUp() {
         FitnessServiceFactory.put(TEST_SERVICE, DistanceUnitTest.TestFitnessService::new);
         intent = new Intent(ApplicationProvider.getApplicationContext(), TabActivity.class);
-        intent.putExtra(TabActivity.FITNESS_SERVICE_KEY, TEST_SERVICE);
-        intent.putExtra(TabActivity.USER_HEIGHT, VALID_HEIGHT);
+        intent.putExtra(DataKeys.FITNESS_SERVICE_KEY, TEST_SERVICE);
+        intent.putExtra(DataKeys.USER_HEIGHT_KEY, VALID_HEIGHT);
     }
 
     @Test
@@ -77,7 +77,7 @@ public class DistanceUnitTest {
     @Test
     public void testUIZeroHeightDistanceShown() {
         nextStepCount = VALID_STEP_COUNT;
-        intent.putExtra(TabActivity.USER_HEIGHT, 0);
+        intent.putExtra(DataKeys.USER_HEIGHT_KEY, 0);
 
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {

@@ -7,12 +7,16 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.example.walkwalkrevolution.fitness.*;
+import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
+import com.example.walkwalkrevolution.routemanagement.RoutesManager;
 import com.example.walkwalkrevolution.ui.main.StepCountFragment;
+import com.google.gson.Gson;
 
 public class MainActivity extends AppCompatActivity {
     public static String fitnessServiceKey = "GOOGLE_FIT";
-
-    private int userHeight = -1;
+    private int userHeight;
+    private SharedPreferences sharedPreferences;
+    private RoutesManager routesManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,9 +30,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        SharedPreferences sharedPreferences = getSharedPreferences("user_name", MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(DataKeys.USER_NAME_KEY, MODE_PRIVATE);
+        routesManager = new RoutesManager(sharedPreferences);
 
-        userHeight = sharedPreferences.getInt("height", -1);
+        userHeight = sharedPreferences.getInt(DataKeys.USER_HEIGHT_KEY, -1);
         if (userHeight == -1) {
             launchHeightActivity();
         } else {
@@ -38,21 +43,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void launchStepCountActivity() {
         Intent intent = new Intent(this, TabActivity.class);
-        intent.putExtra(TabActivity.FITNESS_SERVICE_KEY, fitnessServiceKey);
-        intent.putExtra(TabActivity.USER_HEIGHT, userHeight);
+        intent.putExtra(DataKeys.FITNESS_SERVICE_KEY, fitnessServiceKey);
+        intent.putExtra(DataKeys.USER_HEIGHT_KEY, userHeight);
+        intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, routesManager);
         startActivity(intent);
     }
 
     public void launchHeightActivity() {
         Intent intent = new Intent(this, HeightActivity.class);
+        intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, routesManager);
         startActivity(intent);
-    }
-
-    public void setFitnessServiceKey(String fitnessServiceKey) {
-        this.fitnessServiceKey = fitnessServiceKey;
-    }
-
-    public void setUserHeight(int height) {
-        this.userHeight = height;
     }
 }

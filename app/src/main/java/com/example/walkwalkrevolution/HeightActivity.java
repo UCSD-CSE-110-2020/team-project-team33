@@ -12,10 +12,15 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
+
+import java.io.Serializable;
+
 public class HeightActivity extends AppCompatActivity {
 
     private String heightFeet;
     private String heightInches;
+    private IRouteManagement routesManager;
 
     int totalHeight;
 
@@ -29,6 +34,7 @@ public class HeightActivity extends AppCompatActivity {
         Spinner ftOptions = findViewById(R.id.ftOptions);
         Spinner inOptions = findViewById(R.id.inOptions);
 
+        routesManager = (IRouteManagement) getIntent().getSerializableExtra(DataKeys.ROUTE_MANAGER_KEY);
 
         // declare options
         String[] feet = new String[]{"0","1", "2", "3", "4", "5", "6", "7"};
@@ -81,21 +87,22 @@ public class HeightActivity extends AppCompatActivity {
 
     public void save(View view) {
 
-        SharedPreferences sharedPreferences = getSharedPreferences("user_name", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences(DataKeys.USER_NAME_KEY, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
         totalHeight = (Integer.parseInt(heightFeet) * 12) + Integer.parseInt(heightInches);
 
-        editor.putInt("height", totalHeight);
+        editor.putInt(DataKeys.USER_HEIGHT_KEY, totalHeight);
 
         editor.apply();
-        Toast.makeText(HeightActivity.this, "Saved", Toast.LENGTH_LONG).show();
+        Toast.makeText(HeightActivity.this, getString(R.string.saved_string), Toast.LENGTH_LONG).show();
     }
 
     public void launchStepCountActivity() {
         Intent intent = new Intent(this, TabActivity.class);
-        intent.putExtra(TabActivity.FITNESS_SERVICE_KEY, MainActivity.fitnessServiceKey);
-        intent.putExtra(TabActivity.USER_HEIGHT, totalHeight);
+        intent.putExtra(DataKeys.FITNESS_SERVICE_KEY, MainActivity.fitnessServiceKey);
+        intent.putExtra(DataKeys.USER_HEIGHT_KEY, totalHeight);
+        intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, (Serializable) routesManager);
         startActivity(intent);
     }
 }

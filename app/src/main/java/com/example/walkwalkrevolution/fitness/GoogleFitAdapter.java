@@ -3,7 +3,6 @@ package com.example.walkwalkrevolution.fitness;
 import androidx.annotation.NonNull;
 import android.util.Log;
 
-import com.example.walkwalkrevolution.TabActivity;
 import com.example.walkwalkrevolution.ui.main.StepCountFragment;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;

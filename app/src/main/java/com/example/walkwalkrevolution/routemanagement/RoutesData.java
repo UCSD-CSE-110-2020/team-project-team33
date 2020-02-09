@@ -1,11 +1,12 @@
-package com.example.walkwalkrevolution;
+package com.example.walkwalkrevolution.routemanagement;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class RoutesManager {
+public class RoutesData implements Serializable {
     private ArrayList<Route> routes;
 
-    public RoutesManager() {
+    public RoutesData() {
         routes = new ArrayList<Route>();
     }
 

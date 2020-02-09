@@ -37,8 +37,8 @@ public class UIStepCountUnitTest {
     public void setUp() {
         FitnessServiceFactory.put(TEST_SERVICE, TestFitnessService::new);
         intent = new Intent(ApplicationProvider.getApplicationContext(), TabActivity.class);
-        intent.putExtra(TabActivity.FITNESS_SERVICE_KEY, TEST_SERVICE);
-        intent.putExtra(TabActivity.USER_HEIGHT, 60);
+        intent.putExtra(DataKeys.FITNESS_SERVICE_KEY, TEST_SERVICE);
+        intent.putExtra(DataKeys.USER_HEIGHT_KEY, 60);
     }
 
     @Test
