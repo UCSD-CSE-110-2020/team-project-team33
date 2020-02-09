@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class EnterRouteInfo extends AppCompatActivity {
 
     private Walk walk;
