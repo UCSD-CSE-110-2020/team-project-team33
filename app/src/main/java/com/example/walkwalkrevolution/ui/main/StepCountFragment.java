@@ -21,9 +21,9 @@ import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.fitness.FitnessService;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
 
-public class StepCountFragment extends Fragment {
+import static com.example.walkwalkrevolution.TabActivity.FITNESS_SERVICE_KEY;
 
-    public static final String FITNESS_SERVICE_KEY = "FITNESS_SERVICE_KEY";
+public class StepCountFragment extends Fragment {
 
     private static final String TAG = "StepCountFragment";
 
@@ -104,6 +104,13 @@ public class StepCountFragment extends Fragment {
         private String resp = "";
 
         @Override
+        protected void onPreExecute() {
+            fitnessService.updateStepCount();
+            textSteps.setText(String.valueOf(overallSteps));
+            overallDist.setText(String.format(getString(R.string.dist_format), dist.calculateDistance(overallSteps)));
+        }
+
+        @Override
         protected String doInBackground(String... params) {
             try{
                 while(!isCancelled()) {
@@ -161,6 +168,13 @@ public class StepCountFragment extends Fragment {
 
         @Override
         protected void onProgressUpdate(String... text) {
+            walkSteps.setText(String.valueOf(mySteps));
+            walkDist.setText(String.format(getString(R.string.dist_format), dist.calculateDistance(mySteps)));
+            timer.setText(getTimeElapsed());
+        }
+
+        @Override
+        protected void onPreExecute() {
             walkSteps.setText(String.valueOf(mySteps));
             walkDist.setText(String.format(getString(R.string.dist_format), dist.calculateDistance(mySteps)));
             timer.setText(getTimeElapsed());

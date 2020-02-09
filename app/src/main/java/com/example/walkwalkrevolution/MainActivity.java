@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void launchStepCountActivity() {
         Intent intent = new Intent(this, TabActivity.class);
-        intent.putExtra(StepCountFragment.FITNESS_SERVICE_KEY, fitnessServiceKey);
+        intent.putExtra(TabActivity.FITNESS_SERVICE_KEY, fitnessServiceKey);
         startActivity(intent);
     }
 
