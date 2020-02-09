@@ -48,6 +48,10 @@ public class EnterRouteInfo extends AppCompatActivity {
                 EditText nameField = (EditText) findViewById(R.id.routeName);
                 EditText startField = (EditText) findViewById(R.id.startLoc);
                 name = nameField.getText().toString();
+                if(name.trim().length()== 0){
+                    Toast.makeText(getApplicationContext(), "Name cannot be empty", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 startLoc = startField.getText().toString();
 
                 Walk savedWalk = new Walk(Long.parseLong(steps), Double.parseDouble(distance.substring(0, 3)), 0);
