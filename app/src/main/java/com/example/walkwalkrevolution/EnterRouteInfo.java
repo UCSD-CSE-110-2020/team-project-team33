@@ -52,6 +52,10 @@ public class EnterRouteInfo extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Name cannot be empty", Toast.LENGTH_LONG).show();
                     return;
                 }
+                if(routesManager.hasRouteName(name)){
+                    Toast.makeText(getApplicationContext(), "Route already exists", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 startLoc = startField.getText().toString();
 
                 Walk savedWalk = new Walk(Long.parseLong(steps), Double.parseDouble(distance.substring(0, 3)), 0);

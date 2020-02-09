@@ -39,4 +39,13 @@ public class RoutesManager {
     public int getNumRoutes() {
         return routes.size();
     }
+
+    public boolean hasRouteName(String name){
+        for(Route route: routes){
+            if (route.getName().equals(name)){
+                return true;
+            }
+        }
+        return false;
+    }
 }
