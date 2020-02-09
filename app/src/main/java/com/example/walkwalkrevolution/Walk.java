@@ -3,10 +3,10 @@ package com.example.walkwalkrevolution;
 public class Walk {
     private long steps;
     private double distance;
-    private float time;
+    private String time;
 
     // Constructor
-    public Walk (long steps, double distance, float time){
+    public Walk (long steps, double distance, String time){
         this.steps = steps;
         this.distance = distance;
         this.time = time;
@@ -33,12 +33,12 @@ public class Walk {
     }
 
     // Time getter
-    public float getTime(){
+    public String getTime(){
         return this.time;
     }
 
     // Time setter
-    public void setTime(float time){
+    public void setTime(String time){
         this.time = time;
     }
 

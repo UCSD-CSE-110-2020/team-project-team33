@@ -18,6 +18,7 @@ public class EnterRouteInfo extends AppCompatActivity {
     private String startLoc;
     private String distance;
     private String steps;
+    private String time;
     private Route route;
     private RoutesManager routesManager;
 
@@ -32,6 +33,8 @@ public class EnterRouteInfo extends AppCompatActivity {
         // exclude "miles" in string
         distance = b.getString("distance").substring(0, 3);
         steps = b.getString("steps");
+        time = b.getString("time");
+
 
 
         Button saveBtn = findViewById(R.id.saveButton);
@@ -58,7 +61,7 @@ public class EnterRouteInfo extends AppCompatActivity {
                 }
                 startLoc = startField.getText().toString();
 
-                Walk savedWalk = new Walk(Long.parseLong(steps), Double.parseDouble(distance.substring(0, 3)), 0);
+                Walk savedWalk = new Walk(Long.parseLong(steps), Double.parseDouble(distance.substring(0, 3)), time);
                 Route route = new Route(name, startLoc, savedWalk);
 
                 routesManager.addRoute(route);

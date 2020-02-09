@@ -218,6 +218,7 @@ public class StepCountFragment extends Fragment {
 
         intent.putExtra("distance", distance);
         intent.putExtra("steps", steps);
+        intent.putExtra("time", timer.getText());
 
         startActivity(intent);
     }
