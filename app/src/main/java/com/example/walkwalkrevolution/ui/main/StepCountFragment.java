@@ -223,8 +223,8 @@ public class StepCountFragment extends Fragment {
         String distance = walkDist.getText().toString();
         String steps = walkSteps.getText().toString();
 
-        intent.putExtra("distance", distance);
-        intent.putExtra("steps", steps);
+        intent.putExtra("DISTANCE", mySteps);
+        intent.putExtra("STEPS", dist.calculateDistance(mySteps));
 
         startActivity(intent);
     }
