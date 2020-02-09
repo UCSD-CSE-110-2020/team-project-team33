@@ -18,8 +18,8 @@ public class EnterRouteInfo extends AppCompatActivity {
     private Walk walk;
     private String name;
     private String startLoc;
-    private String distance;
-    private String steps;
+    private double distance;
+    private long steps;
     private Route route;
     private RoutesManager routesManager;
 
@@ -31,9 +31,8 @@ public class EnterRouteInfo extends AppCompatActivity {
 
         Bundle b = getIntent().getExtras();
 
-        // exclude "miles" in string
-        distance = b.getString("distance").substring(0, 3);
-        steps = b.getString("steps");
+        distance = b.getDouble("DISTANCE");
+        steps = b.getLong("STEPS");
 
 
         Button saveBtn = findViewById(R.id.saveButton);
@@ -41,10 +40,12 @@ public class EnterRouteInfo extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                /*
                 SharedPreferences sharedPreferences = getSharedPreferences("user_name", MODE_PRIVATE);
                 Gson gson = new Gson();
                 String json = sharedPreferences.getString("routesManager", "");
                 routesManager = gson.fromJson(json, RoutesManager.class);
+                 */
 
 
                 EditText nameField = (EditText) findViewById(R.id.routeName);
@@ -54,21 +55,19 @@ public class EnterRouteInfo extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Name cannot be empty", Toast.LENGTH_LONG).show();
                     return;
                 }
-                if(routesManager.hasRouteName(name)){
-                    Toast.makeText(getApplicationContext(), "Route already exists", Toast.LENGTH_LONG).show();
-                    return;
-                }
                 startLoc = startField.getText().toString();
 
-                Walk savedWalk = new Walk(Long.parseLong(steps), Double.parseDouble(distance.substring(0, 3)), 0);
+                Walk savedWalk = new Walk(steps, distance, 0);
                 Route route = new Route(name, startLoc, savedWalk);
 
+                /*
                 routesManager.addRoute(route);
                 // convert routesManager to json object and store in sharedprefs
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 json = gson.toJson(routesManager);
                 editor.putString("routesManager", json);
                 editor.apply();
+                 */
 
                 Toast.makeText(EnterRouteInfo.this, "Saved", Toast.LENGTH_SHORT).show();
                 finish();
