@@ -31,6 +31,7 @@ public class StepCountFragment extends Fragment {
     private TextView overallDist;
     private TextView walkSteps;
     private TextView walkDist;
+    private TextView timer;
 
     private FitnessService fitnessService;
     private long overallSteps;
@@ -43,18 +44,33 @@ public class StepCountFragment extends Fragment {
     private long baseSteps = overallSteps;
     private long mySteps = 0;
 
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_step_count, container, false);
 
-        SharedPreferences sharedPreferences = this.getActivity().getSharedPreferences("user_name", Context.MODE_PRIVATE);
+        sharedPreferences = this.getActivity().getSharedPreferences("user_name", Context.MODE_PRIVATE);
+        editor            = sharedPreferences.edit();
+
         userHeight = sharedPreferences.getInt("height", -1);
 
         textSteps = view.findViewById(R.id.overall_steps);
         overallDist = view.findViewById(R.id.overall_dist);
         walkSteps = view.findViewById(R.id.walk_steps);
         walkDist = view.findViewById(R.id.walk_dist);
+        timer = view.findViewById(R.id.walk_time);
+
+        // Get values for most recent walk and set values to display on screen
+        String mostRecentSteps = sharedPreferences.getString("recentSteps", "0");
+        String mostRecentDist  = sharedPreferences.getString("recentDist", "0.0 mi");
+        String mostRecentTime  = sharedPreferences.getString("recentTime", "00:00:00");
+
+        walkSteps.setText(mostRecentSteps);
+        walkDist.setText(mostRecentDist);
+        timer.setText(mostRecentTime);
 
         String fitnessServiceKey = getActivity().getIntent().getStringExtra(FITNESS_SERVICE_KEY);
         fitnessService = FitnessServiceFactory.create(fitnessServiceKey, this);
@@ -110,7 +126,24 @@ public class StepCountFragment extends Fragment {
 
     private class WalkStepsTask extends AsyncTask<String, String, String> {
         private String resp = "";
+        private long startTime;
 
+        WalkStepsTask(){
+            startTime = System.currentTimeMillis();
+        }
+
+        private String formatTime(int x){
+            return x < 10 ? "0" + x : String.valueOf(x);
+        }
+
+        String getTimeElapsed(){
+            long currentTime = System.currentTimeMillis();
+            long duration = (currentTime - startTime) / 1000;
+            int hours = (int)(duration / 3600);
+            int minutes = (int)((duration % 3600) / 60);
+            int seconds = (int)(duration % 60);
+            return formatTime(hours) + ":" + formatTime(minutes) + ":" + formatTime(seconds);
+        }
 
         @Override
         protected String doInBackground(String... params) {
@@ -130,12 +163,14 @@ public class StepCountFragment extends Fragment {
         protected void onProgressUpdate(String... text) {
             walkSteps.setText(String.valueOf(mySteps));
             walkDist.setText(String.format(getString(R.string.dist_format), dist.calculateDistance(mySteps)));
+            timer.setText(getTimeElapsed());
         }
     }
 
     public String startButtonBehavior() {
         if (numPresses == 0) {
             walkStepsTask = new WalkStepsTask();
+            baseSteps = overallSteps;
             walkStepsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             numPresses++;
             return getString(R.string.stop_string);
@@ -143,9 +178,19 @@ public class StepCountFragment extends Fragment {
         else {
             walkStepsTask.cancel(true);
             numPresses--;
+
+            // update step count and dist calculations one more time before ending walk
             fitnessService.updateStepCount();
             mySteps = baseSteps - overallSteps;
             walkDist.setText(String.format(getString(R.string.dist_format), dist.calculateDistance(mySteps)));
+
+            // get values for walk and store in most recent walk data
+            editor.putString("recentSteps", walkSteps.getText().toString());
+            editor.putString("recentDist", walkDist.getText().toString());
+            editor.putString("recentTime", timer.getText().toString());
+            editor.apply();
+
+            // enter activity to let user save walk
             launchEnterRouteInfoActivity();
             return getString(R.string.start_string);
         }
@@ -160,8 +205,6 @@ public class StepCountFragment extends Fragment {
         intent.putExtra("distance", distance);
         intent.putExtra("steps", steps);
 
-
         startActivity(intent);
     }
-
 }
