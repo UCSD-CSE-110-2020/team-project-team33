@@ -17,6 +17,8 @@ public class HeightActivity extends AppCompatActivity {
     private String heightFeet;
     private String heightInches;
 
+    int totalHeight;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +84,7 @@ public class HeightActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("user_name", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        int totalHeight = (Integer.parseInt(heightFeet) * 12) + Integer.parseInt(heightInches);
+        totalHeight = (Integer.parseInt(heightFeet) * 12) + Integer.parseInt(heightInches);
 
         editor.putInt("height", totalHeight);
 
@@ -93,6 +95,7 @@ public class HeightActivity extends AppCompatActivity {
     public void launchStepCountActivity() {
         Intent intent = new Intent(this, TabActivity.class);
         intent.putExtra(TabActivity.FITNESS_SERVICE_KEY, MainActivity.fitnessServiceKey);
+        intent.putExtra(TabActivity.USER_HEIGHT, totalHeight);
         startActivity(intent);
     }
 }

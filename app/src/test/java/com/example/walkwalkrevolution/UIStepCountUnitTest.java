@@ -1,5 +1,6 @@
 package com.example.walkwalkrevolution;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.widget.TextView;
 
@@ -16,11 +17,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.annotation.LooperMode;
 
+import static android.os.Looper.getMainLooper;
 import static com.google.common.truth.Truth.assertThat;
+import static org.robolectric.Shadows.shadowOf;
 import static org.robolectric.annotation.LooperMode.Mode.PAUSED;
 
-@RunWith(AndroidJUnit4.class)
 @LooperMode(PAUSED)
+@RunWith(AndroidJUnit4.class)
 public class UIStepCountUnitTest {
     private static final String TEST_SERVICE = "TEST_SERVICE";
 
@@ -35,6 +38,7 @@ public class UIStepCountUnitTest {
         FitnessServiceFactory.put(TEST_SERVICE, TestFitnessService::new);
         intent = new Intent(ApplicationProvider.getApplicationContext(), TabActivity.class);
         intent.putExtra(TabActivity.FITNESS_SERVICE_KEY, TEST_SERVICE);
+        intent.putExtra(TabActivity.USER_HEIGHT, 60);
     }
 
     @Test
@@ -43,6 +47,7 @@ public class UIStepCountUnitTest {
 
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
+            shadowOf(getMainLooper()).idle();
             TextView textSteps = activity.findViewById(R.id.overall_steps);
             assertThat(textSteps.getText().toString()).isEqualTo(Long.toString(nextStepCount));
         });

@@ -20,6 +20,8 @@ public class TabActivity extends AppCompatActivity {
 
     public static final String FITNESS_SERVICE_KEY = "FITNESS_SERVICE_KEY";
 
+    public static final String USER_HEIGHT = "USER_HEIGHT";
+
     private SectionsPagerAdapter sectionsPagerAdapter;
     private ViewPager viewPager;
 

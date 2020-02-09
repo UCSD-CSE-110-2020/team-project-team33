@@ -12,6 +12,8 @@ import com.example.walkwalkrevolution.ui.main.StepCountFragment;
 public class MainActivity extends AppCompatActivity {
     public static String fitnessServiceKey = "GOOGLE_FIT";
 
+    private int userHeight = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences("user_name", MODE_PRIVATE);
 
-        int userHeight = sharedPreferences.getInt("height", -1);
+        userHeight = sharedPreferences.getInt("height", -1);
         if (userHeight == -1) {
             launchHeightActivity();
         } else {
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     public void launchStepCountActivity() {
         Intent intent = new Intent(this, TabActivity.class);
         intent.putExtra(TabActivity.FITNESS_SERVICE_KEY, fitnessServiceKey);
+        intent.putExtra(TabActivity.USER_HEIGHT, userHeight);
         startActivity(intent);
     }
 
@@ -47,5 +50,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void setFitnessServiceKey(String fitnessServiceKey) {
         this.fitnessServiceKey = fitnessServiceKey;
+    }
+
+    public void setUserHeight(int height) {
+        this.userHeight = height;
     }
 }

@@ -18,10 +18,12 @@ import androidx.fragment.app.Fragment;
 import com.example.walkwalkrevolution.Distance;
 import com.example.walkwalkrevolution.EnterRouteInfo;
 import com.example.walkwalkrevolution.R;
+import com.example.walkwalkrevolution.TabActivity;
 import com.example.walkwalkrevolution.fitness.FitnessService;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
 
 import static com.example.walkwalkrevolution.TabActivity.FITNESS_SERVICE_KEY;
+import static com.example.walkwalkrevolution.TabActivity.USER_HEIGHT;
 
 public class StepCountFragment extends Fragment {
 
@@ -54,7 +56,7 @@ public class StepCountFragment extends Fragment {
         sharedPreferences = this.getActivity().getSharedPreferences("user_name", Context.MODE_PRIVATE);
         editor            = sharedPreferences.edit();
 
-        setUserHeight(sharedPreferences.getInt("height", -1));
+        setUserHeight(getActivity().getIntent().getIntExtra(TabActivity.USER_HEIGHT, 0));
 
         overallStepsTask = new OverallStepCountTask();
 

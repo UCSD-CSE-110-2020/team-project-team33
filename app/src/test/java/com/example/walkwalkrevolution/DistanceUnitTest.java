@@ -21,9 +21,10 @@ import org.robolectric.annotation.LooperMode;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.robolectric.annotation.LooperMode.Mode.PAUSED;
 
 @RunWith(AndroidJUnit4.class)
-@LooperMode(LooperMode.Mode.PAUSED)
+@LooperMode(PAUSED)
 public class DistanceUnitTest {
 
     private static final String TEST_SERVICE = "TEST_SERVICE";
@@ -39,6 +40,7 @@ public class DistanceUnitTest {
         FitnessServiceFactory.put(TEST_SERVICE, DistanceUnitTest.TestFitnessService::new);
         intent = new Intent(ApplicationProvider.getApplicationContext(), TabActivity.class);
         intent.putExtra(TabActivity.FITNESS_SERVICE_KEY, TEST_SERVICE);
+        intent.putExtra(TabActivity.USER_HEIGHT, VALID_HEIGHT);
     }
 
     @Test
@@ -69,6 +71,18 @@ public class DistanceUnitTest {
         scenario.onActivity(activity -> {
             TextView textDist = activity.findViewById(R.id.overall_dist);
             assertThat(textDist.getText().toString()).isEqualTo("0.1 mi");
+        });
+    }
+
+    @Test
+    public void testUIZeroHeightDistanceShown() {
+        nextStepCount = VALID_STEP_COUNT;
+        intent.putExtra(TabActivity.USER_HEIGHT, 0);
+
+        ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
+        scenario.onActivity(activity -> {
+            TextView textDist = activity.findViewById(R.id.overall_dist);
+            assertThat(textDist.getText().toString()).isEqualTo("0.0 mi");
         });
     }
 
