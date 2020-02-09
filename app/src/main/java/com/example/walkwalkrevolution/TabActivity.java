@@ -51,6 +51,9 @@ public class TabActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 btnStartWalk.setText(stepCountFragment.startButtonBehavior());
+                if(btnStartWalk.getText().toString().equals(getString(R.string.start_string))) {
+                    tabLayout.getTabAt(1).select();
+                }
             }
         });
 
