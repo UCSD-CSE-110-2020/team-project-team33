@@ -2,6 +2,7 @@ package com.example.walkwalkrevolution;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +16,8 @@ public class HeightActivity extends AppCompatActivity {
 
     private String heightFeet;
     private String heightInches;
+
+    int totalHeight;
 
 
     @Override
@@ -69,8 +72,7 @@ public class HeightActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 save(view);
-                finish();
-
+                launchStepCountActivity();
             }
         });
 
@@ -82,7 +84,7 @@ public class HeightActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("user_name", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
 
-        int totalHeight = (Integer.parseInt(heightFeet) * 12) + Integer.parseInt(heightInches);
+        totalHeight = (Integer.parseInt(heightFeet) * 12) + Integer.parseInt(heightInches);
 
         editor.putInt("height", totalHeight);
 
@@ -90,4 +92,10 @@ public class HeightActivity extends AppCompatActivity {
         Toast.makeText(HeightActivity.this, "Saved", Toast.LENGTH_LONG).show();
     }
 
+    public void launchStepCountActivity() {
+        Intent intent = new Intent(this, TabActivity.class);
+        intent.putExtra(TabActivity.FITNESS_SERVICE_KEY, MainActivity.fitnessServiceKey);
+        intent.putExtra(TabActivity.USER_HEIGHT, totalHeight);
+        startActivity(intent);
+    }
 }

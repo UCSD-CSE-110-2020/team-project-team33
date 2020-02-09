@@ -18,10 +18,12 @@ import androidx.fragment.app.Fragment;
 import com.example.walkwalkrevolution.Distance;
 import com.example.walkwalkrevolution.EnterRouteInfo;
 import com.example.walkwalkrevolution.R;
+import com.example.walkwalkrevolution.TabActivity;
 import com.example.walkwalkrevolution.fitness.FitnessService;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
 
 import static com.example.walkwalkrevolution.TabActivity.FITNESS_SERVICE_KEY;
+import static com.example.walkwalkrevolution.TabActivity.USER_HEIGHT;
 
 public class StepCountFragment extends Fragment {
 
@@ -35,11 +37,10 @@ public class StepCountFragment extends Fragment {
 
     private FitnessService fitnessService;
     private long overallSteps;
-    private OverallStepCountTask overallStepsTask = new OverallStepCountTask();
+    private OverallStepCountTask overallStepsTask;
     private WalkStepsTask walkStepsTask;
     private int numPresses = 0;
-    private static int userHeight;  // have to set this later
-    private Distance dist = new Distance(userHeight);
+    private Distance dist;
 
     private long baseSteps = overallSteps;
     private long mySteps = 0;
@@ -55,7 +56,9 @@ public class StepCountFragment extends Fragment {
         sharedPreferences = this.getActivity().getSharedPreferences("user_name", Context.MODE_PRIVATE);
         editor            = sharedPreferences.edit();
 
-        userHeight = sharedPreferences.getInt("height", -1);
+        setUserHeight(getActivity().getIntent().getIntExtra(TabActivity.USER_HEIGHT, 0));
+
+        overallStepsTask = new OverallStepCountTask();
 
         textSteps = view.findViewById(R.id.overall_steps);
         overallDist = view.findViewById(R.id.overall_dist);
@@ -98,6 +101,10 @@ public class StepCountFragment extends Fragment {
 
     public void setStepCount(long stepCount) {
         this.overallSteps = stepCount;
+    }
+
+    public void setUserHeight(int height) {
+        this.dist = new Distance(height);
     }
 
     private class OverallStepCountTask extends AsyncTask<String, String, String> {
