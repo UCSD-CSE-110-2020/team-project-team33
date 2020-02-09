@@ -23,8 +23,8 @@ public class TabActivity extends AppCompatActivity {
     private SectionsPagerAdapter sectionsPagerAdapter;
     private ViewPager viewPager;
 
-    private StepCountFragment stepCountFragment;
-    private RoutesFragment routesFragment;
+    public StepCountFragment stepCountFragment;
+    public RoutesFragment routesFragment;
 
     private RoutesManager routesManager;
 
@@ -43,11 +43,6 @@ public class TabActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
 
         SharedPreferences sharedPreferences = getSharedPreferences("user_name", MODE_PRIVATE);
-
-        int userHeight = sharedPreferences.getInt("height", -1);
-        if (userHeight == -1) {
-            launchHeightActivity();
-        }
 
         final Button btnStartWalk = findViewById(R.id.buttonStartWalk);
         btnStartWalk.setOnClickListener(new View.OnClickListener() {
@@ -80,11 +75,6 @@ public class TabActivity extends AppCompatActivity {
         routesFragment = new RoutesFragment();
         adapter.addFragment(routesFragment, getString(R.string.routes_tab));
         viewPager.setAdapter(adapter);
-    }
-
-    public void launchHeightActivity() {
-        Intent intent = new Intent(this, HeightActivity.class);
-        startActivity(intent);
     }
 
 }

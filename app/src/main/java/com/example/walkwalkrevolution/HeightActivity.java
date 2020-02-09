@@ -2,6 +2,7 @@ package com.example.walkwalkrevolution;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -69,8 +70,7 @@ public class HeightActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 save(view);
-                finish();
-
+                launchStepCountActivity();
             }
         });
 
@@ -90,4 +90,9 @@ public class HeightActivity extends AppCompatActivity {
         Toast.makeText(HeightActivity.this, "Saved", Toast.LENGTH_LONG).show();
     }
 
+    public void launchStepCountActivity() {
+        Intent intent = new Intent(this, TabActivity.class);
+        intent.putExtra(TabActivity.FITNESS_SERVICE_KEY, MainActivity.fitnessServiceKey);
+        startActivity(intent);
+    }
 }
