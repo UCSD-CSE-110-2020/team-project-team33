@@ -15,10 +15,12 @@ import com.example.walkwalkrevolution.ui.main.StepCountFragment;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.annotation.LooperMode;
 
 import static com.google.common.truth.Truth.assertThat;
 
 @RunWith(AndroidJUnit4.class)
+@LooperMode(LooperMode.Mode.PAUSED)
 public class StartWalkTests {
     private static final String TEST_SERVICE = "TEST_SERVICE";
 
