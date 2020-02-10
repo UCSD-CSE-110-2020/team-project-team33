@@ -17,16 +17,16 @@ import androidx.fragment.app.Fragment;
 
 import com.example.walkwalkrevolution.DataKeys;
 import com.example.walkwalkrevolution.Distance;
-import com.example.walkwalkrevolution.EnterRouteInfoActivity;
 import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.fitness.FitnessService;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
-import com.google.gson.Gson;
+import com.example.walkwalkrevolution.walktracker.AppTimer;
 
-import java.io.Serializable;
+import java.util.Observable;
+import java.util.Observer;
 
-public class StepCountFragment extends Fragment {
+public class StepCountFragment extends Fragment implements Observer {
 
     private static final String TAG = "StepCountFragment";
 
@@ -37,19 +37,20 @@ public class StepCountFragment extends Fragment {
     private TextView timer;
 
     private FitnessService fitnessService;
+
     private long overallSteps;
-    private OverallStepCountTask overallStepsTask;
-    private WalkStepsTask walkStepsTask;
-    private int numPresses = 0;
     private Distance dist;
 
-    private long baseSteps = overallSteps;
-    
     private long currentWalkSteps;
     private long currentWalkTime;
 
+    private long baseSteps;
+    private long startTime;
+
     private IRouteManagement routesManager;
     private SharedPreferences sharedPreferences;
+    private AppTimer stepUpdateTimer;
+    private AppTimer currentWalkTimer;
 
     @Nullable
     @Override
@@ -58,7 +59,6 @@ public class StepCountFragment extends Fragment {
 
         setUserHeight(getActivity().getIntent().getIntExtra(DataKeys.USER_HEIGHT_KEY, 0));
         routesManager = (IRouteManagement) getActivity().getIntent().getSerializableExtra(DataKeys.ROUTE_MANAGER_KEY);
-        overallStepsTask = new OverallStepCountTask();
         this.sharedPreferences = getActivity().getSharedPreferences(DataKeys.USER_NAME_KEY, Context.MODE_PRIVATE);
 
         textSteps = view.findViewById(R.id.overall_steps);
@@ -77,7 +77,8 @@ public class StepCountFragment extends Fragment {
 
         fitnessService.setup();
 
-        overallStepsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        stepUpdateTimer = new AppTimer();
+        stepUpdateTimer.addObserver(this);
 
         return view;
     }
@@ -86,7 +87,7 @@ public class StepCountFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-//       If authentication was required during google fit setup, this will be called after the user authenticates
+        // If authentication was required during google fit setup, this will be called after the user authenticates
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == fitnessService.getRequestCode()) {
                 fitnessService.updateStepCount();
@@ -114,96 +115,56 @@ public class StepCountFragment extends Fragment {
         int seconds = (int)(duration % 60);
         return formatDigits(hours) + ":" + formatDigits(minutes) + ":" + formatDigits(seconds);
     }
-    
-    private class OverallStepCountTask extends AsyncTask<String, String, String> {
-        private String resp = "";
 
-        @Override
-        protected void onPreExecute() {
-            fitnessService.updateStepCount();
-            textSteps.setText(String.valueOf(overallSteps));
-            overallDist.setText(String.format(getString(R.string.dist_format), dist.calculateDistance(overallSteps)));
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            try{
-                while(!isCancelled()) {
-                    Thread.sleep(1000);
-                    fitnessService.updateStepCount();
-                    publishProgress("");
+    @Override
+    public void update(Observable observable, Object o) {
+        if(observable == stepUpdateTimer) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    updateSteps();
                 }
-            } catch (Exception e) {
-                resp = e.getMessage();
-            }
-            return resp;
-        }
-
-        @Override
-        protected void onProgressUpdate(String... text) {
-            textSteps.setText(String.valueOf(overallSteps));
-            overallDist.setText(String.format(getString(R.string.dist_format), dist.calculateDistance(overallSteps)));
+            });
+        } else {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    updateWalk();
+                }
+            });
         }
     }
 
-    private class WalkStepsTask extends AsyncTask<String, String, String> {
-        private String resp = "";
-        private long startTime;
+    private void updateSteps() {
+        fitnessService.updateStepCount();
+        textSteps.setText(String.valueOf(overallSteps));
+        overallDist.setText(String.format(getString(R.string.dist_format), dist.calculateDistance(overallSteps)));
+    }
 
-        WalkStepsTask(){
-            startTime = System.currentTimeMillis();
-        }
+    private void updateWalk() {
+        currentWalkSteps = overallSteps - baseSteps;
+        walkSteps.setText(String.valueOf(currentWalkSteps));
+        walkDist.setText(String.format(getString(R.string.dist_format), dist.calculateDistance(currentWalkSteps)));
+        timer.setText(getTimeElapsed());
+    }
 
-        String getTimeElapsed(){
-            long currentTime = System.currentTimeMillis();
-            currentWalkTime = (currentTime - startTime) / 1000;
-            return formatTime(currentWalkTime);
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            try {
-                while (!isCancelled()) {
-                    currentWalkSteps = overallSteps - baseSteps;
-                    publishProgress("");
-                    Thread.sleep(1000);
-                }
-            } catch (Exception e) {
-                resp = e.getMessage();
-            }
-            return resp;
-        }
-
-        @Override
-        protected void onProgressUpdate(String... text) {
-            walkSteps.setText(String.valueOf(currentWalkSteps));
-            walkDist.setText(String.format(getString(R.string.dist_format), dist.calculateDistance(currentWalkSteps)));
-            timer.setText(getTimeElapsed());
-        }
-
-        @Override
-        protected void onPreExecute() {
-            walkSteps.setText(String.valueOf(currentWalkSteps));
-            walkDist.setText(String.format(getString(R.string.dist_format), dist.calculateDistance(currentWalkSteps)));
-            timer.setText(getTimeElapsed());
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            fitnessService.updateStepCount();
-            currentWalkSteps = baseSteps - overallSteps;
-            walkDist.setText(String.format(getString(R.string.dist_format), dist.calculateDistance(currentWalkSteps)));
-        }
+    private String getTimeElapsed(){
+        long currentTime = System.currentTimeMillis();
+        currentWalkTime = (currentTime - startTime) / 1000;
+        return formatTime(currentWalkTime);
     }
 
     public void startWalkTask() {
-        walkStepsTask = new WalkStepsTask();
+        currentWalkTimer = new AppTimer();
         baseSteps = overallSteps;
-        walkStepsTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        startTime = System.currentTimeMillis();
+        currentWalkTimer.addObserver(this);
     }
 
     public void stopWalkTask() {
-        walkStepsTask.cancel(true);
+        currentWalkTimer.deleteObservers();
+        currentWalkTimer.cancel();
+        currentWalkTimer = null;
     }
 
     public long getCurrentWalkSteps() {

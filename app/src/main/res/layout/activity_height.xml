@@ -6,74 +6,66 @@
     android:layout_height="match_parent"
     tools:context=".HeightActivity">
 
-    <TextView
-        android:id="@+id/heightPrompt"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="127dp"
-        android:layout_marginTop="84dp"
-        android:layout_marginEnd="127dp"
-        android:layout_marginBottom="20dp"
-        android:text="Please enter your height:"
-        app:layout_constraintBottom_toTopOf="@+id/ftOptions"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="@dimen/general_padding"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <Spinner
-        android:id="@+id/ftOptions"
-        android:layout_width="93dp"
-        android:layout_height="19dp"
-        android:layout_marginStart="127dp"
-        android:layout_marginTop="20dp"
-        android:spinnerMode="dropdown"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/heightPrompt" />
+        <TextView
+            android:id="@+id/height_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/height_text"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-    <Spinner
-        android:id="@+id/inOptions"
-        android:layout_width="93dp"
-        android:layout_height="19dp"
-        android:layout_marginStart="127dp"
-        android:layout_marginTop="36dp"
-        android:spinnerMode="dropdown"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ftOptions" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/general_padding"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/ftText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="153dp"
-        android:text="ft"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ftOptions"
-        app:layout_constraintTop_toBottomOf="@+id/heightPrompt" />
+            <NumberPicker
+                android:id="@+id/foot_picker"
+                android:layout_margin="@dimen/internal_padding"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/inText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="152dp"
-        android:text="in"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/inOptions"
-        app:layout_constraintTop_toBottomOf="@+id/ftText" />
+            <TextView
+                android:id="@+id/foot_text"
+                android:layout_margin="@dimen/internal_padding"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/foot_text" />
 
-    <Button
-        android:id="@+id/saveBtn"
-        android:layout_width="72dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="169dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="170dp"
-        android:text="Save"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/inOptions" />
+            <NumberPicker
+                android:id="@+id/inch_picker"
+                android:layout_margin="@dimen/internal_padding"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/inch_text"
+                android:layout_margin="@dimen/internal_padding"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/inch_text" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/saveBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/save_button_text" />
+
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
