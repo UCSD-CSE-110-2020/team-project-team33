@@ -16,15 +16,11 @@ import com.example.walkwalkrevolution.ui.main.StepCountFragment;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.Robolectric;
-import org.robolectric.annotation.LooperMode;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.robolectric.annotation.LooperMode.Mode.PAUSED;
 
 @RunWith(AndroidJUnit4.class)
-@LooperMode(PAUSED)
 public class DistanceUnitTest {
 
     private static final String TEST_SERVICE = "TEST_SERVICE";
@@ -37,10 +33,12 @@ public class DistanceUnitTest {
 
     @Before
     public void setUp() {
-        FitnessServiceFactory.put(TEST_SERVICE, DistanceUnitTest.TestFitnessService::new);
+        FitnessServiceFactory.put(TEST_SERVICE, TestFitnessService::new);
         intent = new Intent(ApplicationProvider.getApplicationContext(), TabActivity.class);
         intent.putExtra(DataKeys.FITNESS_SERVICE_KEY, TEST_SERVICE);
         intent.putExtra(DataKeys.USER_HEIGHT_KEY, VALID_HEIGHT);
+        intent.putExtra(DataKeys.MOCKING_KEY, true);
+        intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, new MockRoutesManager());
     }
 
     @Test
@@ -69,6 +67,7 @@ public class DistanceUnitTest {
 
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
+            activity.stepCountFragment.updateSteps();
             TextView textDist = activity.findViewById(R.id.overall_dist);
             assertThat(textDist.getText().toString()).isEqualTo("0.1 mi");
         });
@@ -81,6 +80,7 @@ public class DistanceUnitTest {
 
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
+            activity.stepCountFragment.updateSteps();
             TextView textDist = activity.findViewById(R.id.overall_dist);
             assertThat(textDist.getText().toString()).isEqualTo("0.0 mi");
         });

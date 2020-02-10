@@ -52,6 +52,8 @@ public class StepCountFragment extends Fragment implements Observer {
     private AppTimer stepUpdateTimer;
     private AppTimer currentWalkTimer;
 
+    private boolean mocking;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -59,6 +61,7 @@ public class StepCountFragment extends Fragment implements Observer {
 
         setUserHeight(getActivity().getIntent().getIntExtra(DataKeys.USER_HEIGHT_KEY, 0));
         routesManager = (IRouteManagement) getActivity().getIntent().getSerializableExtra(DataKeys.ROUTE_MANAGER_KEY);
+        mocking = getActivity().getIntent().getBooleanExtra(DataKeys.MOCKING_KEY, false);
         this.sharedPreferences = getActivity().getSharedPreferences(DataKeys.USER_NAME_KEY, Context.MODE_PRIVATE);
 
         textSteps = view.findViewById(R.id.overall_steps);
@@ -77,8 +80,10 @@ public class StepCountFragment extends Fragment implements Observer {
 
         fitnessService.setup();
 
-        stepUpdateTimer = new AppTimer();
-        stepUpdateTimer.addObserver(this);
+        if(!mocking) {
+            stepUpdateTimer = new AppTimer();
+            stepUpdateTimer.addObserver(this);
+        }
 
         return view;
     }
@@ -135,13 +140,13 @@ public class StepCountFragment extends Fragment implements Observer {
         }
     }
 
-    private void updateSteps() {
+    public void updateSteps() {
         fitnessService.updateStepCount();
         textSteps.setText(String.valueOf(overallSteps));
         overallDist.setText(String.format(getString(R.string.dist_format), dist.calculateDistance(overallSteps)));
     }
 
-    private void updateWalk() {
+    public void updateWalk() {
         currentWalkSteps = overallSteps - baseSteps;
         walkSteps.setText(String.valueOf(currentWalkSteps));
         walkDist.setText(String.format(getString(R.string.dist_format), dist.calculateDistance(currentWalkSteps)));
@@ -155,16 +160,20 @@ public class StepCountFragment extends Fragment implements Observer {
     }
 
     public void startWalkTask() {
-        currentWalkTimer = new AppTimer();
-        baseSteps = overallSteps;
-        startTime = System.currentTimeMillis();
-        currentWalkTimer.addObserver(this);
+        if(!mocking) {
+            currentWalkTimer = new AppTimer();
+            baseSteps = overallSteps;
+            startTime = System.currentTimeMillis();
+            currentWalkTimer.addObserver(this);
+        }
     }
 
     public void stopWalkTask() {
-        currentWalkTimer.deleteObservers();
-        currentWalkTimer.cancel();
-        currentWalkTimer = null;
+        if(!mocking) {
+            currentWalkTimer.deleteObservers();
+            currentWalkTimer.cancel();
+            currentWalkTimer = null;
+        }
     }
 
     public long getCurrentWalkSteps() {

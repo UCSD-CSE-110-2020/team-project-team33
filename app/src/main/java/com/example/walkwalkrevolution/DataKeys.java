@@ -16,4 +16,6 @@ public class DataKeys {
     public static final String DISTANCE_KEY = "DISTANCE";
     public static final String STEPS_KEY = "STEPS";
     public static final String TIME_KEY = "TIME";
+
+    public static final String MOCKING_KEY = "MOCKING";
 }

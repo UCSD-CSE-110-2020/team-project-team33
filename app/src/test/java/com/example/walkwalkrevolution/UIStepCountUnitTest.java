@@ -1,6 +1,5 @@
 package com.example.walkwalkrevolution;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.widget.TextView;
 
@@ -15,14 +14,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.annotation.LooperMode;
 
-import static android.os.Looper.getMainLooper;
 import static com.google.common.truth.Truth.assertThat;
-import static org.robolectric.Shadows.shadowOf;
-import static org.robolectric.annotation.LooperMode.Mode.PAUSED;
 
-@LooperMode(PAUSED)
 @RunWith(AndroidJUnit4.class)
 public class UIStepCountUnitTest {
     private static final String TEST_SERVICE = "TEST_SERVICE";
@@ -39,6 +33,8 @@ public class UIStepCountUnitTest {
         intent = new Intent(ApplicationProvider.getApplicationContext(), TabActivity.class);
         intent.putExtra(DataKeys.FITNESS_SERVICE_KEY, TEST_SERVICE);
         intent.putExtra(DataKeys.USER_HEIGHT_KEY, 60);
+        intent.putExtra(DataKeys.MOCKING_KEY, true);
+        intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, new MockRoutesManager());
     }
 
     @Test
@@ -47,7 +43,7 @@ public class UIStepCountUnitTest {
 
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
-            shadowOf(getMainLooper()).idle();
+            activity.stepCountFragment.updateSteps();
             TextView textSteps = activity.findViewById(R.id.overall_steps);
             assertThat(textSteps.getText().toString()).isEqualTo(Long.toString(nextStepCount));
         });
@@ -59,6 +55,23 @@ public class UIStepCountUnitTest {
 
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
+            activity.stepCountFragment.updateSteps();
+            TextView textSteps = activity.findViewById(R.id.overall_steps);
+            assertThat(textSteps.getText().toString()).isEqualTo(Long.toString(nextStepCount));
+        });
+    }
+
+    @Test
+    public void testChangedSteps() {
+        nextStepCount = POSATIVE_STEP_COUNT;
+
+        ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
+        scenario.onActivity(activity -> {
+            activity.stepCountFragment.updateSteps();
+        });
+        nextStepCount += nextStepCount;
+        scenario.onActivity(activity -> {
+            activity.stepCountFragment.updateSteps();
             TextView textSteps = activity.findViewById(R.id.overall_steps);
             assertThat(textSteps.getText().toString()).isEqualTo(Long.toString(nextStepCount));
         });

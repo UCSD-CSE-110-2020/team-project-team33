@@ -36,7 +36,7 @@ public class Route implements Serializable {
     }
 
     // startLoc getter
-    public String setStartLoc() {
+    public String getStartLoc() {
         return this.startLoc;
     }
 
