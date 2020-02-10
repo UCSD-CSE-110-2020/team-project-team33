@@ -16,5 +16,13 @@
     <string name="intent_walk_string">Current/last walk</string>
     <string name="time_string">Time:</string>
 
-    <string name="dist_format">"%.1f mi"</string>
+    <string name="dist_format">%.1f mi</string>
+
+    <string name="saved_string">Saved</string>
+    <string name="empty_name_err_string">Name cannot be empty</string>
+
+    <string name="height_text">Please enter your height</string>
+    <string name="foot_text">ft</string>
+    <string name="inch_text">in</string>
+    <string name="save_button_text">Save</string>
 </resources>

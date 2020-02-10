@@ -1,11 +1,11 @@
 package com.example.walkwalkrevolution;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
 import com.example.walkwalkrevolution.ui.main.StepCountFragment;
 import com.example.walkwalkrevolution.ui.main.RoutesFragment;
 import com.google.android.material.tabs.TabLayout;
@@ -14,13 +14,10 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.walkwalkrevolution.ui.main.SectionsPagerAdapter;
-import com.google.gson.Gson;
+
+import java.io.Serializable;
 
 public class TabActivity extends AppCompatActivity {
-
-    public static final String FITNESS_SERVICE_KEY = "FITNESS_SERVICE_KEY";
-
-    public static final String USER_HEIGHT = "USER_HEIGHT";
 
     private SectionsPagerAdapter sectionsPagerAdapter;
     private ViewPager viewPager;
@@ -28,8 +25,7 @@ public class TabActivity extends AppCompatActivity {
     public StepCountFragment stepCountFragment;
     public RoutesFragment routesFragment;
 
-    private RoutesManager routesManager;
-
+    public IRouteManagement routesManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,33 +40,37 @@ public class TabActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("user_name", MODE_PRIVATE);
+        routesManager = (IRouteManagement) getIntent().getSerializableExtra(DataKeys.ROUTE_MANAGER_KEY);
 
         final Button btnStartWalk = findViewById(R.id.buttonStartWalk);
         btnStartWalk.setOnClickListener(new View.OnClickListener() {
+            boolean walkStarted = false;
+
             @Override
             public void onClick(View v) {
-                btnStartWalk.setText(stepCountFragment.startButtonBehavior());
-                if(btnStartWalk.getText().toString().equals(getString(R.string.start_string))) {
+                if(walkStarted) {
                     tabLayout.getTabAt(1).select();
+                    btnStartWalk.setText(getString(R.string.start_string));
+                    stepCountFragment.stopWalkTask();
+                    launchEnterRouteInfoActivity();
+                } else {
+                    btnStartWalk.setText(getString(R.string.stop_string));
+                    stepCountFragment.startWalkTask();
                 }
+                walkStarted = !walkStarted;
             }
         });
 
+    }
 
+    public void launchEnterRouteInfoActivity() {
+        Intent intent = new Intent (this, EnterRouteInfoActivity.class);
+        intent.putExtra(DataKeys.DISTANCE_KEY, stepCountFragment.getCurrentWalkDistance());
+        intent.putExtra(DataKeys.STEPS_KEY, stepCountFragment.getCurrentWalkSteps());
+        intent.putExtra(DataKeys.TIME_KEY, stepCountFragment.getCurrentWalkTime());
+        intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, (Serializable) routesManager);
 
-        // put routes manager into sharedprefs as as json file
-        routesManager = new RoutesManager();
-        SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(routesManager);
-        prefsEditor.putString("routesManager", json);
-        prefsEditor.apply();
-
-
-
-
-
+        startActivity(intent);
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -82,4 +82,6 @@ public class TabActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
     }
 
+    @Override
+    public void onBackPressed() { }
 }
