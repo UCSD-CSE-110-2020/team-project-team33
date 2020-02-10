@@ -114,10 +114,10 @@ public class StepCountFragment extends Fragment implements Observer {
         return x < 10 ? "0" + x : String.valueOf(x);
     }
     
-    private String formatTime(long duration) {
-        int hours = (int)(duration / 3600);
-        int minutes = (int)((duration % 3600) / 60);
-        int seconds = (int)(duration % 60);
+    public String formatTime(long duration) {
+        int seconds = (int)((duration / 1000) % 60);
+        int minutes = (int)((duration / (1000 * 60)) % 60);
+        int hours = (int)(duration / (1000 * 60 * 60)) % 24;
         return formatDigits(hours) + ":" + formatDigits(minutes) + ":" + formatDigits(seconds);
     }
 
@@ -151,6 +151,13 @@ public class StepCountFragment extends Fragment implements Observer {
         walkSteps.setText(String.valueOf(currentWalkSteps));
         walkDist.setText(String.format(getString(R.string.dist_format), dist.calculateDistance(currentWalkSteps)));
         timer.setText(getTimeElapsed());
+    }
+
+    public void updateWalk(long time) {
+        currentWalkSteps = overallSteps - baseSteps;
+        walkSteps.setText(String.valueOf(currentWalkSteps));
+        walkDist.setText(String.format(getString(R.string.dist_format), dist.calculateDistance(currentWalkSteps)));
+        timer.setText(formatTime(time));
     }
 
     private String getTimeElapsed(){
