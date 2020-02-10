@@ -54,4 +54,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, routesManager);
         startActivity(intent);
     }
+
+    @Override
+    public void onBackPressed() { }
 }

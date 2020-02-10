@@ -73,4 +73,7 @@ public class HeightActivity extends AppCompatActivity {
         intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, (Serializable) routesManager);
         startActivity(intent);
     }
+
+    @Override
+    public void onBackPressed() { }
 }

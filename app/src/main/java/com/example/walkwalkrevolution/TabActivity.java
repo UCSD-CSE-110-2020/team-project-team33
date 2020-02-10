@@ -85,4 +85,6 @@ public class TabActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
     }
 
+    @Override
+    public void onBackPressed() { }
 }

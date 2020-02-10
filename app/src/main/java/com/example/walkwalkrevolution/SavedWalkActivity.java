@@ -21,4 +21,7 @@ public class SavedWalkActivity extends Activity {
         getMenuInflater().inflate(R.menu.toolbar_saved_activity, menu);
         return true;
     }
+
+    @Override
+    public void onBackPressed() { }
 }

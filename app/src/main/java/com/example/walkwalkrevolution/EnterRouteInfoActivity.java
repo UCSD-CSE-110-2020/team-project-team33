@@ -51,4 +51,7 @@ public class EnterRouteInfoActivity extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    public void onBackPressed() { }
 }
