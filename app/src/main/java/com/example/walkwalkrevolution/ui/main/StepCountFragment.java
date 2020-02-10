@@ -162,7 +162,7 @@ public class StepCountFragment extends Fragment implements Observer {
 
     private String getTimeElapsed(){
         long currentTime = System.currentTimeMillis();
-        currentWalkTime = (currentTime - startTime) / 1000;
+        currentWalkTime = (currentTime - startTime);
         return formatTime(currentWalkTime);
     }
 
