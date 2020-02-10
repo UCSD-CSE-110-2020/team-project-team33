@@ -1,15 +1,11 @@
 package com.example.walkwalkrevolution;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.widget.EditText;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-
-import com.google.gson.Gson;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +22,7 @@ public class SaveRouteUnitTest {
 
     @Before
     public void setUp() {
-        intent = new Intent(ApplicationProvider.getApplicationContext(), EnterRouteInfo.class);
+        intent = new Intent(ApplicationProvider.getApplicationContext(), EnterRouteInfoActivity.class);
         intent.putExtra("DISTANCE", 20);
         intent.putExtra("STEPS", 20);
 
@@ -34,7 +30,7 @@ public class SaveRouteUnitTest {
 
     @Test
     public void testSavedRouteWithStart() {
-        ActivityScenario<EnterRouteInfo> scenario = ActivityScenario.launch(intent);
+        ActivityScenario<EnterRouteInfoActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
             EditText nameField = (EditText) activity.findViewById(R.id.routeName);
             EditText startField = (EditText) activity.findViewById(R.id.startLoc);
@@ -50,7 +46,7 @@ public class SaveRouteUnitTest {
 
     @Test
     public void testSavedRouteNoName() {
-        ActivityScenario<EnterRouteInfo> scenario = ActivityScenario.launch(intent);
+        ActivityScenario<EnterRouteInfoActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
             EditText nameField = (EditText) activity.findViewById(R.id.routeName);
             EditText startField = (EditText) activity.findViewById(R.id.startLoc);

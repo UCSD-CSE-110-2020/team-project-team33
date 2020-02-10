@@ -16,14 +16,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.walkwalkrevolution.Distance;
-import com.example.walkwalkrevolution.EnterRouteInfo;
+import com.example.walkwalkrevolution.EnterRouteInfoActivity;
 import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.TabActivity;
 import com.example.walkwalkrevolution.fitness.FitnessService;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
 
 import static com.example.walkwalkrevolution.TabActivity.FITNESS_SERVICE_KEY;
-import static com.example.walkwalkrevolution.TabActivity.USER_HEIGHT;
 
 public class StepCountFragment extends Fragment {
 
@@ -219,7 +218,7 @@ public class StepCountFragment extends Fragment {
 
     public void launchEnterRouteInfoActivity() {
 
-        Intent intent = new Intent (this.getActivity(), EnterRouteInfo.class);
+        Intent intent = new Intent (this.getActivity(), EnterRouteInfoActivity.class);
         String distance = walkDist.getText().toString();
         String steps = walkSteps.getText().toString();
 

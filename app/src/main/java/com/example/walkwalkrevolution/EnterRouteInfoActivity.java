@@ -2,18 +2,13 @@ package com.example.walkwalkrevolution;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
-import static android.content.Context.MODE_PRIVATE;
-
-public class EnterRouteInfo extends AppCompatActivity {
+public class EnterRouteInfoActivity extends AppCompatActivity {
 
     private Walk walk;
     private String name;
@@ -69,7 +64,7 @@ public class EnterRouteInfo extends AppCompatActivity {
                 editor.apply();
                  */
 
-                Toast.makeText(EnterRouteInfo.this, "Saved", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EnterRouteInfoActivity.this, "Saved", Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
