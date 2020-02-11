@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,14 +21,16 @@ import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.fitness.FitnessService;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
-import com.example.walkwalkrevolution.walktracker.AppTimer;
+import com.example.walkwalkrevolution.walktracker.IDelayedUpdate;
+import com.example.walkwalkrevolution.walktracker.StepUpdate;
+import com.example.walkwalkrevolution.walktracker.WalkUpdate;
 
-import java.util.Observable;
-import java.util.Observer;
-
-public class StepCountFragment extends Fragment implements Observer {
+public class StepCountFragment extends Fragment {
 
     private static final String TAG = "StepCountFragment";
+
+    private static final int UPDATE_STEPS_INTERVAL = 5000;
+    private static final int SECOND_MILLIS = 1000;
 
     private TextView textSteps;
     private TextView overallDist;
@@ -49,10 +51,11 @@ public class StepCountFragment extends Fragment implements Observer {
 
     private IRouteManagement routesManager;
     private SharedPreferences sharedPreferences;
-    private AppTimer stepUpdateTimer;
-    private AppTimer currentWalkTimer;
 
     private boolean mocking;
+
+    IDelayedUpdate stepCountUpdate;
+    IDelayedUpdate walkUpdate;
 
     @Nullable
     @Override
@@ -60,8 +63,8 @@ public class StepCountFragment extends Fragment implements Observer {
         View view = inflater.inflate(R.layout.fragment_step_count, container, false);
 
         setUserHeight(getActivity().getIntent().getIntExtra(DataKeys.USER_HEIGHT_KEY, 0));
-        routesManager = (IRouteManagement) getActivity().getIntent().getSerializableExtra(DataKeys.ROUTE_MANAGER_KEY);
-        mocking = getActivity().getIntent().getBooleanExtra(DataKeys.MOCKING_KEY, false);
+        this.routesManager = (IRouteManagement) getActivity().getIntent().getSerializableExtra(DataKeys.ROUTE_MANAGER_KEY);
+        this.mocking = getActivity().getIntent().getBooleanExtra(DataKeys.MOCKING_KEY, false);
         this.sharedPreferences = getActivity().getSharedPreferences(DataKeys.USER_NAME_KEY, Context.MODE_PRIVATE);
 
         textSteps = view.findViewById(R.id.overall_steps);
@@ -80,10 +83,9 @@ public class StepCountFragment extends Fragment implements Observer {
 
         fitnessService.setup();
 
-        if(!mocking) {
-            stepUpdateTimer = new AppTimer();
-            stepUpdateTimer.addObserver(this);
-        }
+        stepCountUpdate = new StepUpdate(this, UPDATE_STEPS_INTERVAL);
+        stepCountUpdate.start();
+        walkUpdate = new WalkUpdate(this, SECOND_MILLIS);
 
         return view;
     }
@@ -115,29 +117,10 @@ public class StepCountFragment extends Fragment implements Observer {
     }
     
     public String formatTime(long duration) {
-        int seconds = (int)((duration / 1000) % 60);
-        int minutes = (int)((duration / (1000 * 60)) % 60);
-        int hours = (int)(duration / (1000 * 60 * 60)) % 24;
+        int seconds = (int)((duration / SECOND_MILLIS) % 60);
+        int minutes = (int)((duration / (SECOND_MILLIS * 60)) % 60);
+        int hours = (int)(duration / (SECOND_MILLIS * 60 * 60)) % 24;
         return formatDigits(hours) + ":" + formatDigits(minutes) + ":" + formatDigits(seconds);
-    }
-
-    @Override
-    public void update(Observable observable, Object o) {
-        if(observable == stepUpdateTimer) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    updateSteps();
-                }
-            });
-        } else {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    updateWalk();
-                }
-            });
-        }
     }
 
     public void updateSteps() {
@@ -167,20 +150,14 @@ public class StepCountFragment extends Fragment implements Observer {
     }
 
     public void startWalkTask() {
-        if(!mocking) {
-            currentWalkTimer = new AppTimer();
-            baseSteps = overallSteps;
-            startTime = System.currentTimeMillis();
-            currentWalkTimer.addObserver(this);
-        }
+        baseSteps = overallSteps;
+        startTime = System.currentTimeMillis();
+        walkUpdate.start();
+
     }
 
     public void stopWalkTask() {
-        if(!mocking) {
-            currentWalkTimer.deleteObservers();
-            currentWalkTimer.cancel();
-            currentWalkTimer = null;
-        }
+        walkUpdate.stop();
     }
 
     public long getCurrentWalkSteps() {
