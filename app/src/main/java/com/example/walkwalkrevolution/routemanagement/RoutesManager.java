@@ -2,12 +2,15 @@ package com.example.walkwalkrevolution.routemanagement;
 
 import android.content.SharedPreferences;
 
+import androidx.annotation.NonNull;
+
 import com.example.walkwalkrevolution.DataKeys;
 import com.google.gson.Gson;
 
 import java.io.Serializable;
+import java.util.Iterator;
 
-public class RoutesManager implements IRouteManagement, Serializable {
+public class RoutesManager implements IRouteManagement, Serializable, Iterable {
 
     RoutesData routes;
 
@@ -47,5 +50,11 @@ public class RoutesManager implements IRouteManagement, Serializable {
         routes.addRoute(route);
         prefsEditor.putString(DataKeys.ROUTES_DATA_KEY, gson.toJson(routes));
         prefsEditor.apply();
+    }
+
+    @NonNull
+    @Override
+    public Iterator iterator() {
+        return routes.iterator();
     }
 }
