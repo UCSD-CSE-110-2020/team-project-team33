@@ -18,4 +18,11 @@ public class DataKeys {
     public static final String TIME_KEY = "TIME";
 
     public static final String MOCKING_KEY = "MOCKING";
+
+    public static final int DIFFICULTY_INDEX = 0;
+    public static final int ROAD_TYPE = 1;
+    public static final int TERRAIN = 2;
+    public static final int SURFACE = 3;
+    public static final int ROUTE_TYPE = 4;
+
 }

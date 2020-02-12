@@ -8,6 +8,7 @@ public class Route implements Serializable {
     private long steps;
     private double distance;
     private long time;
+    private String[] features;
     //Features eventually
     private boolean favorite;
 
@@ -18,6 +19,14 @@ public class Route implements Serializable {
         this.steps = steps;
         this.distance = distance;
         this.time = time;
+        features = new String[5];
+    }
+
+    public void setFeature(int index, String s) { features[index] = s; }
+
+    public String getFeature(int index) {
+        if(features[index] != null) { return features[index]; }
+        else { return "none"; }
     }
 
     // Name setter
