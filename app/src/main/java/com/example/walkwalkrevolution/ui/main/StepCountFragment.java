@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,74 +15,71 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.walkwalkrevolution.DataKeys;
-import com.example.walkwalkrevolution.Distance;
 import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.fitness.FitnessService;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
-import com.example.walkwalkrevolution.walktracker.AppTimer;
+import com.example.walkwalkrevolution.walktracker.IDelayedUpdate;
+import com.example.walkwalkrevolution.walktracker.StepUpdate;
+import com.example.walkwalkrevolution.walktracker.WalkInfo;
+import com.example.walkwalkrevolution.walktracker.WalkUpdate;
 
-import java.util.Observable;
-import java.util.Observer;
-
-public class StepCountFragment extends Fragment implements Observer {
+public class StepCountFragment extends Fragment {
 
     private static final String TAG = "StepCountFragment";
 
-    private TextView textSteps;
-    private TextView overallDist;
-    private TextView walkSteps;
-    private TextView walkDist;
-    private TextView timer;
+    private static final int UPDATE_STEPS_INTERVAL = 5000;
+    private static final int SECOND_MILLIS = 1000;
+
+    private TextView dailyStepsText;
+    private TextView dailyDistanceText;
+    private TextView walkStepsText;
+    private TextView walkDistanceText;
+    private TextView timerText;
 
     private FitnessService fitnessService;
 
-    private long overallSteps;
-    private Distance dist;
-
-    private long currentWalkSteps;
-    private long currentWalkTime;
-
-    private long baseSteps;
-    private long startTime;
-
     private IRouteManagement routesManager;
     private SharedPreferences sharedPreferences;
-    private AppTimer stepUpdateTimer;
-    private AppTimer currentWalkTimer;
 
-    private boolean mocking;
+    WalkInfo walkInfo;
+
+    IDelayedUpdate stepCountUpdate;
+    IDelayedUpdate walkUpdate;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_step_count, container, false);
 
-        setUserHeight(getActivity().getIntent().getIntExtra(DataKeys.USER_HEIGHT_KEY, 0));
         routesManager = (IRouteManagement) getActivity().getIntent().getSerializableExtra(DataKeys.ROUTE_MANAGER_KEY);
-        mocking = getActivity().getIntent().getBooleanExtra(DataKeys.MOCKING_KEY, false);
-        this.sharedPreferences = getActivity().getSharedPreferences(DataKeys.USER_NAME_KEY, Context.MODE_PRIVATE);
+        sharedPreferences = getActivity().getSharedPreferences(DataKeys.USER_NAME_KEY, Context.MODE_PRIVATE);
 
-        textSteps = view.findViewById(R.id.overall_steps);
-        overallDist = view.findViewById(R.id.overall_dist);
-        walkSteps = view.findViewById(R.id.walk_steps);
-        walkDist = view.findViewById(R.id.walk_dist);
-        timer = view.findViewById(R.id.walk_time);
+        dailyStepsText = view.findViewById(R.id.overall_steps);
+        dailyDistanceText = view.findViewById(R.id.overall_dist);
+        walkStepsText = view.findViewById(R.id.walk_steps);
+        walkDistanceText = view.findViewById(R.id.walk_dist);
+        timerText = view.findViewById(R.id.walk_time);
 
         // Get values for most recent walk and set values to display on screen
-        walkSteps.setText(Long.toString(routesManager.getRecentSteps(sharedPreferences)));
-        walkDist.setText(getString(R.string.dist_format, routesManager.getRecentDistance(sharedPreferences)));
-        timer.setText(formatTime(routesManager.getRecentTime(sharedPreferences)));
+        setWalkStepsText(routesManager.getRecentSteps(sharedPreferences));
+        setWalkDistanceText(routesManager.getRecentDistance(sharedPreferences));
+        setTimerText(routesManager.getRecentTime(sharedPreferences));
 
-        String fitnessServiceKey = getActivity().getIntent().getStringExtra(DataKeys.FITNESS_SERVICE_KEY);
-        fitnessService = FitnessServiceFactory.create(fitnessServiceKey, this);
+        boolean mock = getActivity().getIntent().getBooleanExtra(DataKeys.MOCKING_KEY, false);
+        if(!mock) {
+            String fitnessServiceKey = getActivity().getIntent().getStringExtra(DataKeys.FITNESS_SERVICE_KEY);
+            fitnessService = FitnessServiceFactory.create(fitnessServiceKey, this);
 
-        fitnessService.setup();
-
-        if(!mocking) {
-            stepUpdateTimer = new AppTimer();
-            stepUpdateTimer.addObserver(this);
+            fitnessService.setup();
         }
+
+        walkInfo = new WalkInfo(getActivity().getIntent().getIntExtra(DataKeys.USER_HEIGHT_KEY, 0), fitnessService);
+        walkInfo.setMocking(mock);
+
+        stepCountUpdate = new StepUpdate(this, walkInfo, UPDATE_STEPS_INTERVAL);
+        stepCountUpdate.start();
+        walkUpdate = new WalkUpdate(this, walkInfo, SECOND_MILLIS);
 
         return view;
     }
@@ -103,95 +99,49 @@ public class StepCountFragment extends Fragment implements Observer {
     }
 
     public void setStepCount(long stepCount) {
-        this.overallSteps = stepCount;
+        walkInfo.setSteps(stepCount);
     }
 
-    private void setUserHeight(int height) {
-        this.dist = new Distance(height);
+    public void setDailyStepsText(long steps) {
+        dailyStepsText.setText(Long.toString(steps));
+    }
+
+    public void setDailyDistanceText(double distance) {
+        dailyDistanceText.setText(String.format(getString(R.string.dist_format), distance));
+    }
+
+    public void setWalkStepsText(long steps) {
+        walkStepsText.setText(Long.toString(steps));
+    }
+
+    public void setWalkDistanceText(double distance) {
+        walkDistanceText.setText(String.format(getString(R.string.dist_format), distance));
+    }
+
+    public void setTimerText(long time) {
+        timerText.setText(formatTime(time));
+    }
+
+    public String formatTime(long duration) {
+        int seconds = (int)(duration % 60);
+        int minutes = (int)((duration / 60) % 60);
+        int hours = (int)(duration / (60 * 60)) % 24;
+        return formatDigits(hours) + ":" + formatDigits(minutes) + ":" + formatDigits(seconds);
     }
 
     private String formatDigits(int x){
         return x < 10 ? "0" + x : String.valueOf(x);
     }
-    
-    public String formatTime(long duration) {
-        int seconds = (int)((duration / 1000) % 60);
-        int minutes = (int)((duration / (1000 * 60)) % 60);
-        int hours = (int)(duration / (1000 * 60 * 60)) % 24;
-        return formatDigits(hours) + ":" + formatDigits(minutes) + ":" + formatDigits(seconds);
+
+    public WalkInfo getWalkInfo() {
+        return walkInfo;
     }
 
-    @Override
-    public void update(Observable observable, Object o) {
-        if(observable == stepUpdateTimer) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    updateSteps();
-                }
-            });
-        } else {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    updateWalk();
-                }
-            });
-        }
+    public IDelayedUpdate getStepCountUpdate() {
+        return stepCountUpdate;
     }
 
-    public void updateSteps() {
-        fitnessService.updateStepCount();
-        textSteps.setText(String.valueOf(overallSteps));
-        overallDist.setText(String.format(getString(R.string.dist_format), dist.calculateDistance(overallSteps)));
-    }
-
-    public void updateWalk() {
-        currentWalkSteps = overallSteps - baseSteps;
-        walkSteps.setText(String.valueOf(currentWalkSteps));
-        walkDist.setText(String.format(getString(R.string.dist_format), dist.calculateDistance(currentWalkSteps)));
-        timer.setText(getTimeElapsed());
-    }
-
-    public void updateWalk(long time) {
-        currentWalkSteps = overallSteps - baseSteps;
-        walkSteps.setText(String.valueOf(currentWalkSteps));
-        walkDist.setText(String.format(getString(R.string.dist_format), dist.calculateDistance(currentWalkSteps)));
-        timer.setText(formatTime(time));
-    }
-
-    private String getTimeElapsed(){
-        long currentTime = System.currentTimeMillis();
-        currentWalkTime = (currentTime - startTime);
-        return formatTime(currentWalkTime);
-    }
-
-    public void startWalkTask() {
-        if(!mocking) {
-            currentWalkTimer = new AppTimer();
-            baseSteps = overallSteps;
-            startTime = System.currentTimeMillis();
-            currentWalkTimer.addObserver(this);
-        }
-    }
-
-    public void stopWalkTask() {
-        if(!mocking) {
-            currentWalkTimer.deleteObservers();
-            currentWalkTimer.cancel();
-            currentWalkTimer = null;
-        }
-    }
-
-    public long getCurrentWalkSteps() {
-        return currentWalkSteps;
-    }
-
-    public double getCurrentWalkDistance() {
-        return dist.calculateDistance(currentWalkSteps);
-    }
-
-    public long getCurrentWalkTime() {
-        return currentWalkTime;
+    public IDelayedUpdate getWalkUpdate() {
+        return walkUpdate;
     }
 }

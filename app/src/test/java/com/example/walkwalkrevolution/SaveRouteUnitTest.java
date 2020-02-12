@@ -7,8 +7,6 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.example.walkwalkrevolution.routemanagement.RoutesManager;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

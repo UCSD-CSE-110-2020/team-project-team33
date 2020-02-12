@@ -2,7 +2,7 @@ package com.example.walkwalkrevolution.routemanagement;
 
 import java.io.Serializable;
 
-public class Route implements Serializable {
+public class Route implements Serializable, Comparable<Route> {
     private String name;
     private String startLoc;
     private long steps;
@@ -78,5 +78,10 @@ public class Route implements Serializable {
     // startLoc getter
     public boolean setFavorite() {
         return this.favorite;
+    }
+
+    @Override
+    public int compareTo(Route route) {
+        return this.getName().compareTo(route.getName());
     }
 }
