@@ -1,8 +1,6 @@
 package com.example.walkwalkrevolution;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.widget.TextView;
 
 import androidx.test.core.app.ActivityScenario;
@@ -29,6 +27,7 @@ public class DistanceUnitTest {
 
     private static final int VALID_HEIGHT = 63;
     private static final int VALID_STEP_COUNT = 247;
+    private static final double EXPECTED_DIST = (((VALID_HEIGHT * 0.413) / 12 ) / 5280) * VALID_STEP_COUNT;
 
     private Intent intent;
     private long nextStepCount;
@@ -39,16 +38,14 @@ public class DistanceUnitTest {
         intent = new Intent(ApplicationProvider.getApplicationContext(), TabActivity.class);
         intent.putExtra(DataKeys.FITNESS_SERVICE_KEY, TEST_SERVICE);
         intent.putExtra(DataKeys.USER_HEIGHT_KEY, VALID_HEIGHT);
-        intent.putExtra(DataKeys.MOCKING_KEY, true);
         intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, new MockRoutesManager());
     }
 
     @Test
     public void testNormalDistanceReturned() {
         Distance dist = new Distance(VALID_HEIGHT);
-        double expect = (((VALID_HEIGHT * 0.413) / 12 ) / 5280) * VALID_STEP_COUNT;
         double actual = dist.calculateDistance(VALID_STEP_COUNT);
-        assertTrue(Math.abs(expect - actual) < 0.001);
+        assertTrue(Math.abs(EXPECTED_DIST - actual) < 0.001);
     }
 
     @Test
@@ -69,9 +66,11 @@ public class DistanceUnitTest {
 
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
-            activity.stepCountFragment.updateSteps();
+            activity.stepCountFragment.getStepCountUpdate().update();
             TextView textDist = activity.findViewById(R.id.overall_dist);
-            assertThat(textDist.getText().toString()).isEqualTo("0.1 mi");
+            assertThat(textDist.getText().toString())
+                    .isEqualTo(String.format(activity
+                            .getString(R.string.dist_format), EXPECTED_DIST));
         });
     }
 
@@ -82,9 +81,9 @@ public class DistanceUnitTest {
 
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
-            activity.stepCountFragment.updateSteps();
             TextView textDist = activity.findViewById(R.id.overall_dist);
-            assertThat(textDist.getText().toString()).isEqualTo("0.0 mi");
+            assertThat(textDist.getText().toString())
+                    .isEqualTo(String.format(activity.getString(R.string.dist_format), 0.0));
         });
     }
 
