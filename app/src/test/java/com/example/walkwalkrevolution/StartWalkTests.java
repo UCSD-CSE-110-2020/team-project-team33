@@ -15,17 +15,19 @@ import com.example.walkwalkrevolution.ui.main.StepCountFragment;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.annotation.LooperMode;
 
 import static com.google.common.truth.Truth.assertThat;
 
 @RunWith(AndroidJUnit4.class)
-@LooperMode(LooperMode.Mode.PAUSED)
 public class StartWalkTests {
     private static final String TEST_SERVICE = "TEST_SERVICE";
 
-    private static final int POSATIVE_STEP_COUNT = 237;
-    private static final int NEGATIVE_STEP_COUNT = -5;
+    private static final int VALID_STEP_COUNT = 247;
+    private static final int VALID_HEIGHT = 63;
+    private static final double EXPECTED_DIST = (((VALID_HEIGHT * 0.413) / 12 ) / 5280) * VALID_STEP_COUNT;
+    private static final long VALID_TIME = 5930;
+    private static final String VALID_TIME_STR = "01:38:50";
+
 
     private Intent intent;
     private long nextStepCount;
@@ -35,8 +37,7 @@ public class StartWalkTests {
         FitnessServiceFactory.put(TEST_SERVICE, TestFitnessService::new);
         intent = new Intent(ApplicationProvider.getApplicationContext(), TabActivity.class);
         intent.putExtra(DataKeys.FITNESS_SERVICE_KEY, TEST_SERVICE);
-        intent.putExtra(DataKeys.USER_HEIGHT_KEY, 60);
-        intent.putExtra(DataKeys.MOCKING_KEY, true);
+        intent.putExtra(DataKeys.USER_HEIGHT_KEY, VALID_HEIGHT);
         intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, new MockRoutesManager());
     }
 
@@ -61,7 +62,7 @@ public class StartWalkTests {
 
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
-            assertThat(activity.stepCountFragment.formatTime(5590000)).isEqualTo("01:33:10");
+            assertThat(activity.stepCountFragment.formatTime(VALID_TIME)).isEqualTo(VALID_TIME_STR);
         });
     }
 
@@ -73,9 +74,13 @@ public class StartWalkTests {
         scenario.onActivity(activity -> {
             Button startWalkButton = activity.findViewById(R.id.buttonStartWalk);
             startWalkButton.performClick();
-            activity.stepCountFragment.updateWalk(5590000);
+
+            activity.stepCountFragment.getWalkInfo().setMocking(true);
+            activity.stepCountFragment.getWalkInfo().setWalkTime(VALID_TIME);
+            activity.stepCountFragment.getWalkUpdate().update();
+
             TextView timer = activity.findViewById(R.id.walk_time);
-            assertThat(timer.getText().toString()).isEqualTo("01:33:10");
+            assertThat(timer.getText().toString()).isEqualTo(VALID_TIME_STR);
         });
     }
 
@@ -86,16 +91,18 @@ public class StartWalkTests {
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
             Button startWalkButton = activity.findViewById(R.id.buttonStartWalk);
-            activity.stepCountFragment.updateSteps();
-            activity.stepCountFragment.updateWalk();
+
+            update(activity.stepCountFragment);
+
             startWalkButton.performClick();
         });
-        nextStepCount = POSATIVE_STEP_COUNT;
+        nextStepCount = VALID_STEP_COUNT;
         scenario.onActivity(activity -> {
-            activity.stepCountFragment.updateSteps();
-            activity.stepCountFragment.updateWalk();
+            update(activity.stepCountFragment);
+
             TextView walkSteps = activity.findViewById(R.id.walk_steps);
-            assertThat(walkSteps.getText().toString()).isEqualTo(Long.toString(POSATIVE_STEP_COUNT));
+
+            assertThat(walkSteps.getText().toString()).isEqualTo(Long.toString(VALID_STEP_COUNT));
         });
     }
 
@@ -106,17 +113,24 @@ public class StartWalkTests {
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
             Button startWalkButton = activity.findViewById(R.id.buttonStartWalk);
-            activity.stepCountFragment.updateSteps();
-            activity.stepCountFragment.updateWalk();
+
             startWalkButton.performClick();
         });
-        nextStepCount = POSATIVE_STEP_COUNT;
+
+        nextStepCount = VALID_STEP_COUNT;
+
         scenario.onActivity(activity -> {
-            activity.stepCountFragment.updateSteps();
-            activity.stepCountFragment.updateWalk();
             TextView walkDist = activity.findViewById(R.id.walk_dist);
-            assertThat(walkDist.getText().toString()).isEqualTo("0.1 mi");
+
+            update(activity.stepCountFragment);
+
+            assertThat(walkDist.getText().toString()).isEqualTo(String.format(activity.getString(R.string.dist_format), EXPECTED_DIST));
         });
+    }
+
+    private void update(StepCountFragment stepCountFragment) {
+        stepCountFragment.getStepCountUpdate().update();
+        stepCountFragment.getWalkUpdate().update();
     }
 
     private class TestFitnessService implements FitnessService {

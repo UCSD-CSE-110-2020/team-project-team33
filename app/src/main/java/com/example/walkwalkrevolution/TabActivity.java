@@ -51,11 +51,11 @@ public class TabActivity extends AppCompatActivity {
                 if(walkStarted) {
                     tabLayout.getTabAt(1).select();
                     btnStartWalk.setText(getString(R.string.start_string));
-                    stepCountFragment.stopWalkTask();
+                    stepCountFragment.getWalkUpdate().stop();
                     launchEnterRouteInfoActivity();
                 } else {
                     btnStartWalk.setText(getString(R.string.stop_string));
-                    stepCountFragment.startWalkTask();
+                    stepCountFragment.getWalkUpdate().start();
                 }
                 walkStarted = !walkStarted;
             }
@@ -65,9 +65,9 @@ public class TabActivity extends AppCompatActivity {
 
     public void launchEnterRouteInfoActivity() {
         Intent intent = new Intent (this, EnterRouteInfoActivity.class);
-        intent.putExtra(DataKeys.DISTANCE_KEY, stepCountFragment.getCurrentWalkDistance());
-        intent.putExtra(DataKeys.STEPS_KEY, stepCountFragment.getCurrentWalkSteps());
-        intent.putExtra(DataKeys.TIME_KEY, stepCountFragment.getCurrentWalkTime());
+        intent.putExtra(DataKeys.DISTANCE_KEY, stepCountFragment.getWalkInfo().getWalkDistance());
+        intent.putExtra(DataKeys.STEPS_KEY, stepCountFragment.getWalkInfo().getWalkSteps());
+        intent.putExtra(DataKeys.TIME_KEY, stepCountFragment.getWalkInfo().getWalkTime());
         intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, (Serializable) routesManager);
 
         startActivity(intent);

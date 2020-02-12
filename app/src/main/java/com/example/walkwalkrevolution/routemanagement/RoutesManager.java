@@ -20,6 +20,8 @@ public class RoutesManager implements IRouteManagement, Serializable, Iterable {
         String json = sharedPreferences.getString(DataKeys.ROUTES_DATA_KEY, null);
         if(json == null) {
             routes = new RoutesData();
+            prefsEditor.putString(DataKeys.ROUTES_DATA_KEY, gson.toJson(routes));
+            prefsEditor.apply();
         } else {
             routes = gson.fromJson(json, RoutesData.class);
         }

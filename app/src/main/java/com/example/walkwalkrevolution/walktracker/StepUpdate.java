@@ -6,18 +6,20 @@ import com.example.walkwalkrevolution.ui.main.StepCountFragment;
 
 public class StepUpdate implements IDelayedUpdate {
     StepCountFragment stepCountFragment;
+    WalkInfo walkInfo;
     Handler stepUpdateHandler;
     Runnable stepUpdateTask;
 
-    public StepUpdate(StepCountFragment stepCountFragment, int interval) {
+    public StepUpdate(StepCountFragment stepCountFragment, WalkInfo walk, int interval) {
         this.stepCountFragment = stepCountFragment;
+        walkInfo = walk;
 
         stepUpdateHandler = new Handler();
 
         stepUpdateTask = new Runnable() {
             @Override
             public void run() {
-                stepCountFragment.updateSteps();
+                update();
                 stepUpdateHandler.postDelayed(stepUpdateTask, interval);
             }
         };
@@ -31,5 +33,11 @@ public class StepUpdate implements IDelayedUpdate {
     @Override
     public void stop() {
         stepUpdateHandler.removeCallbacks(stepUpdateTask);
+    }
+
+    @Override
+    public void update() {
+        stepCountFragment.setDailyStepsText(walkInfo.getSteps());
+        stepCountFragment.setDailyDistanceText(walkInfo.getDistance());
     }
 }
