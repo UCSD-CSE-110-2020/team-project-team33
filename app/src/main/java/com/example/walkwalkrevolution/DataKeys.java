@@ -25,4 +25,6 @@ public class DataKeys {
     public static final int SURFACE = 3;
     public static final int ROUTE_TYPE = 4;
 
+    public static final int NUM_FEAUTRES = 5;
+
 }

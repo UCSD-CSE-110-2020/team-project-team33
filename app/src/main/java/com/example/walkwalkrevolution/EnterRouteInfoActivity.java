@@ -3,6 +3,7 @@ package com.example.walkwalkrevolution;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,16 +17,13 @@ import android.widget.Toast;
 
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
 import com.example.walkwalkrevolution.routemanagement.Route;
-import com.example.walkwalkrevolution.routemanagement.RouteFeatures.Difficulty;
-import com.example.walkwalkrevolution.routemanagement.RouteFeatures.Feature;
-import com.example.walkwalkrevolution.routemanagement.RouteFeatures.Road;
-import com.example.walkwalkrevolution.routemanagement.RouteFeatures.RouteType;
-import com.example.walkwalkrevolution.routemanagement.RouteFeatures.Surface;
-import com.example.walkwalkrevolution.routemanagement.RouteFeatures.Terrain;
-import com.google.gson.Gson;
+import com.example.walkwalkrevolution.routemanagement.RouteFeatures.RouteFeatures;
 
 public class EnterRouteInfoActivity extends AppCompatActivity {
     IRouteManagement routesManager;
+    RouteFeatures routeFeatures = new RouteFeatures();
+    String[] features = new String[DataKeys.NUM_FEAUTRES];
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,12 +36,10 @@ public class EnterRouteInfoActivity extends AppCompatActivity {
         long time = b.getLong(DataKeys.TIME_KEY);
         routesManager = (IRouteManagement) getIntent().getSerializableExtra(DataKeys.ROUTE_MANAGER_KEY);
 
-
         Button saveBtn = findViewById(R.id.saveButton);
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
 
                 EditText nameField = (EditText) findViewById(R.id.routeName);
                 EditText startField = (EditText) findViewById(R.id.startLoc);
@@ -69,48 +65,47 @@ public class EnterRouteInfoActivity extends AppCompatActivity {
         Spinner surface = findViewById(R.id.surfaceType);
         Spinner routeType = findViewById(R.id.routeType);
 
-        Feature[] features = { new Difficulty(), new Road(), new Terrain(), new Surface(), new RouteType() };
         Spinner[] spinners = { difficulty, road, terrain, surface, routeType };
 
-        for(int i = 0; i < features.length; i++) {
-            setOptions(spinners[i], features[i]);
+        for(int i = 0; i < spinners.length; i++) {
+            setSpinnerOptions(spinners[i], i);
+            setSpinnerSelect(spinners[i], i);
         }
+    }
 
+    private void setSpinnerSelect(Spinner spinner, int index) {
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                if(position == 0) {
+                    setSpinnerHint(selectedItemView);
+                    features[index] = null;
+                } else {
+                    features[index] = selectedItemView.toString();
+                }
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // default stub
+            }
+
+        });
     }
 
 
-    private void setOptions(Spinner spinner, Feature feature) {
-        /*ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, feature.getOptions());
-        menu.setAdapter(adapter);*/
+    private void setSpinnerOptions(Spinner spinner, int index) {
 
         // Initializing an ArrayAdapter
         final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
-                this,android.R.layout.simple_spinner_dropdown_item,feature.getOptions()){
-            @Override
-            public boolean isEnabled(int position){
-                if(position == 0)
-                {
-                    // Disable the first item from Spinner
-                    // First item will be use for hint
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
-            }
+                this,android.R.layout.simple_spinner_dropdown_item, routeFeatures.getFeature(index)){
             @Override
             public View getDropDownView(int position, View convertView,
                                         ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
-                TextView tv = (TextView) view;
                 if(position == 0){
-                    // Set the hint text color gray
-                    tv.setTextColor(Color.GRAY);
-                }
-                else {
-                    tv.setTextColor(Color.BLACK);
+                    // Set the hint text color gray italic
+                    setSpinnerHint(view);
                 }
                 return view;
             }
@@ -119,8 +114,16 @@ public class EnterRouteInfoActivity extends AppCompatActivity {
         spinner.setAdapter(spinnerArrayAdapter);
     }
 
+    private void setSpinnerHint(View view) {
+        // set gray italics for hints
+        TextView tv = (TextView) view;
+        tv.setTextColor(Color.GRAY);
+        tv.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
+    }
+
 
 
     @Override
     public void onBackPressed() { }
+
 }
