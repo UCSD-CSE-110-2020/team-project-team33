@@ -83,8 +83,7 @@
                 android:background="@drawable/border"
                 android:ems="10"
                 android:gravity="top|left"
-                android:inputType="textLongMessage"
-                android:text="hi" />
+                android:inputType="textLongMessage" />
 
             <Button
                 android:id="@+id/saveButton"

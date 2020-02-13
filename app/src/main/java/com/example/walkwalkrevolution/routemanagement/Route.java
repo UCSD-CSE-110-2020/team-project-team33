@@ -1,6 +1,7 @@
 package com.example.walkwalkrevolution.routemanagement;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class Route implements Serializable, Comparable<Route> {
     private String name;
@@ -8,25 +9,18 @@ public class Route implements Serializable, Comparable<Route> {
     private long steps;
     private double distance;
     private long time;
-    private String[] features;
+    private List<String> features;
     //Features eventually
     private boolean favorite;
 
     // Constructor
-    public Route(String name, String startLocation, long steps, double distance, long time) {
+    public Route(String name, String startLocation, long steps, double distance, long time, List<String> features) {
         this.name = name;
         this.startLoc = startLocation;
         this.steps = steps;
         this.distance = distance;
         this.time = time;
-        features = new String[5];
-    }
-
-    public void setFeature(int index, String s) { features[index] = s; }
-
-    public String getFeature(int index) {
-        if(features[index] != null) { return features[index]; }
-        else { return "none"; }
+        this.features = features;
     }
 
     // Name setter
@@ -88,6 +82,9 @@ public class Route implements Serializable, Comparable<Route> {
     public boolean setFavorite() {
         return this.favorite;
     }
+
+    // features getter
+    public List<String> getFeatures() { return this.features; }
 
     @Override
     public int compareTo(Route route) {

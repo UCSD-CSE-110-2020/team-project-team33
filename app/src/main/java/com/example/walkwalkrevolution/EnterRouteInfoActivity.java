@@ -19,6 +19,9 @@ import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
 import com.example.walkwalkrevolution.routemanagement.Route;
 import com.example.walkwalkrevolution.routemanagement.RouteFeatures.RouteFeatures;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EnterRouteInfoActivity extends AppCompatActivity {
     IRouteManagement routesManager;
     RouteFeatures routeFeatures = new RouteFeatures();
@@ -50,7 +53,7 @@ public class EnterRouteInfoActivity extends AppCompatActivity {
                 }
                 String startLoc = startField.getText().toString();
 
-                Route route = new Route(name, startLoc, steps, distance, time);
+                Route route = new Route(name, startLoc, steps, distance, time, getFeatures());
                 routesManager.saveRoute(getSharedPreferences(DataKeys.USER_NAME_KEY, MODE_PRIVATE), route);
 
                 Toast.makeText(EnterRouteInfoActivity.this, getString(R.string.saved_string), Toast.LENGTH_SHORT).show();
@@ -119,6 +122,15 @@ public class EnterRouteInfoActivity extends AppCompatActivity {
         TextView tv = (TextView) view;
         tv.setTextColor(Color.GRAY);
         tv.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
+    }
+
+    private List<String> getFeatures() {
+        List<String> tags = new ArrayList<String>();
+        for(String s : features) {
+            if(s != null) { tags.add(s); }
+        }
+        return tags;
+
     }
 
 
