@@ -28,9 +28,6 @@ public class StepCountFragment extends Fragment {
 
     private static final String TAG = "StepCountFragment";
 
-    private static final int UPDATE_STEPS_INTERVAL = 5000;
-    private static final int SECOND_MILLIS = 1000;
-
     private TextView dailyStepsText;
     private TextView dailyDistanceText;
     private TextView walkStepsText;
@@ -46,6 +43,12 @@ public class StepCountFragment extends Fragment {
 
     IDelayedUpdate stepCountUpdate;
     IDelayedUpdate walkUpdate;
+
+    public StepCountFragment(WalkInfo w, IDelayedUpdate step, IDelayedUpdate walk) {
+        walkInfo = w;
+        stepCountUpdate = step;
+        walkUpdate = walk;
+    }
 
     @Nullable
     @Override
@@ -66,40 +69,9 @@ public class StepCountFragment extends Fragment {
         setWalkDistanceText(routesManager.getRecentDistance(sharedPreferences));
         setTimerText(routesManager.getRecentTime(sharedPreferences));
 
-        boolean mock = getActivity().getIntent().getBooleanExtra(DataKeys.MOCKING_KEY, false);
-        if(!mock) {
-            String fitnessServiceKey = getActivity().getIntent().getStringExtra(DataKeys.FITNESS_SERVICE_KEY);
-            fitnessService = FitnessServiceFactory.create(fitnessServiceKey, this);
-
-            fitnessService.setup();
-        }
-
-        walkInfo = new WalkInfo(getActivity().getIntent().getIntExtra(DataKeys.USER_HEIGHT_KEY, 0), fitnessService);
-        walkInfo.setMocking(mock);
-
-        stepCountUpdate = new StepUpdate(this, walkInfo, UPDATE_STEPS_INTERVAL);
         stepCountUpdate.start();
-        walkUpdate = new WalkUpdate(this, walkInfo, SECOND_MILLIS);
 
         return view;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // If authentication was required during google fit setup, this will be called after the user authenticates
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == fitnessService.getRequestCode()) {
-                fitnessService.updateStepCount();
-            }
-        } else {
-            Log.e(TAG, "ERROR, google fit result code: " + resultCode);
-        }
-    }
-
-    public void setStepCount(long stepCount) {
-        walkInfo.setSteps(stepCount);
     }
 
     public void setDailyStepsText(long steps) {

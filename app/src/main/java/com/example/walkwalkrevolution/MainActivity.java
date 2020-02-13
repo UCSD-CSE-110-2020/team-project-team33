@@ -8,7 +8,6 @@ import android.os.Bundle;
 
 import com.example.walkwalkrevolution.fitness.*;
 import com.example.walkwalkrevolution.routemanagement.RoutesManager;
-import com.example.walkwalkrevolution.ui.main.StepCountFragment;
 
 public class MainActivity extends AppCompatActivity {
     private String fitnessServiceKey = "GOOGLE_FIT";
@@ -23,8 +22,8 @@ public class MainActivity extends AppCompatActivity {
 
         FitnessServiceFactory.put(fitnessServiceKey, new FitnessServiceFactory.BluePrint() {
             @Override
-            public FitnessService create(StepCountFragment stepCountFragment) {
-                return new GoogleFitAdapter(stepCountFragment);
+            public FitnessService create(TabActivity tabActivity) {
+                return new GoogleFitAdapter(tabActivity);
             }
         });
 
