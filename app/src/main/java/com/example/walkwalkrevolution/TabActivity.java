@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
+import com.example.walkwalkrevolution.ui.main.MockFragment;
 import com.example.walkwalkrevolution.ui.main.StepCountFragment;
 import com.example.walkwalkrevolution.ui.main.RoutesFragment;
 import com.google.android.material.tabs.TabLayout;
@@ -19,11 +20,16 @@ import java.io.Serializable;
 
 public class TabActivity extends AppCompatActivity {
 
+    private static final int HOME_TAB_INDEX = 0;
+    private static final int ROUTES_TAB_INDEX = 1;
+    private static final int MOCK_TAB_INDEX = 2;
+
     private SectionsPagerAdapter sectionsPagerAdapter;
     private ViewPager viewPager;
 
     public StepCountFragment stepCountFragment;
     public RoutesFragment routesFragment;
+    public MockFragment mockFragment;
 
     public IRouteManagement routesManager;
 
@@ -49,7 +55,7 @@ public class TabActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(walkStarted) {
-                    tabLayout.getTabAt(1).select();
+                    tabLayout.getTabAt(ROUTES_TAB_INDEX).select();
                     btnStartWalk.setText(getString(R.string.start_string));
                     stepCountFragment.getWalkUpdate().stop();
                     launchEnterRouteInfoActivity();
@@ -79,6 +85,8 @@ public class TabActivity extends AppCompatActivity {
         adapter.addFragment(stepCountFragment, getString(R.string.home_tab));
         routesFragment = new RoutesFragment();
         adapter.addFragment(routesFragment, getString(R.string.routes_tab));
+        mockFragment = new MockFragment();
+        adapter.addFragment(mockFragment, getString(R.string.mock_tab));
         viewPager.setAdapter(adapter);
     }
 

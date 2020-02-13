@@ -21,11 +21,9 @@ public class WalkInfo {
 
     public long getSteps() {
         if(mocking) {
-            return steps;
-        } else {
             fitnessService.updateStepCount();
-            return steps;
         }
+        return steps;
     }
 
     public void setSteps(long s) {
