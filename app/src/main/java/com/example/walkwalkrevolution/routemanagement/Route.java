@@ -76,8 +76,13 @@ public class Route implements Serializable, Comparable<Route> {
     }
 
     // startLoc getter
-    public boolean setFavorite() {
+    public boolean getFavorite() {
         return this.favorite;
+    }
+
+    //favorite toggle
+    public void toggleFavorite(){
+        this.favorite = !favorite;
     }
 
     @Override

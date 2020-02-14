@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/edit_walk"
-        android:title="Edit"/>
+        android:title="Edit"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/delete_walk"
-        android:title="Delete"/>
+        android:title="Delete"
+        app:showAsAction="ifRoom" />
 </menu>

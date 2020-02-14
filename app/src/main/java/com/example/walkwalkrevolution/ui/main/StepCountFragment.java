@@ -122,14 +122,14 @@ public class StepCountFragment extends Fragment {
         timerText.setText(formatTime(time));
     }
 
-    public String formatTime(long duration) {
+    public static String formatTime(long duration) {
         int seconds = (int)(duration % 60);
         int minutes = (int)((duration / 60) % 60);
         int hours = (int)(duration / (60 * 60)) % 24;
         return formatDigits(hours) + ":" + formatDigits(minutes) + ":" + formatDigits(seconds);
     }
 
-    private String formatDigits(int x){
+    private static String formatDigits(int x){
         return x < 10 ? "0" + x : String.valueOf(x);
     }
 
