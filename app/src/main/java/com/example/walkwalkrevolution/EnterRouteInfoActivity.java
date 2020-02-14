@@ -10,10 +10,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
 import com.example.walkwalkrevolution.routemanagement.Route;
@@ -26,6 +28,7 @@ public class EnterRouteInfoActivity extends AppCompatActivity {
     IRouteManagement routesManager;
     RouteFeatures routeFeatures = new RouteFeatures();
     String[] features = new String[DataKeys.NUM_FEAUTRES];
+    boolean isFavorited = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,7 @@ public class EnterRouteInfoActivity extends AppCompatActivity {
                 String startLoc = startField.getText().toString();
 
                 Route route = new Route(name, startLoc, steps, distance, time, getFeatures());
+                route.setFavorite(isFavorited);
                 routesManager.saveRoute(getSharedPreferences(DataKeys.USER_NAME_KEY, MODE_PRIVATE), route);
 
                 Toast.makeText(EnterRouteInfoActivity.this, getString(R.string.saved_string), Toast.LENGTH_SHORT).show();
@@ -74,6 +78,17 @@ public class EnterRouteInfoActivity extends AppCompatActivity {
             setSpinnerOptions(spinners[i], i);
             setSpinnerSelect(spinners[i], i);
         }
+
+        ToggleButton toggle = (ToggleButton) findViewById(R.id.favoriteBtn);
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    isFavorited = true;
+                } else {
+                    isFavorited = false;
+                }
+            }
+        });
     }
 
     private void setSpinnerSelect(Spinner spinner, int index) {

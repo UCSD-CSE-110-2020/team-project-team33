@@ -85,12 +85,20 @@
                 android:gravity="top|left"
                 android:inputType="textLongMessage" />
 
+            <ToggleButton
+                android:id="@+id/favoriteBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textOff="Add to Favorites"
+                android:textOn="Remove from Favorites" />
+
             <Button
                 android:id="@+id/saveButton"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="4dp"
                 android:text="Save" />
         </LinearLayout>
     </ScrollView>
