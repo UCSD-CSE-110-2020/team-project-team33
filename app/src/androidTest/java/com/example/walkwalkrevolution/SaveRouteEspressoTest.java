@@ -49,6 +49,11 @@ public class SaveRouteEspressoTest {
             intent.putExtra(DataKeys.TIME_KEY, TIME);
             return intent;
         }
+
+
+        SharedPreferences getSharedPreferences(String name, int mode){
+            return sp;
+        }
     };
 
     @Test
