@@ -15,11 +15,14 @@ import com.example.walkwalkrevolution.routemanagement.Route;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 // Create the basic adapter extending from RecyclerView.Adapter
 // Note that we specify the custom ViewHolder which gives us access to our views
 public class RouteItemAdapter extends
         RecyclerView.Adapter<RouteItemAdapter.ViewHolder> {
+
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
@@ -33,6 +36,7 @@ public class RouteItemAdapter extends
         public TextView time;
         Context context;
         //public Button favoriteBtn;
+
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -95,7 +99,18 @@ public class RouteItemAdapter extends
         viewHolder.startLoc.setText(route.getStartLoc());
         viewHolder.dist.setText(route.getDistance() + " mi");
         viewHolder.steps.setText(route.getSteps() + " steps");
-        //viewHolder.time.setText(route.getTime());
+        viewHolder.time.setText(formatTime(route.getTime()));
+    }
+
+    public String formatTime(long duration) {
+        int seconds = (int)(duration % 60);
+        int minutes = (int)((duration / 60) % 60);
+        int hours = (int)(duration / (60 * 60)) % 24;
+        return formatDigits(hours) + ":" + formatDigits(minutes) + ":" + formatDigits(seconds);
+    }
+
+    private String formatDigits(int x){
+        return x < 10 ? "0" + x : String.valueOf(x);
     }
 
     @Override

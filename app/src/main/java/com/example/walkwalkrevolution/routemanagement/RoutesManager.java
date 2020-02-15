@@ -5,12 +5,17 @@ import android.content.SharedPreferences;
 import androidx.annotation.NonNull;
 
 import com.example.walkwalkrevolution.DataKeys;
+import com.example.walkwalkrevolution.ui.main.RoutesFragment;
 import com.google.gson.Gson;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
-public class RoutesManager implements IRouteManagement, Serializable, Iterable {
+public class RoutesManager extends Observable implements IRouteManagement, Serializable, Iterable {
 
     RoutesData routes;
 
@@ -50,6 +55,11 @@ public class RoutesManager implements IRouteManagement, Serializable, Iterable {
         prefsEditor.putLong(DataKeys.RECENT_DIST_KEY, Double.doubleToRawLongBits(route.getDistance()));
         prefsEditor.putLong(DataKeys.RECENT_TIME_KEY, route.getTime());
         routes.addRoute(route);
+
+        // should be updating observers..
+        setChanged();
+        notifyObservers(route);
+
         prefsEditor.putString(DataKeys.ROUTES_DATA_KEY, gson.toJson(routes));
         prefsEditor.apply();
     }
