@@ -33,7 +33,7 @@ public class RouteItemAdapter extends
         public TextView dist;
         public TextView steps;
         public TextView time;
-        public Button favoriteBtn;
+        //public Button favoriteBtn;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -41,10 +41,12 @@ public class RouteItemAdapter extends
             // Stores the itemView in a public final member variable that can be used
             // to access the context from any ViewHolder instance.
             super(itemView);
-            /*
-            routeName = itemView.findViewById(R.layout.routeName);
-            startLoc = itemView.findViewById(R.layout.startLoc);
-             */
+            routeName = itemView.findViewById(R.id.itemRouteName);
+            startLoc = itemView.findViewById(R.id.itemRouteStart);
+            dist = itemView.findViewById(R.id.itemRouteDist);
+            steps = itemView.findViewById(R.id.itemRouteSteps);
+            time = itemView.findViewById(R.id.itemRouteTime);
+
 
         }
     }
@@ -62,17 +64,28 @@ public class RouteItemAdapter extends
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        /*View routeView = inflater.inflate(R.layout., parent, false);
+        View routeView = inflater.inflate(R.layout.item_route, parent, false);
 
         ViewHolder viewHolder = new ViewHolder(routeView);
         return viewHolder;
-        */
 
     }
 
     @Override
     public void onBindViewHolder(RouteItemAdapter.ViewHolder viewHolder, int position) {
+        Route route = routes.get(position);
 
+        TextView routeName = viewHolder.routeName;
+        TextView startLoc = viewHolder.startLoc;
+        TextView dist = viewHolder.dist;
+        TextView steps = viewHolder.steps;
+        TextView time = viewHolder.time;
+
+        viewHolder.routeName.setText(route.getName());
+        viewHolder.startLoc.setText(route.getStartLoc());
+        viewHolder.dist.setText(route.getDistance() + " mi");
+        viewHolder.steps.setText(route.getSteps() + " steps");
+        //viewHolder.time.setText(route.getTime());
     }
 
     @Override

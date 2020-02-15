@@ -10,5 +10,6 @@
     <dimen name="internal_padding">8dp</dimen>
     <dimen name="home_text_size">24sp</dimen>
     <dimen name="app_bar_height">180dp</dimen>
-    <dimen name="text_margin">16dp</dimen>
+    <dimen name="text_margin">8dp</dimen>
+    <dimen name="route_name_size">20dp</dimen>
 </resources>
