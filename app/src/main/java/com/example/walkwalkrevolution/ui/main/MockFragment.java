@@ -50,15 +50,12 @@ public class MockFragment extends Fragment {
 
         pickerHour.setMinValue(0);
         pickerHour.setMaxValue(23);
-        pickerHour.setWrapSelectorWheel(false);
 
         pickerMinutes.setMinValue(0);
         pickerMinutes.setMaxValue(59);
-        pickerMinutes.setWrapSelectorWheel(false);
 
         pickerSeconds.setMinValue(0);
         pickerSeconds.setMaxValue(59);
-        pickerSeconds.setWrapSelectorWheel(false);
 
         buttonToggleMock.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,23 +25,47 @@ public class RoutesFragment extends Fragment {
 
     IRouteManagement routesManager;
     WalkInfo walkInfo;
+    RecyclerView rvRoutes;
+    RouteItemAdapter routeAdapter;
+    View view;
 
     public RoutesFragment(WalkInfo walkInfo) {
         this.walkInfo = walkInfo;
     }
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_routes, container, false);
+        view = inflater.inflate(R.layout.fragment_routes, container, false);
         routesManager = (IRouteManagement) getActivity().getIntent().getSerializableExtra(DataKeys.ROUTE_MANAGER_KEY);
 
-        RecyclerView rvRoutes = (RecyclerView) view.findViewById(R.id.rvRoutes);
+        rvRoutes = (RecyclerView) view.findViewById(R.id.rvRoutes);
 
-        RouteItemAdapter routeAdapter = new RouteItemAdapter(((Iterable<Route>) routesManager).iterator());
+        routeAdapter = new RouteItemAdapter();
+        routeAdapter.setRoutes(((Iterable<Route>) routesManager).iterator());
+
 
         rvRoutes.setAdapter(routeAdapter);
+
+        rvRoutes.addItemDecoration(new DividerItemDecoration(rvRoutes.getContext(), DividerItemDecoration.VERTICAL));
 
         rvRoutes.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
 
         return view;
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setLayout();
+
+    }
+
+    public void setLayout() {
+        routesManager = (IRouteManagement) getActivity().getIntent().getSerializableExtra(DataKeys.ROUTE_MANAGER_KEY);
+        routeAdapter.setRoutes(((Iterable<Route>) routesManager).iterator());
+        rvRoutes.setAdapter(routeAdapter);
+        rvRoutes.addItemDecoration(new DividerItemDecoration(rvRoutes.getContext(), DividerItemDecoration.VERTICAL));
+        rvRoutes.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        routeAdapter.notifyDataSetChanged();
     }
 }

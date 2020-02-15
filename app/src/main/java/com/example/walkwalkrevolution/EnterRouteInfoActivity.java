@@ -20,7 +20,9 @@ import android.widget.ToggleButton;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
 import com.example.walkwalkrevolution.routemanagement.Route;
 import com.example.walkwalkrevolution.routemanagement.RouteFeatures.RouteFeatures;
+import com.example.walkwalkrevolution.ui.main.RoutesFragment;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +62,10 @@ public class EnterRouteInfoActivity extends AppCompatActivity {
                 route.setFavorite(isFavorited);
                 routesManager.saveRoute(getSharedPreferences(DataKeys.USER_NAME_KEY, MODE_PRIVATE), route);
 
+                getIntent().putExtra(DataKeys.ROUTE_MANAGER_KEY, (Serializable) routesManager);
+
                 Toast.makeText(EnterRouteInfoActivity.this, getString(R.string.saved_string), Toast.LENGTH_SHORT).show();
+
                 finish();
             }
         });
