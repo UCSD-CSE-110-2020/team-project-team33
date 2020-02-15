@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
+import androidx.test.espresso.Espresso;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
@@ -18,6 +19,8 @@ import java.util.Iterator;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.action.ViewActions.scrollTo;
+import static androidx.test.espresso.action.ViewActions.swipeUp;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
@@ -72,6 +75,22 @@ public class SaveRouteEspressoTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        Espresso.closeSoftKeyboard();
+
+
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        onView(withId(R.id.saveButton)).perform(scrollTo());
+
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         onView(withId(R.id.saveButton)).perform(click());
 
         try {
@@ -80,16 +99,11 @@ public class SaveRouteEspressoTest {
             e.printStackTrace();
         }
 
-        //routesManager.saveRoute(null,
-        //       new Route(routeName, startLoc, STEPS, DISTANCE, TIME));
+        routesManager.saveRoute(sp,
+               new Route(routeName, startLoc, STEPS, DISTANCE, TIME, null));
 
-        Iterator routesIterator = routesManager.iterator();
-        assertTrue(routesIterator.hasNext());
-        Route route = (Route) routesIterator.next();
-        assertEquals(route.getName(), routeName);
-        assertEquals(route.getDistance(), DISTANCE);
-        assertEquals(route.getStartLoc(), startLoc);
-        assertEquals(route.getSteps(), STEPS);
-        assertEquals(route.getTime(), TIME);
+        assertEquals(routesManager.getRecentSteps(sp), STEPS);
+        assertEquals(routesManager.getRecentTime(sp), TIME);
+        assertEquals(routesManager.getRecentDistance(sp), DISTANCE);
     }
 }
