@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.walkwalkrevolution.R;
-import com.example.walkwalkrevolution.walktracker.IDelayedUpdate;
+import com.example.walkwalkrevolution.TabActivity;
 import com.example.walkwalkrevolution.walktracker.WalkInfo;
 
 public class MockFragment extends Fragment {
@@ -26,13 +26,11 @@ public class MockFragment extends Fragment {
 
     private WalkInfo walkInfo;
 
-    private IDelayedUpdate stepUpdate;
-    private IDelayedUpdate walkUpdate;
+    private TabActivity tabActivity;
 
-    public MockFragment(WalkInfo w, IDelayedUpdate step, IDelayedUpdate walk) {
+    public MockFragment(WalkInfo w, TabActivity t) {
         walkInfo = w;
-        stepUpdate = step;
-        walkUpdate = walk;
+        tabActivity = t;
     }
 
     @Nullable
@@ -48,8 +46,7 @@ public class MockFragment extends Fragment {
         buttonSetTime = view.findViewById(R.id.set_time_button);
         buttonToggleMock = view.findViewById(R.id.toggle_mock_button);
 
-        buttonSetStepCount.setEnabled(false);
-        buttonSetTime.setEnabled(false);
+        setButtons();
 
         pickerHour.setMinValue(0);
         pickerHour.setMaxValue(23);
@@ -66,16 +63,34 @@ public class MockFragment extends Fragment {
         buttonToggleMock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(walkInfo.isMocking()) {
-                    buttonToggleMock.setText(getString(R.string.toggle_mock_text_off));
-                    walkInfo.setMocking(false);
-                } else {
-                    buttonToggleMock.setText(getString(R.string.toggle_mock_text_on));
-                    walkInfo.setMocking(true);
-                }
+                walkInfo.setMocking(!walkInfo.isMocking());
+                setButtons();
+            }
+        });
+
+        buttonSetStepCount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                walkInfo.setSteps(Long.parseLong(editStepCount.getText().toString()));
+            }
+        });
+
+        buttonSetTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                long time = pickerHour.getValue() * 60 * 60 + pickerMinutes.getValue() * 60 + pickerSeconds.getValue();
+                walkInfo.setWalkTime(time);
             }
         });
 
         return view;
+    }
+
+    public void setButtons() {
+        if(buttonSetStepCount != null && buttonSetTime != null && buttonToggleMock != null) {
+            buttonSetStepCount.setEnabled(walkInfo.isMocking());
+            buttonSetTime.setEnabled(walkInfo.isMocking() && tabActivity.isWalkStarted());
+            buttonToggleMock.setText(walkInfo.isMocking() ? getString(R.string.toggle_mock_text_on) : getString(R.string.toggle_mock_text_off));
+        }
     }
 }

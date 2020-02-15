@@ -2,7 +2,6 @@ package com.example.walkwalkrevolution.walktracker;
 
 import android.os.Handler;
 
-import com.example.walkwalkrevolution.TabActivity;
 import com.example.walkwalkrevolution.ui.main.StepCountFragment;
 
 public class WalkUpdate implements IDelayedUpdate {
@@ -10,8 +9,6 @@ public class WalkUpdate implements IDelayedUpdate {
     WalkInfo walkInfo;
     Handler stepUpdateHandler;
     Runnable stepUpdateTask;
-
-    boolean running;
 
     public WalkUpdate(StepCountFragment stepCountFragment, WalkInfo info, int interval) {
         this.stepCountFragment = stepCountFragment;
@@ -24,6 +21,9 @@ public class WalkUpdate implements IDelayedUpdate {
             public void run() {
                 update();
                 stepUpdateHandler.postDelayed(stepUpdateTask, interval);
+                if(!walkInfo.isMocking()) {
+                    walkInfo.incrementWalkTime();
+                }
             }
         };
     }
@@ -43,9 +43,6 @@ public class WalkUpdate implements IDelayedUpdate {
     public void update() {
         stepCountFragment.setWalkStepsText(walkInfo.getWalkSteps());
         stepCountFragment.setWalkDistanceText(walkInfo.getWalkDistance());
-        if(!walkInfo.isMocking()) {
-            walkInfo.incrementWalkTime();
-        }
         stepCountFragment.setTimerText(walkInfo.getWalkTime());
     }
 }

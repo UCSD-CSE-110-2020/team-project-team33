@@ -49,6 +49,8 @@ public class TabActivity extends AppCompatActivity {
 
     private FitnessService fitnessService;
 
+    private boolean walkStarted;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,8 +75,6 @@ public class TabActivity extends AppCompatActivity {
 
         final Button btnStartWalk = findViewById(R.id.buttonStartWalk);
         btnStartWalk.setOnClickListener(new View.OnClickListener() {
-            boolean walkStarted = false;
-
             @Override
             public void onClick(View v) {
                 if(walkStarted) {
@@ -87,6 +87,7 @@ public class TabActivity extends AppCompatActivity {
                     stepCountFragment.getWalkUpdate().start();
                 }
                 walkStarted = !walkStarted;
+                mockFragment.setButtons();
             }
         });
 
@@ -111,7 +112,7 @@ public class TabActivity extends AppCompatActivity {
         routesFragment = new RoutesFragment();
         adapter.addFragment(routesFragment, getString(R.string.routes_tab));
 
-        mockFragment = new MockFragment(stepCountFragment.getWalkInfo(), stepCountFragment.getStepUpdate(), stepCountFragment.getWalkUpdate());
+        mockFragment = new MockFragment(stepCountFragment.getWalkInfo(), this);
         adapter.addFragment(mockFragment, getString(R.string.mock_tab));
 
         viewPager.setAdapter(adapter);
@@ -133,6 +134,10 @@ public class TabActivity extends AppCompatActivity {
 
     public void setStepCount(long stepCount) {
         walkInfo.setSteps(stepCount);
+    }
+
+    public boolean isWalkStarted() {
+        return walkStarted;
     }
 
     @Override
