@@ -20,9 +20,10 @@
             android:id="@+id/editStepCount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:autofillHints=""
             android:ems="10"
-            android:inputType="number"
-            android:autofillHints="" />
+            android:hint="ex: 5000"
+            android:inputType="number" />
 
         <Button
             android:id="@+id/button_set_step_count"
