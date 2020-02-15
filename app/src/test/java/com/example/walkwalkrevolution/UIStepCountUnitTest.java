@@ -3,7 +3,6 @@ package com.example.walkwalkrevolution;
 import android.content.Intent;
 import android.widget.TextView;
 
-import com.example.walkwalkrevolution.fitness.FitnessService;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
 
 import androidx.test.core.app.ActivityScenario;
@@ -27,11 +26,10 @@ public class UIStepCountUnitTest {
     private static final int VALID_HEIGHT = 63;
 
     private Intent intent;
-    private long nextStepCount;
 
     @Before
     public void setUp() {
-        FitnessServiceFactory.put(TEST_SERVICE, TestFitnessService::new);
+        FitnessServiceFactory.put(TEST_SERVICE, MockFitnessService::new);
         intent = new Intent(ApplicationProvider.getApplicationContext(), TabActivity.class);
         intent.putExtra(DataKeys.FITNESS_SERVICE_KEY, TEST_SERVICE);
         intent.putExtra(DataKeys.USER_HEIGHT_KEY, VALID_HEIGHT);
@@ -40,66 +38,41 @@ public class UIStepCountUnitTest {
 
     @Test
     public void testPosativeSteps() {
-        nextStepCount = POSATIVE_STEP_COUNT;
+        MockFitnessService.nextStepCount = POSATIVE_STEP_COUNT;
 
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
             activity.stepCountFragment.getStepUpdate().update();
             TextView textSteps = activity.findViewById(R.id.overall_steps);
-            assertThat(textSteps.getText().toString()).isEqualTo(Long.toString(nextStepCount));
+            assertThat(textSteps.getText().toString()).isEqualTo(Long.toString(MockFitnessService.nextStepCount));
         });
     }
 
     @Test
     public void testNegativeSteps() {
-        nextStepCount = NEGATIVE_STEP_COUNT;
+        MockFitnessService.nextStepCount = NEGATIVE_STEP_COUNT;
 
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
             activity.stepCountFragment.getStepUpdate().update();
             TextView textSteps = activity.findViewById(R.id.overall_steps);
-            assertThat(textSteps.getText().toString()).isEqualTo(Long.toString(nextStepCount));
+            assertThat(textSteps.getText().toString()).isEqualTo(Long.toString(MockFitnessService.nextStepCount));
         });
     }
 
     @Test
     public void testChangedSteps() {
-        nextStepCount = POSATIVE_STEP_COUNT;
+        MockFitnessService.nextStepCount = POSATIVE_STEP_COUNT;
 
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
             activity.stepCountFragment.getStepUpdate().update();
         });
-        nextStepCount += nextStepCount;
+        MockFitnessService.nextStepCount += MockFitnessService.nextStepCount;
         scenario.onActivity(activity -> {
             activity.stepCountFragment.getStepUpdate().update();
             TextView textSteps = activity.findViewById(R.id.overall_steps);
-            assertThat(textSteps.getText().toString()).isEqualTo(Long.toString(nextStepCount));
+            assertThat(textSteps.getText().toString()).isEqualTo(Long.toString(MockFitnessService.nextStepCount));
         });
-    }
-
-    private class TestFitnessService implements FitnessService {
-        private static final String TAG = "[TestFitnessService]: ";
-        private TabActivity tabActivty;
-
-        public TestFitnessService(TabActivity tabActivity) {
-            this.tabActivty = tabActivity;
-        }
-
-        @Override
-        public int getRequestCode() {
-            return 0;
-        }
-
-        @Override
-        public void setup() {
-            System.out.println(TAG + "setup");
-        }
-
-        @Override
-        public void updateStepCount() {
-            System.out.println(TAG + "updateStepCount");
-            tabActivty.setStepCount(nextStepCount);
-        }
     }
 }

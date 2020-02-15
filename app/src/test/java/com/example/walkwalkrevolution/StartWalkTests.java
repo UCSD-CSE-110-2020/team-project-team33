@@ -8,7 +8,6 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.example.walkwalkrevolution.fitness.FitnessService;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
 import com.example.walkwalkrevolution.ui.main.StepCountFragment;
 
@@ -32,11 +31,10 @@ public class StartWalkTests {
 
 
     private Intent intent;
-    private long nextStepCount;
 
     @Before
     public void setUp() {
-        FitnessServiceFactory.put(TEST_SERVICE, TestFitnessService::new);
+        FitnessServiceFactory.put(TEST_SERVICE, MockFitnessService::new);
         intent = new Intent(ApplicationProvider.getApplicationContext(), TabActivity.class);
         intent.putExtra(DataKeys.FITNESS_SERVICE_KEY, TEST_SERVICE);
         intent.putExtra(DataKeys.USER_HEIGHT_KEY, VALID_HEIGHT);
@@ -45,7 +43,7 @@ public class StartWalkTests {
 
     @Test
     public void startButtonChangesText() {
-        nextStepCount = 0;
+        MockFitnessService.nextStepCount = 0;
 
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
@@ -60,7 +58,7 @@ public class StartWalkTests {
 
     @Test
     public void testTimerFormat() {
-        nextStepCount = 0;
+        MockFitnessService.nextStepCount = 0;
 
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
@@ -70,7 +68,7 @@ public class StartWalkTests {
 
     @Test
     public void testTimerUI() {
-        nextStepCount = 0;
+        MockFitnessService.nextStepCount = 0;
 
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
@@ -88,7 +86,7 @@ public class StartWalkTests {
 
     @Test
     public void testStepCountUI() {
-        nextStepCount = 0;
+        MockFitnessService.nextStepCount = 0;
 
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
@@ -98,7 +96,7 @@ public class StartWalkTests {
 
             startWalkButton.performClick();
         });
-        nextStepCount = VALID_STEP_COUNT;
+        MockFitnessService.nextStepCount = VALID_STEP_COUNT;
         scenario.onActivity(activity -> {
             update(activity.stepCountFragment);
 
@@ -110,7 +108,7 @@ public class StartWalkTests {
 
     @Test
     public void testStepDistanceUI() {
-        nextStepCount = 0;
+        MockFitnessService.nextStepCount = 0;
 
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
@@ -119,7 +117,7 @@ public class StartWalkTests {
             startWalkButton.performClick();
         });
 
-        nextStepCount = VALID_STEP_COUNT;
+        MockFitnessService. nextStepCount = VALID_STEP_COUNT;
 
         scenario.onActivity(activity -> {
             TextView walkDist = activity.findViewById(R.id.walk_dist);
@@ -133,30 +131,5 @@ public class StartWalkTests {
     private void update(StepCountFragment stepCountFragment) {
         stepCountFragment.getStepUpdate().update();
         stepCountFragment.getWalkUpdate().update();
-    }
-
-    private class TestFitnessService implements FitnessService {
-        private static final String TAG = "[TestFitnessService]: ";
-        private TabActivity tabActivty;
-
-        public TestFitnessService(TabActivity tabActivity) {
-            this.tabActivty = tabActivity;
-        }
-
-        @Override
-        public int getRequestCode() {
-            return 0;
-        }
-
-        @Override
-        public void setup() {
-            System.out.println(TAG + "setup");
-        }
-
-        @Override
-        public void updateStepCount() {
-            System.out.println(TAG + "updateStepCount");
-            tabActivty.setStepCount(nextStepCount);
-        }
     }
 }
