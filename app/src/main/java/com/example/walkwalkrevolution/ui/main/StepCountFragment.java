@@ -1,11 +1,8 @@
 package com.example.walkwalkrevolution.ui.main;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,14 +14,15 @@ import androidx.fragment.app.Fragment;
 import com.example.walkwalkrevolution.DataKeys;
 import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.fitness.FitnessService;
-import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
 import com.example.walkwalkrevolution.walktracker.IDelayedUpdate;
 import com.example.walkwalkrevolution.walktracker.StepUpdate;
 import com.example.walkwalkrevolution.walktracker.WalkInfo;
-import com.example.walkwalkrevolution.walktracker.WalkUpdate;
 
 public class StepCountFragment extends Fragment {
+
+    private static final int UPDATE_STEPS_INTERVAL = 5000;
+    private static final int SECOND_MILLIS = 1000;
 
     private static final String TAG = "StepCountFragment";
 
@@ -34,20 +32,18 @@ public class StepCountFragment extends Fragment {
     private TextView walkDistanceText;
     private TextView timerText;
 
-    private FitnessService fitnessService;
-
     private IRouteManagement routesManager;
     private SharedPreferences sharedPreferences;
 
     WalkInfo walkInfo;
 
-    IDelayedUpdate stepCountUpdate;
+    IDelayedUpdate stepUpdate;
     IDelayedUpdate walkUpdate;
 
-    public StepCountFragment(WalkInfo w, IDelayedUpdate step, IDelayedUpdate walk) {
+    public StepCountFragment(WalkInfo w) {
         walkInfo = w;
-        stepCountUpdate = step;
-        walkUpdate = walk;
+        stepUpdate = new StepUpdate(this, w, UPDATE_STEPS_INTERVAL);
+        walkUpdate = new StepUpdate(this, w, SECOND_MILLIS);
     }
 
     @Nullable
@@ -69,7 +65,7 @@ public class StepCountFragment extends Fragment {
         setWalkDistanceText(routesManager.getRecentDistance(sharedPreferences));
         setTimerText(routesManager.getRecentTime(sharedPreferences));
 
-        stepCountUpdate.start();
+        stepUpdate.start();
 
         return view;
     }
@@ -109,8 +105,8 @@ public class StepCountFragment extends Fragment {
         return walkInfo;
     }
 
-    public IDelayedUpdate getStepCountUpdate() {
-        return stepCountUpdate;
+    public IDelayedUpdate getStepUpdate() {
+        return stepUpdate;
     }
 
     public IDelayedUpdate getWalkUpdate() {

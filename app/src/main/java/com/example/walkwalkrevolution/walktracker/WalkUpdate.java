@@ -6,13 +6,15 @@ import com.example.walkwalkrevolution.TabActivity;
 import com.example.walkwalkrevolution.ui.main.StepCountFragment;
 
 public class WalkUpdate implements IDelayedUpdate {
-    TabActivity tabActivity;
+    StepCountFragment stepCountFragment;
     WalkInfo walkInfo;
     Handler stepUpdateHandler;
     Runnable stepUpdateTask;
 
-    public WalkUpdate(TabActivity tabActivity, WalkInfo info, int interval) {
-        this.tabActivity = tabActivity;
+    boolean running;
+
+    public WalkUpdate(StepCountFragment stepCountFragment, WalkInfo info, int interval) {
+        this.stepCountFragment = stepCountFragment;
         this.walkInfo = info;
 
         stepUpdateHandler = new Handler();
@@ -28,22 +30,28 @@ public class WalkUpdate implements IDelayedUpdate {
 
     @Override
     public void start() {
-        walkInfo.startWalk();
-        stepUpdateTask.run();
+        if(!running) {
+            running = true;
+            walkInfo.startWalk();
+            stepUpdateTask.run();
+        }
     }
 
     @Override
     public void stop() {
-        stepUpdateHandler.removeCallbacks(stepUpdateTask);
+        if(running) {
+            running = false;
+            stepUpdateHandler.removeCallbacks(stepUpdateTask);
+        }
     }
 
     @Override
     public void update() {
-        tabActivity.stepCountFragment.setWalkStepsText(walkInfo.getWalkSteps());
-        tabActivity.stepCountFragment.setWalkDistanceText(walkInfo.getWalkDistance());
+        stepCountFragment.setWalkStepsText(walkInfo.getWalkSteps());
+        stepCountFragment.setWalkDistanceText(walkInfo.getWalkDistance());
         if(!walkInfo.isMocking()) {
             walkInfo.incrementWalkTime();
         }
-        tabActivity.stepCountFragment.setTimerText(walkInfo.getWalkTime());
+        stepCountFragment.setTimerText(walkInfo.getWalkTime());
     }
 }

@@ -131,7 +131,7 @@ public class StartWalkTests {
     }
 
     private void update(StepCountFragment stepCountFragment) {
-        stepCountFragment.getStepCountUpdate().update();
+        stepCountFragment.getStepUpdate().update();
         stepCountFragment.getWalkUpdate().update();
     }
 

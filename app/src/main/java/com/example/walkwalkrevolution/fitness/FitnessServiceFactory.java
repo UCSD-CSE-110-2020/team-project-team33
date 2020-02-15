@@ -17,9 +17,9 @@ public class FitnessServiceFactory {
         blueprints.put(key, bluePrint);
     }
 
-    public static FitnessService create(String key, TabActivity TabActivity) {
+    public static FitnessService create(String key, TabActivity tabActivity) {
         Log.i(TAG, String.format("creating FitnessService with key %s", key));
-        return blueprints.get(key).create(TabActivity);
+        return blueprints.get(key).create(tabActivity);
     }
 
     public interface BluePrint {

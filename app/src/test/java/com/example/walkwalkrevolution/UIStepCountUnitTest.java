@@ -5,7 +5,6 @@ import android.widget.TextView;
 
 import com.example.walkwalkrevolution.fitness.FitnessService;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
-import com.example.walkwalkrevolution.ui.main.StepCountFragment;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
@@ -45,7 +44,7 @@ public class UIStepCountUnitTest {
 
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
-            activity.stepCountFragment.getStepCountUpdate().update();
+            activity.stepCountFragment.getStepUpdate().update();
             TextView textSteps = activity.findViewById(R.id.overall_steps);
             assertThat(textSteps.getText().toString()).isEqualTo(Long.toString(nextStepCount));
         });
@@ -57,7 +56,7 @@ public class UIStepCountUnitTest {
 
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
-            activity.stepCountFragment.getStepCountUpdate().update();
+            activity.stepCountFragment.getStepUpdate().update();
             TextView textSteps = activity.findViewById(R.id.overall_steps);
             assertThat(textSteps.getText().toString()).isEqualTo(Long.toString(nextStepCount));
         });
@@ -69,11 +68,11 @@ public class UIStepCountUnitTest {
 
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
-            activity.stepCountFragment.getStepCountUpdate().update();
+            activity.stepCountFragment.getStepUpdate().update();
         });
         nextStepCount += nextStepCount;
         scenario.onActivity(activity -> {
-            activity.stepCountFragment.getStepCountUpdate().update();
+            activity.stepCountFragment.getStepUpdate().update();
             TextView textSteps = activity.findViewById(R.id.overall_steps);
             assertThat(textSteps.getText().toString()).isEqualTo(Long.toString(nextStepCount));
         });
