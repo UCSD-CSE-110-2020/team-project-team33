@@ -21,6 +21,9 @@ public class WalkUpdate implements IDelayedUpdate {
             public void run() {
                 update();
                 stepUpdateHandler.postDelayed(stepUpdateTask, interval);
+                if(!walkInfo.isMocking()) {
+                    walkInfo.incrementWalkTime();
+                }
             }
         };
     }
@@ -40,9 +43,6 @@ public class WalkUpdate implements IDelayedUpdate {
     public void update() {
         stepCountFragment.setWalkStepsText(walkInfo.getWalkSteps());
         stepCountFragment.setWalkDistanceText(walkInfo.getWalkDistance());
-        if(!walkInfo.isMocking()) {
-            walkInfo.incrementWalkTime();
-        }
         stepCountFragment.setTimerText(walkInfo.getWalkTime());
     }
 }

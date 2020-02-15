@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.main.MockFragment">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/editStepCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="number"
+            android:autofillHints="" />
+
+        <Button
+            android:id="@+id/button_set_step_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/step_count_button_text" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <NumberPicker
+                android:id="@+id/hour_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/internal_padding" />
+
+
+            <TextView
+                android:id="@+id/hours_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/hours_text" />
+
+            <NumberPicker
+                android:id="@+id/minute_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/internal_padding" />
+
+
+            <TextView
+                android:id="@+id/minutes_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/minutes_text" />
+
+            <NumberPicker
+                android:id="@+id/second_picker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/internal_padding" />
+
+            <TextView
+                android:id="@+id/seconds_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/seconds_text" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/set_time_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/set_time_text" />
+
+        <Button
+            android:id="@+id/toggle_mock_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/toggle_mock_text_off" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
