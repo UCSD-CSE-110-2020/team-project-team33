@@ -3,7 +3,7 @@ package com.example.walkwalkrevolution.fitness;
 import androidx.annotation.NonNull;
 import android.util.Log;
 
-import com.example.walkwalkrevolution.ui.main.StepCountFragment;
+import com.example.walkwalkrevolution.TabActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.fitness.Fitness;
@@ -19,10 +19,10 @@ public class GoogleFitAdapter implements FitnessService {
     private final String TAG = "GoogleFitAdapter";
     private GoogleSignInAccount account;
 
-    private StepCountFragment fragment;
+    private TabActivity activity;
 
-    public GoogleFitAdapter(StepCountFragment frag) {
-        this.fragment = frag;
+    public GoogleFitAdapter(TabActivity act) {
+        this.activity = act;
     }
 
 
@@ -33,10 +33,10 @@ public class GoogleFitAdapter implements FitnessService {
                 .build();
 
 
-        account = GoogleSignIn.getAccountForExtension(fragment.getContext(), fitnessOptions);
+        account = GoogleSignIn.getAccountForExtension(activity, fitnessOptions);
         if (!GoogleSignIn.hasPermissions(account, fitnessOptions)) {
             GoogleSignIn.requestPermissions(
-                    fragment, // your activity
+                    activity, // your activity
                     GOOGLE_FIT_PERMISSIONS_REQUEST_CODE,
                     account,
                     fitnessOptions);
@@ -51,7 +51,7 @@ public class GoogleFitAdapter implements FitnessService {
             return;
         }
 
-        Fitness.getRecordingClient(fragment.getContext(), account)
+        Fitness.getRecordingClient(activity, account)
                 .subscribe(DataType.TYPE_STEP_COUNT_CUMULATIVE)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -77,7 +77,7 @@ public class GoogleFitAdapter implements FitnessService {
             return;
         }
 
-        Fitness.getHistoryClient(fragment.getContext(), account)
+        Fitness.getHistoryClient(activity, account)
                 .readDailyTotal(DataType.TYPE_STEP_COUNT_DELTA)
                 .addOnSuccessListener(
                         new OnSuccessListener<DataSet>() {
@@ -89,7 +89,7 @@ public class GoogleFitAdapter implements FitnessService {
                                                 ? 0
                                                 : dataSet.getDataPoints().get(0).getValue(Field.FIELD_STEPS).asInt();
 
-                                fragment.setStepCount(total);
+                                activity.setStepCount(total);
                                 Log.d(TAG, "Total steps: " + total);
                             }
                         })

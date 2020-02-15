@@ -7,9 +7,7 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import com.example.walkwalkrevolution.fitness.FitnessService;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
-import com.example.walkwalkrevolution.ui.main.StepCountFragment;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,11 +28,10 @@ public class DistanceUnitTest {
     private static final double EXPECTED_DIST = (((VALID_HEIGHT * 0.413) / 12 ) / 5280) * VALID_STEP_COUNT;
 
     private Intent intent;
-    private long nextStepCount;
 
     @Before
     public void setUp() {
-        FitnessServiceFactory.put(TEST_SERVICE, TestFitnessService::new);
+        FitnessServiceFactory.put(TEST_SERVICE, MockFitnessService::new);
         intent = new Intent(ApplicationProvider.getApplicationContext(), TabActivity.class);
         intent.putExtra(DataKeys.FITNESS_SERVICE_KEY, TEST_SERVICE);
         intent.putExtra(DataKeys.USER_HEIGHT_KEY, VALID_HEIGHT);
@@ -62,11 +59,11 @@ public class DistanceUnitTest {
 
     @Test
     public void testUINormalDistanceShown() {
-        nextStepCount = VALID_STEP_COUNT;
+        MockFitnessService.nextStepCount = VALID_STEP_COUNT;
 
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
-            activity.stepCountFragment.getStepCountUpdate().update();
+            activity.stepCountFragment.getStepUpdate().update();
             TextView textDist = activity.findViewById(R.id.overall_dist);
             assertThat(textDist.getText().toString())
                     .isEqualTo(String.format(activity
@@ -76,7 +73,7 @@ public class DistanceUnitTest {
 
     @Test
     public void testUIZeroHeightDistanceShown() {
-        nextStepCount = VALID_STEP_COUNT;
+        MockFitnessService.nextStepCount = VALID_STEP_COUNT;
         intent.putExtra(DataKeys.USER_HEIGHT_KEY, 0);
 
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
@@ -85,30 +82,5 @@ public class DistanceUnitTest {
             assertThat(textDist.getText().toString())
                     .isEqualTo(String.format(activity.getString(R.string.dist_format), 0.0));
         });
-    }
-
-    private class TestFitnessService implements FitnessService {
-        private static final String TAG = "[TestFitnessService]: ";
-        private StepCountFragment stepCountFragment;
-
-        public TestFitnessService(StepCountFragment stepCountFragment) {
-            this.stepCountFragment = stepCountFragment;
-        }
-
-        @Override
-        public int getRequestCode() {
-            return 0;
-        }
-
-        @Override
-        public void setup() {
-            System.out.println(TAG + "setup");
-        }
-
-        @Override
-        public void updateStepCount() {
-            System.out.println(TAG + "updateStepCount");
-            stepCountFragment.setStepCount(nextStepCount);
-        }
     }
 }
