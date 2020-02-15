@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
+import com.example.walkwalkrevolution.routemanagement.Route;
 import com.example.walkwalkrevolution.ui.main.RoutesFragment;
 import com.example.walkwalkrevolution.ui.main.StepCountFragment;
 import com.example.walkwalkrevolution.walktracker.IDelayedUpdate;
@@ -22,7 +23,7 @@ import com.example.walkwalkrevolution.walktracker.WalkUpdate;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-public class RouteInfoActivity extends AppCompatActivity implements IDelayedUpdate {
+public class RouteInfoActivity extends AppCompatActivity  {
 
 
     private TextView route_info_steps;
@@ -39,6 +40,13 @@ public class RouteInfoActivity extends AppCompatActivity implements IDelayedUpda
     private SharedPreferences sharedPreferences;
     public IRouteManagement routesManager;
 
+    IDelayedUpdate stepUpdate;
+    IDelayedUpdate walkUpdate;
+
+
+
+    public RouteInfoActivity(WalkInfo w, Route route){
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,6 +73,7 @@ public class RouteInfoActivity extends AppCompatActivity implements IDelayedUpda
                     startBttn.setText("Stop walk/run");
 
                     //start updating
+
 
 
 
@@ -103,6 +112,18 @@ public class RouteInfoActivity extends AppCompatActivity implements IDelayedUpda
 
     private String formatDigits(int x){
         return x < 10 ? "0" + x : String.valueOf(x);
+    }
+
+    public WalkInfo getWalkInfo() {
+        return walkInfo;
+    }
+
+    public IDelayedUpdate getStepUpdate() {
+        return stepUpdate;
+    }
+
+    public IDelayedUpdate getWalkUpdate() {
+        return walkUpdate;
     }
 
 

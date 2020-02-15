@@ -3,7 +3,9 @@ package com.example.walkwalkrevolution.walktracker;
 import com.example.walkwalkrevolution.Distance;
 import com.example.walkwalkrevolution.fitness.FitnessService;
 
-public class WalkInfo {
+import java.io.Serializable;
+
+public class WalkInfo implements Serializable {
     private long steps;
     private long startSteps;
     private long walkTime;

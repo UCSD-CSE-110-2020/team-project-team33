@@ -32,7 +32,6 @@ public class RouteInfoUpdate implements IDelayedUpdate {
 
     }
 
-
     @Override
     public void start() {
         stepUpdateTask.run();
