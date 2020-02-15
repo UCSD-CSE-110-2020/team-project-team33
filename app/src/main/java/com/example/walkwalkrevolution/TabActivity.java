@@ -54,11 +54,6 @@ public class TabActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tab);
 
-        sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
-        viewPager = (ViewPager) findViewById(R.id.view_pager);
-        setupViewPager(viewPager);
-
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
 
         routesManager = (IRouteManagement) getIntent().getSerializableExtra(DataKeys.ROUTE_MANAGER_KEY);
@@ -67,6 +62,13 @@ public class TabActivity extends AppCompatActivity {
         fitnessService = FitnessServiceFactory.create(fitnessServiceKey, this);
         fitnessService.setup();
 
+        walkInfo = new WalkInfo(getIntent().getIntExtra(DataKeys.USER_HEIGHT_KEY, 0), fitnessService);
+
+
+        // Keep these after all initializations
+        sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        viewPager = (ViewPager) findViewById(R.id.view_pager);
+        setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
 
         final Button btnStartWalk = findViewById(R.id.buttonStartWalk);
@@ -103,8 +105,6 @@ public class TabActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        walkInfo = new WalkInfo(getIntent().getIntExtra(DataKeys.USER_HEIGHT_KEY, 0), fitnessService);
-        walkInfo.setMocking(getIntent().getBooleanExtra(DataKeys.MOCKING_KEY, false));
         stepCountFragment = new StepCountFragment(walkInfo);
         adapter.addFragment(stepCountFragment, getString(R.string.home_tab));
 
@@ -113,6 +113,7 @@ public class TabActivity extends AppCompatActivity {
 
         mockFragment = new MockFragment(stepCountFragment.getWalkInfo(), stepCountFragment.getStepUpdate(), stepCountFragment.getWalkUpdate());
         adapter.addFragment(mockFragment, getString(R.string.mock_tab));
+
         viewPager.setAdapter(adapter);
     }
 

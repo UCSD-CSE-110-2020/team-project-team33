@@ -30,19 +30,13 @@ public class WalkUpdate implements IDelayedUpdate {
 
     @Override
     public void start() {
-        if(!running) {
-            running = true;
-            walkInfo.startWalk();
-            stepUpdateTask.run();
-        }
+        walkInfo.startWalk();
+        stepUpdateTask.run();
     }
 
     @Override
     public void stop() {
-        if(running) {
-            running = false;
-            stepUpdateHandler.removeCallbacks(stepUpdateTask);
-        }
+        stepUpdateHandler.removeCallbacks(stepUpdateTask);
     }
 
     @Override

@@ -10,8 +10,6 @@ public class StepUpdate implements IDelayedUpdate {
     Handler stepUpdateHandler;
     Runnable stepUpdateTask;
 
-    boolean running;
-
     public StepUpdate(StepCountFragment stepCountFragment, WalkInfo walk, int interval) {
         this.stepCountFragment = stepCountFragment;
         walkInfo = walk;
@@ -29,18 +27,12 @@ public class StepUpdate implements IDelayedUpdate {
 
     @Override
     public void start() {
-        if(!running) {
-            running = true;
-            stepUpdateTask.run();
-        }
+        stepUpdateTask.run();
     }
 
     @Override
     public void stop() {
-        if(running) {
-            running = false;
-            stepUpdateHandler.removeCallbacks(stepUpdateTask);
-        }
+        stepUpdateHandler.removeCallbacks(stepUpdateTask);
     }
 
     @Override

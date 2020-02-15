@@ -9,7 +9,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.example.walkwalkrevolution.fitness.FitnessService;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
-import com.example.walkwalkrevolution.ui.main.StepCountFragment;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -89,10 +88,10 @@ public class DistanceUnitTest {
 
     private class TestFitnessService implements FitnessService {
         private static final String TAG = "[TestFitnessService]: ";
-        private StepCountFragment stepCountFragment;
+        private TabActivity tabActivty;
 
-        public TestFitnessService(StepCountFragment stepCountFragment) {
-            this.stepCountFragment = stepCountFragment;
+        public TestFitnessService(TabActivity tabActivity) {
+            this.tabActivty = tabActivity;
         }
 
         @Override
@@ -108,7 +107,7 @@ public class DistanceUnitTest {
         @Override
         public void updateStepCount() {
             System.out.println(TAG + "updateStepCount");
-            stepCountFragment.setStepCount(nextStepCount);
+            tabActivty.setStepCount(nextStepCount);
         }
     }
 }

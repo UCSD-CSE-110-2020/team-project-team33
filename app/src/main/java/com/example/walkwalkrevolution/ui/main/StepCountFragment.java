@@ -18,6 +18,7 @@ import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
 import com.example.walkwalkrevolution.walktracker.IDelayedUpdate;
 import com.example.walkwalkrevolution.walktracker.StepUpdate;
 import com.example.walkwalkrevolution.walktracker.WalkInfo;
+import com.example.walkwalkrevolution.walktracker.WalkUpdate;
 
 public class StepCountFragment extends Fragment {
 
@@ -43,7 +44,7 @@ public class StepCountFragment extends Fragment {
     public StepCountFragment(WalkInfo w) {
         walkInfo = w;
         stepUpdate = new StepUpdate(this, w, UPDATE_STEPS_INTERVAL);
-        walkUpdate = new StepUpdate(this, w, SECOND_MILLIS);
+        walkUpdate = new WalkUpdate(this, w, SECOND_MILLIS);
     }
 
     @Nullable
