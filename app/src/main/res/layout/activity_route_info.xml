@@ -138,6 +138,25 @@
 
         </TableLayout>
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="299dp"
+            android:layout_marginEnd="29dp"
+            android:layout_marginBottom="27dp"
+            android:clickable="true"
+            app:backgroundTint="#00FFFFFF"
+            app:borderWidth="0dp"
+            app:hoveredFocusedTranslationZ="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/tableLayout3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:maxImageSize="42dp"
+            app:pressedTranslationZ="0dp"
+            app:srcCompat="@android:drawable/btn_star_big_on" />
+
         <TextView
             android:id="@+id/route_features"
             android:layout_width="0dp"
@@ -177,25 +196,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/route_info_notes" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="299dp"
-            android:layout_marginEnd="29dp"
-            android:layout_marginBottom="27dp"
-            android:clickable="true"
-            app:backgroundTint="#00FFFFFF"
-            app:borderWidth="0dp"
-            app:hoveredFocusedTranslationZ="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/tableLayout3"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:maxImageSize="42dp"
-            app:pressedTranslationZ="0dp"
-            app:srcCompat="@android:drawable/btn_star_big_on" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
