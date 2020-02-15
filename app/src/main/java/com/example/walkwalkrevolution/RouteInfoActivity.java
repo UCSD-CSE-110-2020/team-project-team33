@@ -22,7 +22,7 @@ import com.example.walkwalkrevolution.walktracker.WalkUpdate;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-public class RouteInfo extends AppCompatActivity implements IDelayedUpdate {
+public class RouteInfoActivity extends AppCompatActivity implements IDelayedUpdate {
 
 
     private TextView route_info_steps;
@@ -62,10 +62,11 @@ public class RouteInfo extends AppCompatActivity implements IDelayedUpdate {
                     setWalkDistanceText(0);
                     setWalkStepsText(0);
                     setTimerText(0);
-
                     startBttn.setText("Stop walk/run");
 
                     //start updating
+
+
 
                 }else{
                     startBttn.setText("Start new walk/run");
@@ -81,7 +82,7 @@ public class RouteInfo extends AppCompatActivity implements IDelayedUpdate {
 
 
     public void setWalkStepsText(long steps) {
-        route_info_dist.setText(Long.toString(steps));
+        route_info_steps.setText(Long.toString(steps));
     }
 
     public void setWalkDistanceText(double distance) {

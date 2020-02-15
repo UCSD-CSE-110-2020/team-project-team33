@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".RouteInfo"
+            android:name=".RouteInfoActivity"
             android:label="@string/title_activity_route_info"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
