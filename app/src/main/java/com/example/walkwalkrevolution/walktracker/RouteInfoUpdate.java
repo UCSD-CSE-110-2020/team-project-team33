@@ -29,7 +29,6 @@ public class RouteInfoUpdate implements IDelayedUpdate {
                 stepUpdateHandler.postDelayed(stepUpdateTask, interval);
             }
         };
-
     }
 
     @Override
@@ -46,5 +45,6 @@ public class RouteInfoUpdate implements IDelayedUpdate {
     public void update() {
         routeInfoActivity.setWalkStepsText(walkInfo.getSteps());
         routeInfoActivity.setWalkDistanceText(walkInfo.getDistance());
+        routeInfoActivity.setTimerText(walkInfo.getWalkTime());
     }
 }

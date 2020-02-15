@@ -17,22 +17,28 @@ import com.example.walkwalkrevolution.routemanagement.Route;
 import com.example.walkwalkrevolution.ui.main.RoutesFragment;
 import com.example.walkwalkrevolution.ui.main.StepCountFragment;
 import com.example.walkwalkrevolution.walktracker.IDelayedUpdate;
+import com.example.walkwalkrevolution.walktracker.RouteInfoUpdate;
 import com.example.walkwalkrevolution.walktracker.StepUpdate;
 import com.example.walkwalkrevolution.walktracker.WalkInfo;
 import com.example.walkwalkrevolution.walktracker.WalkUpdate;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.List;
+
 public class RouteInfoActivity extends AppCompatActivity  {
 
-
+    private TextView route_info_title;
+    private TextView route_info_startLoc;
+    private TextView route_info_features;
     private TextView route_info_steps;
     private TextView route_info_time;
     private TextView route_info_dist;
+    private List<String> features;
 
 
-    StepCountFragment stepCountFragment;
     WalkInfo walkInfo;
+    Route route;
     Handler stepUpdateHandler;
     Runnable stepUpdateTask;
 
@@ -40,12 +46,16 @@ public class RouteInfoActivity extends AppCompatActivity  {
     private SharedPreferences sharedPreferences;
     public IRouteManagement routesManager;
 
-    IDelayedUpdate stepUpdate;
-    IDelayedUpdate walkUpdate;
+    IDelayedUpdate routeInfoUpdate;
 
 
 
     public RouteInfoActivity(WalkInfo w, Route route){
+        walkInfo = w;
+        this.route = route;
+        features = route.getFeatures();
+        routeInfoUpdate = new RouteInfoUpdate(this, w, Constants.SECOND_MILLIS);
+
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,10 +64,25 @@ public class RouteInfoActivity extends AppCompatActivity  {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        route_info_title = findViewById(R.id.route_info_title);
+        route_info_startLoc = findViewById(R.id.route_info_startLoc_value);
+        route_info_features = findViewById(R.id.route_features);
+        route_info_steps = findViewById(R.id.route_steps_value);
+        route_info_time = findViewById(R.id.route_time_value);
+        route_info_dist = findViewById(R.id.route_dist_value);
 
-         route_info_steps = findViewById(R.id.route_steps_value);
-         route_info_time = findViewById(R.id.route_time_value);
-         route_info_dist = findViewById(R.id.route_dist_value);
+        route_info_title.setText(route.getName());
+        route_info_startLoc.setText(route.getStartLoc());
+        setWalkStepsText(route.getSteps());
+        setWalkDistanceText(route.getDistance());
+        setTimerText(route.getTime());
+
+        String featuresString = "";
+        for (int i = 0; i < features.size(); i++) {
+            featuresString += features.get(i) + "    ";
+        }
+        route_info_features.setText(featuresString);
+
 
         Button startBttn = findViewById(R.id.route_info_bttn);
         startBttn.setOnClickListener(new View.OnClickListener() {
@@ -73,17 +98,13 @@ public class RouteInfoActivity extends AppCompatActivity  {
                     startBttn.setText("Stop walk/run");
 
                     //start updating
-
-
-
-
+                    getRouteInfoUpdate().start();
                 }else{
                     startBttn.setText("Start new walk/run");
+                    getRouteInfoUpdate().stop();
 
                 }
-
                 walkStarted = !walkStarted;
-
             }
         });
     }
@@ -114,17 +135,7 @@ public class RouteInfoActivity extends AppCompatActivity  {
         return x < 10 ? "0" + x : String.valueOf(x);
     }
 
-    public WalkInfo getWalkInfo() {
-        return walkInfo;
+    public IDelayedUpdate getRouteInfoUpdate() {
+        return routeInfoUpdate;
     }
-
-    public IDelayedUpdate getStepUpdate() {
-        return stepUpdate;
-    }
-
-    public IDelayedUpdate getWalkUpdate() {
-        return walkUpdate;
-    }
-
-
 }
