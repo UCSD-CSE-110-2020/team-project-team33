@@ -3,6 +3,7 @@ package com.example.walkwalkrevolution;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import androidx.test.espresso.Espresso;
 import androidx.test.platform.app.InstrumentationRegistry;
@@ -33,8 +34,9 @@ public class SaveRouteEspressoTest {
     private RoutesManager routesManager;
 
     public SaveRouteEspressoTest(){
-         sp = new MockSharedPreference();
-         routesManager = new RoutesManager(sp);
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        sp = context.getSharedPreferences(DataKeys.USER_NAME_KEY, Context.MODE_PRIVATE);
+        routesManager = new RoutesManager(sp);
     }
 
     @Rule
@@ -51,13 +53,13 @@ public class SaveRouteEspressoTest {
         }
 
 
-        SharedPreferences getSharedPreferences(String name, int mode){
-            return sp;
-        }
     };
 
     @Test
     public void testSaveWalk(){
+
+
+
         String routeName = "My Route";
         String startLoc = "home";
 
@@ -104,8 +106,8 @@ public class SaveRouteEspressoTest {
             e.printStackTrace();
         }
 
-        routesManager.saveRoute(sp,
-               new Route(routeName, startLoc, STEPS, DISTANCE, TIME, null));
+        //routesManager.saveRoute(sp,
+        //       new Route(routeName, startLoc, STEPS, DISTANCE, TIME, null));
 
         assertEquals(routesManager.getRecentSteps(sp), STEPS);
         assertEquals(routesManager.getRecentTime(sp), TIME);
