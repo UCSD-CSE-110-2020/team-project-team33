@@ -63,7 +63,6 @@ public class TabActivity extends AppCompatActivity {
         setupViewPager(viewPager);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
 
         routesManager = (IRouteManagement) getIntent().getSerializableExtra(DataKeys.ROUTE_MANAGER_KEY);
 
@@ -71,6 +70,8 @@ public class TabActivity extends AppCompatActivity {
         fitnessService = FitnessServiceFactory.create(fitnessServiceKey, this);
 
         fitnessService.setup();
+
+        tabLayout.setupWithViewPager(viewPager);
 
         final Button btnStartWalk = findViewById(R.id.buttonStartWalk);
         btnStartWalk.setOnClickListener(new View.OnClickListener() {
@@ -107,6 +108,7 @@ public class TabActivity extends AppCompatActivity {
         SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         walkInfo = new WalkInfo(getIntent().getIntExtra(DataKeys.USER_HEIGHT_KEY, 0), fitnessService);
+        System.out.println(fitnessService);
         walkInfo.setMocking(getIntent().getBooleanExtra(DataKeys.MOCKING_KEY, false));
         stepCountUpdate = new StepUpdate(this, walkInfo, UPDATE_STEPS_INTERVAL);
         walkUpdate = new WalkUpdate(this, walkInfo, SECOND_MILLIS);

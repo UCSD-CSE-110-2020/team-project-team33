@@ -3,7 +3,6 @@ package com.example.walkwalkrevolution.fitness;
 import android.util.Log;
 
 import com.example.walkwalkrevolution.TabActivity;
-import com.example.walkwalkrevolution.ui.main.StepCountFragment;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -81,10 +81,10 @@ public class UIStepCountUnitTest {
 
     private class TestFitnessService implements FitnessService {
         private static final String TAG = "[TestFitnessService]: ";
-        private StepCountFragment stepCountFragment;
+        private TabActivity tabActivity;
 
-        public TestFitnessService(StepCountFragment stepCountFragment) {
-            this.stepCountFragment = stepCountFragment;
+        public TestFitnessService(TabActivity tabActivity) {
+            this.tabActivity = tabActivity;
         }
 
         @Override
@@ -100,7 +100,7 @@ public class UIStepCountUnitTest {
         @Override
         public void updateStepCount() {
             System.out.println(TAG + "updateStepCount");
-            stepCountFragment.setStepCount(nextStepCount);
+            tabActivity.setStepCount(nextStepCount);
         }
     }
 }
