@@ -1,13 +1,15 @@
 package com.example.walkwalkrevolution;
 
 import android.content.Intent;
+import android.widget.EditText;
 import android.widget.TextView;
-
-import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
+
+import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
+import com.example.walkwalkrevolution.walktracker.WalkInfo;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +20,7 @@ import static com.google.common.truth.Truth.assertThat;
 
 @RunWith(AndroidJUnit4.class)
 @LooperMode(LooperMode.Mode.PAUSED)
-public class UIStepCountUnitTest {
+public class TestMock {
     private static final String TEST_SERVICE = "TEST_SERVICE";
 
     private static final int POSATIVE_STEP_COUNT = 237;
@@ -37,42 +39,32 @@ public class UIStepCountUnitTest {
     }
 
     @Test
-    public void testPosativeSteps() {
-        MockFitnessService.nextStepCount = POSATIVE_STEP_COUNT;
-
+    public void testWalkInfoMocking() {
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
+            activity.stepCountFragment.getWalkInfo().setMocking(true);
+            activity.stepCountFragment.getWalkInfo().setSteps(POSATIVE_STEP_COUNT);
             activity.stepCountFragment.getStepUpdate().update();
-            TextView textSteps = activity.findViewById(R.id.overall_steps);
-            assertThat(textSteps.getText().toString()).isEqualTo(Long.toString(MockFitnessService.nextStepCount));
+
+            TextView steps = activity.findViewById(R.id.overall_steps);
+            assertThat(steps.getText().toString()).isEqualTo(Long.toString(POSATIVE_STEP_COUNT));
         });
     }
 
     @Test
-    public void testNegativeSteps() {
-        MockFitnessService.nextStepCount = NEGATIVE_STEP_COUNT;
-
+    public void testWalkInfoWalkMocking() {
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
+            activity.stepCountFragment.getWalkInfo().setMocking(true);
+            activity.stepCountFragment.getWalkInfo().setSteps(POSATIVE_STEP_COUNT);
             activity.stepCountFragment.getStepUpdate().update();
-            TextView textSteps = activity.findViewById(R.id.overall_steps);
-            assertThat(textSteps.getText().toString()).isEqualTo(Long.toString(MockFitnessService.nextStepCount));
-        });
-    }
+            activity.stepCountFragment.getWalkUpdate().update();
+            activity.stepCountFragment.getWalkInfo().startWalk();
+            activity.stepCountFragment.getWalkInfo().setSteps(POSATIVE_STEP_COUNT + POSATIVE_STEP_COUNT);
 
-    @Test
-    public void testChangedSteps() {
-        MockFitnessService.nextStepCount = POSATIVE_STEP_COUNT;
 
-        ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
-        scenario.onActivity(activity -> {
-            activity.stepCountFragment.getStepUpdate().update();
-        });
-        MockFitnessService.nextStepCount += MockFitnessService.nextStepCount;
-        scenario.onActivity(activity -> {
-            activity.stepCountFragment.getStepUpdate().update();
-            TextView textSteps = activity.findViewById(R.id.overall_steps);
-            assertThat(textSteps.getText().toString()).isEqualTo(Long.toString(MockFitnessService.nextStepCount));
+            TextView steps = activity.findViewById(R.id.walk_steps);
+            assertThat(steps.getText().toString()).isEqualTo(Long.toString(POSATIVE_STEP_COUNT));
         });
     }
 }

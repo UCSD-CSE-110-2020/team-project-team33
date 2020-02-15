@@ -1,6 +1,5 @@
 package com.example.walkwalkrevolution;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
@@ -13,9 +12,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
-import com.example.walkwalkrevolution.fitness.FitnessService;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
-import com.example.walkwalkrevolution.ui.main.StepCountFragment;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -39,13 +36,11 @@ import static org.hamcrest.Matchers.is;
 public class ExampleEspressoTest {
     private static final String TEST_SERVICE = "TEST_SERVICE";
 
-    private long nextStepCount = 247;
-
     @Rule
     public ActivityTestRule<HeightActivity> mActivityTestRule = new ActivityTestRule<HeightActivity>(HeightActivity.class) {
         @Override
         protected Intent getActivityIntent() {
-            FitnessServiceFactory.put(TEST_SERVICE, TestFitnessService::new);
+            FitnessServiceFactory.put(TEST_SERVICE, MockFitnessService::new);
             Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
             Intent intent = new Intent(targetContext, HeightActivity.class);
             intent.putExtra(DataKeys.FITNESS_SERVICE_KEY, TEST_SERVICE);
@@ -56,6 +51,7 @@ public class ExampleEspressoTest {
 
     @Test
     public void exampleEspressoTest() {
+        MockFitnessService.nextStepCount = 247;
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
@@ -85,14 +81,14 @@ public class ExampleEspressoTest {
         }
 
         ViewInteraction textView = onView(
-                allOf(withId(R.id.overall_steps), withText(String.valueOf(nextStepCount)),
+                allOf(withId(R.id.overall_steps), withText(String.valueOf(MockFitnessService.nextStepCount)),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.tableLayout),
                                         1),
                                 1),
                         isDisplayed()));
-        textView.check(matches(withText(String.valueOf(nextStepCount))));
+        textView.check(matches(withText(String.valueOf(MockFitnessService.nextStepCount))));
 
         ViewInteraction textView2 = onView(
                 allOf(withId(R.id.overall_dist), withText("0.12 mi"),
@@ -122,30 +118,5 @@ public class ExampleEspressoTest {
                         && view.equals(((ViewGroup) parent).getChildAt(position));
             }
         };
-    }
-
-    private class TestFitnessService implements FitnessService {
-        private static final String TAG = "[TestFitnessService]: ";
-        private StepCountFragment stepCountFragment;
-
-        public TestFitnessService(StepCountFragment stepCountFragment) {
-            this.stepCountFragment = stepCountFragment;
-        }
-
-        @Override
-        public int getRequestCode() {
-            return 0;
-        }
-
-        @Override
-        public void setup() {
-            System.out.println(TAG + "setup");
-        }
-
-        @Override
-        public void updateStepCount() {
-            System.out.println(TAG + "updateStepCount");
-            stepCountFragment.setStepCount(nextStepCount);
-        }
     }
 }

@@ -1,11 +1,8 @@
 package com.example.walkwalkrevolution.ui.main;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +14,6 @@ import androidx.fragment.app.Fragment;
 import com.example.walkwalkrevolution.DataKeys;
 import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.fitness.FitnessService;
-import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
 import com.example.walkwalkrevolution.walktracker.IDelayedUpdate;
 import com.example.walkwalkrevolution.walktracker.StepUpdate;
@@ -26,10 +22,10 @@ import com.example.walkwalkrevolution.walktracker.WalkUpdate;
 
 public class StepCountFragment extends Fragment {
 
-    private static final String TAG = "StepCountFragment";
-
     private static final int UPDATE_STEPS_INTERVAL = 5000;
     private static final int SECOND_MILLIS = 1000;
+
+    private static final String TAG = "StepCountFragment";
 
     private TextView dailyStepsText;
     private TextView dailyDistanceText;
@@ -37,15 +33,19 @@ public class StepCountFragment extends Fragment {
     private TextView walkDistanceText;
     private TextView timerText;
 
-    private FitnessService fitnessService;
-
     private IRouteManagement routesManager;
     private SharedPreferences sharedPreferences;
 
     WalkInfo walkInfo;
 
-    IDelayedUpdate stepCountUpdate;
+    IDelayedUpdate stepUpdate;
     IDelayedUpdate walkUpdate;
+
+    public StepCountFragment(WalkInfo w) {
+        walkInfo = w;
+        stepUpdate = new StepUpdate(this, w, UPDATE_STEPS_INTERVAL);
+        walkUpdate = new WalkUpdate(this, w, SECOND_MILLIS);
+    }
 
     @Nullable
     @Override
@@ -66,40 +66,9 @@ public class StepCountFragment extends Fragment {
         setWalkDistanceText(routesManager.getRecentDistance(sharedPreferences));
         setTimerText(routesManager.getRecentTime(sharedPreferences));
 
-        boolean mock = getActivity().getIntent().getBooleanExtra(DataKeys.MOCKING_KEY, false);
-        if(!mock) {
-            String fitnessServiceKey = getActivity().getIntent().getStringExtra(DataKeys.FITNESS_SERVICE_KEY);
-            fitnessService = FitnessServiceFactory.create(fitnessServiceKey, this);
-
-            fitnessService.setup();
-        }
-
-        walkInfo = new WalkInfo(getActivity().getIntent().getIntExtra(DataKeys.USER_HEIGHT_KEY, 0), fitnessService);
-        walkInfo.setMocking(mock);
-
-        stepCountUpdate = new StepUpdate(this, walkInfo, UPDATE_STEPS_INTERVAL);
-        stepCountUpdate.start();
-        walkUpdate = new WalkUpdate(this, walkInfo, SECOND_MILLIS);
+        stepUpdate.start();
 
         return view;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // If authentication was required during google fit setup, this will be called after the user authenticates
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == fitnessService.getRequestCode()) {
-                fitnessService.updateStepCount();
-            }
-        } else {
-            Log.e(TAG, "ERROR, google fit result code: " + resultCode);
-        }
-    }
-
-    public void setStepCount(long stepCount) {
-        walkInfo.setSteps(stepCount);
     }
 
     public void setDailyStepsText(long steps) {
@@ -137,8 +106,8 @@ public class StepCountFragment extends Fragment {
         return walkInfo;
     }
 
-    public IDelayedUpdate getStepCountUpdate() {
-        return stepCountUpdate;
+    public IDelayedUpdate getStepUpdate() {
+        return stepUpdate;
     }
 
     public IDelayedUpdate getWalkUpdate() {
