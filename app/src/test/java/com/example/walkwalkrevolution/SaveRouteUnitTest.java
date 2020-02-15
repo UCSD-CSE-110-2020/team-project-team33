@@ -43,7 +43,7 @@ public class SaveRouteUnitTest {
     public void testSavedRouteWithStartUI() {
         ActivityScenario<EnterRouteInfoActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
-            EditText nameField = (EditText) activity.findViewById(R.id.routeName);
+            EditText nameField = (EditText) activity.findViewById(R.id.routeSteps);
             EditText startField = (EditText) activity.findViewById(R.id.startLoc);
 
             nameField.setText(DEFAULT_NAME);
@@ -59,7 +59,7 @@ public class SaveRouteUnitTest {
     public void testSavedRouteNoNameUI() {
         ActivityScenario<EnterRouteInfoActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
-            EditText nameField = (EditText) activity.findViewById(R.id.routeName);
+            EditText nameField = (EditText) activity.findViewById(R.id.routeSteps);
             EditText startField = (EditText) activity.findViewById(R.id.startLoc);
 
             startField.setText(DEFAULT_START);
@@ -74,7 +74,7 @@ public class SaveRouteUnitTest {
     public void testSavedRouteWithStart() {
         ActivityScenario<EnterRouteInfoActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
-            EditText nameField = (EditText) activity.findViewById(R.id.routeName);
+            EditText nameField = (EditText) activity.findViewById(R.id.routeSteps);
             EditText startField = (EditText) activity.findViewById(R.id.startLoc);
 
             nameField.setText(DEFAULT_NAME);

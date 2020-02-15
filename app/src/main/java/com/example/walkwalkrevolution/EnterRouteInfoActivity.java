@@ -47,7 +47,7 @@ public class EnterRouteInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                EditText nameField = (EditText) findViewById(R.id.routeName);
+                EditText nameField = (EditText) findViewById(R.id.routeSteps);
                 EditText startField = (EditText) findViewById(R.id.startLoc);
                 String name = nameField.getText().toString();
                 if(name.trim().length() == 0){
