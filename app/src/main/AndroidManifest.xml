@@ -10,13 +10,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".RouteInfo"
+            android:label="@string/title_activity_route_info"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".EnterRouteInfoActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".TabActivity"
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".HeightActivity"
             android:screenOrientation="portrait" />

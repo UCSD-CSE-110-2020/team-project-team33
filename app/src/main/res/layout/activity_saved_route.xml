@@ -52,17 +52,17 @@
             android:background="@drawable/border"
             android:text="TextView"
             android:textSize="18sp"
-            app:layout_constraintBottom_toTopOf="@+id/start"
+            app:layout_constraintBottom_toTopOf="@+id/start_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/features" />
 
         <Button
-            android:id="@+id/start"
+            android:id="@+id/start_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:text="START"
+            android:text="@string/start_string"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -88,7 +88,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="STEPS"
+                    android:text="@string/step_count_string"
                     android:textSize="18sp" />
 
                 <TextView
@@ -96,7 +96,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="5,000"
+                    android:text="@string/step_placeholder"
                     android:textAlignment="center"
                     android:textSize="18sp" />
             </TableRow>
@@ -110,7 +110,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="DISTANCE"
+                    android:text="@string/distance_string"
                     android:textSize="18sp" />
 
                 <TextView
@@ -118,7 +118,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="8.6 mi"
+                    android:text="@string/dist_placeholder"
                     android:textAlignment="center"
                     android:textSize="18sp" />
             </TableRow>
@@ -132,7 +132,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="TIME"
+                    android:text="@string/time_string"
                     android:textSize="18sp" />
 
                 <TextView

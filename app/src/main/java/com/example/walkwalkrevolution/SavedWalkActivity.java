@@ -1,11 +1,15 @@
 package com.example.walkwalkrevolution;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
+import android.widget.TextView;
 import android.widget.Toolbar;
 
+
 public class SavedWalkActivity extends Activity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -25,3 +29,5 @@ public class SavedWalkActivity extends Activity {
     @Override
     public void onBackPressed() { }
 }
+
+
