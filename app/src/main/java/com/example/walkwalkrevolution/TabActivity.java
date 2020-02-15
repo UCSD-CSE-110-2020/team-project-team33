@@ -109,7 +109,7 @@ public class TabActivity extends AppCompatActivity {
         stepCountFragment = new StepCountFragment(walkInfo);
         adapter.addFragment(stepCountFragment, getString(R.string.home_tab));
 
-        routesFragment = new RoutesFragment();
+        routesFragment = new RoutesFragment(walkInfo);
         adapter.addFragment(routesFragment, getString(R.string.routes_tab));
 
         mockFragment = new MockFragment(stepCountFragment.getWalkInfo(), this);
