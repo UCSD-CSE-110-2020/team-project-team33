@@ -50,4 +50,5 @@
     <string name="route_terrain_label">Terrain:</string>
 
     <string name="notes_title">Notes</string>
+    <string name="title_activity_main2">Main2Activity</string>
 </resources>

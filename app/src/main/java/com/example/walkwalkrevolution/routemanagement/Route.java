@@ -127,6 +127,6 @@ public class Route implements Serializable, Comparable<Route> {
 
     @Override
     public int compareTo(Route route) {
-        return this.getName().compareTo(route.getName());
+        return this.getName().toLowerCase().compareTo(route.getName().toLowerCase());
     }
 }

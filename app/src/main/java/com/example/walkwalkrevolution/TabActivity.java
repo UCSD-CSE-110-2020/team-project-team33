@@ -107,8 +107,8 @@ public class TabActivity extends AppCompatActivity {
         fragmentContainer.setVisibility(fragmentContainer.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
     }
 
-    public void launchEnterRouteInfo() {
-        EnterRouteInfoFragment fragment = new EnterRouteInfoFragment(this, routesManager, walkInfo);
+    public void launchEnterRouteInfo(boolean isSavingWalk) {
+        EnterRouteInfoFragment fragment = new EnterRouteInfoFragment(this, routesManager, walkInfo, isSavingWalk);
         currentFragment = fragment;
         fragmentManager.beginTransaction().add(R.id.fragmentContainer, fragment).commit();
         toggleViewPagerVisibility();
@@ -133,7 +133,7 @@ public class TabActivity extends AppCompatActivity {
         btnStartWalk.setText(getString(R.string.start_string));
         stepCountFragment.getWalkUpdate().stop();
         if (walkInfo.getCurrentRoute() == null) {
-            launchEnterRouteInfo();
+            launchEnterRouteInfo(true);
         } else {
             walkInfo.getCurrentRoute().setSteps(walkInfo.getWalkSteps());
             walkInfo.getCurrentRoute().setDistance(walkInfo.getWalkDistance());
