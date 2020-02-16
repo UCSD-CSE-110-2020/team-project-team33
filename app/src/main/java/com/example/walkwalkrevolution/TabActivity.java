@@ -109,7 +109,7 @@ public class TabActivity extends AppCompatActivity {
         fragmentContainer.setVisibility(fragmentContainer.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
     }
 
-    public void launchEnterRouteInfo() {
+    protected void launchEnterRouteInfo() {
         EnterRouteInfoFragment fragment = new EnterRouteInfoFragment(this, routesManager, walkInfo);
         fragmentManager.beginTransaction().add(R.id.fragmentContainer, fragment).commit();
         toggleViewPagerVisibility();
