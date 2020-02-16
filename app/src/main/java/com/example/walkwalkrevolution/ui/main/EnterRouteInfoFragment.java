@@ -1,10 +1,14 @@
-package com.example.walkwalkrevolution;
+package com.example.walkwalkrevolution.ui.main;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -17,60 +21,45 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.example.walkwalkrevolution.DataKeys;
+import com.example.walkwalkrevolution.R;
+import com.example.walkwalkrevolution.TabActivity;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
 import com.example.walkwalkrevolution.routemanagement.Route;
 import com.example.walkwalkrevolution.routemanagement.RouteFeatures.RouteFeatures;
+import com.example.walkwalkrevolution.walktracker.WalkInfo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnterRouteInfoActivity extends AppCompatActivity {
+public class EnterRouteInfoFragment extends Fragment {
     IRouteManagement routesManager;
+    TabActivity tabActivity;
     RouteFeatures routeFeatures = new RouteFeatures();
     String[] features = new String[Constants.NUM_FEATURES];
     boolean isFavorited = false;
+    WalkInfo walkInfo;
 
+    public EnterRouteInfoFragment(TabActivity tabs, IRouteManagement routeMan, WalkInfo walk) {
+        tabActivity = tabs;
+        routesManager = routeMan;
+        walkInfo = walk;
+    }
+
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_enter_route_info);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_enter_route_info, container, false);
 
-        Bundle b = getIntent().getExtras();
+        double distance = walkInfo.getWalkDistance();
+        long steps = walkInfo.getWalkSteps();
+        long time = walkInfo.getWalkTime();
 
-        double distance = b.getDouble(DataKeys.DISTANCE_KEY);
-        long steps = b.getLong(DataKeys.STEPS_KEY);
-        long time = b.getLong(DataKeys.TIME_KEY);
-        routesManager = (IRouteManagement) getIntent().getSerializableExtra(DataKeys.ROUTE_MANAGER_KEY);
-
-        Button saveBtn = findViewById(R.id.saveButton);
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                EditText nameField = (EditText) findViewById(R.id.routeName);
-                EditText startField = (EditText) findViewById(R.id.startLoc);
-                String name = nameField.getText().toString();
-                if(name.trim().length() == 0){
-                    Toast.makeText(getApplicationContext(), getString(R.string.empty_name_err_string), Toast.LENGTH_LONG).show();
-                    return;
-                }
-                String startLoc = startField.getText().toString();
-
-                Route route = new Route(name, startLoc, steps, distance, time, getFeatures());
-                route.setFavorite(isFavorited);
-                routesManager.saveRoute(getSharedPreferences(DataKeys.USER_NAME_KEY, MODE_PRIVATE), route);
-
-                Toast.makeText(EnterRouteInfoActivity.this, getString(R.string.saved_string), Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        });
-
-
-        Spinner difficulty = findViewById(R.id.difficultyType);
-        Spinner road = findViewById(R.id.roadType);
-        Spinner terrain = findViewById(R.id.terrainType);
-        Spinner surface = findViewById(R.id.surfaceType);
-        Spinner routeType = findViewById(R.id.routeType);
+        Spinner difficulty = view.findViewById(R.id.difficultyType);
+        Spinner road = view.findViewById(R.id.roadType);
+        Spinner terrain = view.findViewById(R.id.terrainType);
+        Spinner surface = view.findViewById(R.id.surfaceType);
+        Spinner routeType = view.findViewById(R.id.routeType);
 
         Spinner[] spinners = { difficulty, road, terrain, surface, routeType };
 
@@ -79,7 +68,7 @@ public class EnterRouteInfoActivity extends AppCompatActivity {
             setSpinnerSelect(spinners[i], i);
         }
 
-        ToggleButton toggle = (ToggleButton) findViewById(R.id.favoriteBtn);
+        ToggleButton toggle = (ToggleButton) view.findViewById(R.id.favoriteBtn);
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -89,9 +78,42 @@ public class EnterRouteInfoActivity extends AppCompatActivity {
                 }
             }
         });
+
+        Button saveBtn = view.findViewById(R.id.saveButton);
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                EditText nameField = (EditText) view.findViewById(R.id.routeName);
+                EditText startField = (EditText) view.findViewById(R.id.startLoc);
+                String name = nameField.getText().toString();
+                if(name.trim().length() == 0){
+                    Toast.makeText(view.getContext(), getString(R.string.empty_name_err_string), Toast.LENGTH_LONG).show();
+                    return;
+                }
+                String startLoc = startField.getText().toString();
+
+                Route route = new Route(name, startLoc, steps, distance, time, getFeatures());
+                route.setFavorite(isFavorited);
+                routesManager.saveRoute(getActivity().getSharedPreferences(DataKeys.USER_NAME_KEY, Context.MODE_PRIVATE), route);
+
+                Toast.makeText(view.getContext(), getString(R.string.saved_string), Toast.LENGTH_SHORT).show();
+
+                returnFromPage();
+            }
+        });
+
+        return view;
+    }
+
+    private void returnFromPage() {
+        tabActivity.deleteFragment(this);
     }
 
     private void setSpinnerSelect(Spinner spinner, int index) {
+        if(spinner == null) {
+            return;
+        }
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -113,10 +135,13 @@ public class EnterRouteInfoActivity extends AppCompatActivity {
 
 
     private void setSpinnerOptions(Spinner spinner, int index) {
+        if(spinner == null) {
+            return;
+        }
 
         // Initializing an ArrayAdapter
         final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
-                this,android.R.layout.simple_spinner_dropdown_item, routeFeatures.getFeature(index)){
+                getActivity(), android.R.layout.simple_spinner_dropdown_item, routeFeatures.getFeature(index)){
             @Override
             public View getDropDownView(int position, View convertView,
                                         ViewGroup parent) {
@@ -147,10 +172,4 @@ public class EnterRouteInfoActivity extends AppCompatActivity {
         return tags;
 
     }
-
-
-
-    @Override
-    public void onBackPressed() { }
-
 }

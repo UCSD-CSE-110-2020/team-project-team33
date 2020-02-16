@@ -15,7 +15,6 @@ import androidx.fragment.app.Fragment;
 import com.example.walkwalkrevolution.Constants;
 import com.example.walkwalkrevolution.DataKeys;
 import com.example.walkwalkrevolution.R;
-import com.example.walkwalkrevolution.fitness.FitnessService;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
 import com.example.walkwalkrevolution.walktracker.IDelayedUpdate;
 import com.example.walkwalkrevolution.walktracker.StepUpdate;
