@@ -9,18 +9,30 @@ public class Route implements Serializable, Comparable<Route> {
     private long steps;
     private double distance;
     private long time;
-    private List<String> features;
-    //Features eventually
+    private String type;
+    private String surface;
+    private String road;
+    private String difficulty;
+    private String terrain;
+    private String notes;
     private boolean favorite;
 
+    private boolean walkStarted;
+
     // Constructor
-    public Route(String name, String startLocation, long steps, double distance, long time, List<String> features) {
+    public Route(String name, String startLocation, long steps, double distance, long time,
+                 String type, String surface, String road, String difficulty, String terrain, String notes) {
         this.name = name;
         this.startLoc = startLocation;
         this.steps = steps;
         this.distance = distance;
         this.time = time;
-        this.features = features;
+        this.type = type;
+        this.surface = surface;
+        this.road = road;
+        this.difficulty = difficulty;
+        this.terrain = terrain;
+        this.notes = notes;
     }
 
     // Name setter
@@ -78,13 +90,40 @@ public class Route implements Serializable, Comparable<Route> {
         this.favorite = fav;
     }
 
-    // startLoc getter
-    public boolean setFavorite() {
+    // favorite getter
+    public boolean getFavorite() {
         return this.favorite;
     }
 
-    // features getter
-    public List<String> getFeatures() { return this.features; }
+    public String getType() {
+        return type;
+    }
+
+    public String getSurface() {
+        return surface;
+    }
+
+    public String getRoad() {
+        return road;
+    }
+
+    public String getDifficulty() {
+        return difficulty;
+    }
+
+    public String getTerrain() {
+        return terrain;
+    }
+
+    public String getNotes() { return notes; }
+
+    public void setWalkStarted(boolean b) {
+        walkStarted = b;
+    }
+
+    public boolean isWalkStarted() {
+        return walkStarted;
+    }
 
     @Override
     public int compareTo(Route route) {

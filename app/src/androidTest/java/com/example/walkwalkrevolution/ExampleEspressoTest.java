@@ -62,7 +62,7 @@ public class ExampleEspressoTest {
         }
 
         ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.saveBtn), withText("Save"),
+                allOf(isDisplayed(), withId(R.id.saveBtn), withText("Save"),
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
@@ -81,7 +81,7 @@ public class ExampleEspressoTest {
         }
 
         ViewInteraction textView = onView(
-                allOf(withId(R.id.overall_steps), withText(String.valueOf(MockFitnessService.nextStepCount)),
+                allOf(isDisplayed(), withId(R.id.overall_steps), withText(String.valueOf(MockFitnessService.nextStepCount)),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.tableLayout),
@@ -91,7 +91,7 @@ public class ExampleEspressoTest {
         textView.check(matches(withText(String.valueOf(MockFitnessService.nextStepCount))));
 
         ViewInteraction textView2 = onView(
-                allOf(withId(R.id.overall_dist), withText("0.12 mi"),
+                allOf(isDisplayed(), withId(R.id.overall_dist), withText("0.12 mi"),
                         childAtPosition(
                                 childAtPosition(
                                         withId(R.id.tableLayout),

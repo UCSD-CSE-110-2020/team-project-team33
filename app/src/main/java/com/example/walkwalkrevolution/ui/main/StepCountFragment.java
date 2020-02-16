@@ -3,6 +3,7 @@ package com.example.walkwalkrevolution.ui.main;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.walkwalkrevolution.Constants;
 import com.example.walkwalkrevolution.DataKeys;
 import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
@@ -20,11 +22,7 @@ import com.example.walkwalkrevolution.walktracker.WalkInfo;
 import com.example.walkwalkrevolution.walktracker.WalkUpdate;
 
 public class StepCountFragment extends Fragment {
-
-    private static final int UPDATE_STEPS_INTERVAL = 5000;
-    private static final int SECOND_MILLIS = 1000;
-
-    private static final String TAG = "StepCountFragment";
+    public static final String TAG = "StepCountFragment";
 
     private TextView dailyStepsText;
     private TextView dailyDistanceText;
@@ -42,8 +40,8 @@ public class StepCountFragment extends Fragment {
 
     public StepCountFragment(WalkInfo w) {
         walkInfo = w;
-        stepUpdate = new StepUpdate(this, w, UPDATE_STEPS_INTERVAL);
-        walkUpdate = new WalkUpdate(this, w, SECOND_MILLIS);
+        stepUpdate = new StepUpdate(this, w, Constants.UPDATE_STEPS_INTERVAL);
+        walkUpdate = new WalkUpdate(this, w, Constants.SECOND_MILLIS);
     }
 
     @Nullable

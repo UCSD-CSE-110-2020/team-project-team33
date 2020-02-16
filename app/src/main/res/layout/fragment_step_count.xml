@@ -42,9 +42,6 @@
                     android:text="@string/Today_string"
                     android:textSize="@dimen/home_text_size"
                     android:textStyle="bold" />
-                android:textSize="@dimen/home_text_size"
-                android:textStyle="bold"
-                android:text="@string/Today_string" />
             </TableRow>
 
             <TableRow
@@ -117,7 +114,6 @@
                     android:text="@string/intent_walk_string"
                     android:textSize="@dimen/home_text_size"
                     android:textStyle="bold" />
-                android:textSize="@dimen/home_text_size" />
 
             </TableRow>
 

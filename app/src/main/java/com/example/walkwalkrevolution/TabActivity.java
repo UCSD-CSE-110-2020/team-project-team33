@@ -1,9 +1,12 @@
 package com.example.walkwalkrevolution;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.RouteInfo;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -11,8 +14,10 @@ import android.widget.FrameLayout;
 import com.example.walkwalkrevolution.fitness.FitnessService;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
+import com.example.walkwalkrevolution.routemanagement.Route;
 import com.example.walkwalkrevolution.ui.main.EnterRouteInfoFragment;
 import com.example.walkwalkrevolution.ui.main.MockFragment;
+import com.example.walkwalkrevolution.ui.main.RouteInfoFragment;
 import com.example.walkwalkrevolution.ui.main.StepCountFragment;
 import com.example.walkwalkrevolution.ui.main.RoutesFragment;
 import com.example.walkwalkrevolution.walktracker.WalkInfo;
@@ -20,9 +25,7 @@ import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -38,6 +41,7 @@ public class TabActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private AppBarLayout appbar;
     private Button btnStartWalk;
+    private TabLayout tabLayout;
 
     public StepCountFragment stepCountFragment;
     public RoutesFragment routesFragment;
@@ -45,6 +49,7 @@ public class TabActivity extends AppCompatActivity {
 
     private FrameLayout fragmentContainer;
     private FragmentManager fragmentManager;
+    private Fragment currentFragment;
 
     public IRouteManagement routesManager;
 
@@ -59,7 +64,7 @@ public class TabActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tab);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
 
         routesManager = (IRouteManagement) getIntent().getSerializableExtra(DataKeys.ROUTE_MANAGER_KEY);
 
@@ -69,6 +74,9 @@ public class TabActivity extends AppCompatActivity {
 
         walkInfo = new WalkInfo(getIntent().getIntExtra(DataKeys.USER_HEIGHT_KEY, 0), fitnessService);
 
+        fragmentContainer = findViewById(R.id.fragmentContainer);
+        fragmentContainer.setVisibility(View.GONE);
+        fragmentManager = getSupportFragmentManager();
 
         // Keep these after all initializations
         viewPager = (ViewPager) findViewById(R.id.view_pager);
@@ -77,25 +85,15 @@ public class TabActivity extends AppCompatActivity {
 
         appbar = findViewById(R.id.appbar);
 
-        fragmentContainer = findViewById(R.id.fragmentContainer);
-        fragmentContainer.setVisibility(View.GONE);
-        fragmentManager = getSupportFragmentManager();
-
         btnStartWalk = findViewById(R.id.buttonStartWalk);
         btnStartWalk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(walkStarted) {
-                    tabLayout.getTabAt(ROUTES_TAB_INDEX).select();
-                    btnStartWalk.setText(getString(R.string.start_string));
-                    stepCountFragment.getWalkUpdate().stop();
-                    launchEnterRouteInfo();
+                if (walkStarted) {
+                    stopWalk();
                 } else {
-                    tabLayout.getTabAt(HOME_TAB_INDEX).select();
-                    btnStartWalk.setText(getString(R.string.stop_string));
-                    stepCountFragment.getWalkUpdate().start();
+                    startWalk();
                 }
-                walkStarted = !walkStarted;
                 mockFragment.setButtons();
             }
         });
@@ -111,17 +109,49 @@ public class TabActivity extends AppCompatActivity {
 
     public void launchEnterRouteInfo() {
         EnterRouteInfoFragment fragment = new EnterRouteInfoFragment(this, routesManager, walkInfo);
+        currentFragment = fragment;
+        fragmentManager.beginTransaction().add(R.id.fragmentContainer, fragment).commit();
+        toggleViewPagerVisibility();
+    }
+
+    public void launchRouteInfo(Route route) {
+        RouteInfoFragment fragment = new RouteInfoFragment(this, route, walkInfo, routesManager);
+        currentFragment = fragment;
         fragmentManager.beginTransaction().add(R.id.fragmentContainer, fragment).commit();
         toggleViewPagerVisibility();
     }
 
     public void deleteFragment(Fragment fragment) {
         fragmentManager.beginTransaction().remove(fragment).commit();
+        currentFragment = null;
         toggleViewPagerVisibility();
     }
 
+    public void stopWalk() {
+        walkStarted = !walkStarted;
+        tabLayout.getTabAt(ROUTES_TAB_INDEX).select();
+        btnStartWalk.setText(getString(R.string.start_string));
+        stepCountFragment.getWalkUpdate().stop();
+        if (walkInfo.getCurrentRoute() == null) {
+            launchEnterRouteInfo();
+        } else {
+            walkInfo.getCurrentRoute().setSteps(walkInfo.getWalkSteps());
+            walkInfo.getCurrentRoute().setDistance(walkInfo.getWalkDistance());
+            walkInfo.getCurrentRoute().setTime(walkInfo.getWalkTime());
+            routesManager.saveRoute(getSharedPreferences(DataKeys.USER_NAME_KEY, Context.MODE_PRIVATE), walkInfo.getCurrentRoute());
+            walkInfo.setCurrentRoute(null);
+        }
+    }
+
+    public void startWalk() {
+        walkStarted = !walkStarted;
+        tabLayout.getTabAt(HOME_TAB_INDEX).select();
+        btnStartWalk.setText(getString(R.string.stop_string));
+        stepCountFragment.getWalkUpdate().start();
+    }
+
     private void setupViewPager(ViewPager viewPager) {
-        SectionsPagerAdapter adapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        SectionsPagerAdapter adapter = new SectionsPagerAdapter(fragmentManager);
 
         stepCountFragment = new StepCountFragment(walkInfo);
         adapter.addFragment(stepCountFragment, getString(R.string.home_tab));
@@ -129,7 +159,7 @@ public class TabActivity extends AppCompatActivity {
         routesFragment = new RoutesFragment(this, routesManager, walkInfo);
         adapter.addFragment(routesFragment, getString(R.string.routes_tab));
 
-        mockFragment = new MockFragment(this, stepCountFragment.getWalkInfo());
+        mockFragment = new MockFragment(this, walkInfo);
         adapter.addFragment(mockFragment, getString(R.string.mock_tab));
 
         viewPager.setAdapter(adapter);
@@ -158,5 +188,20 @@ public class TabActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() { }
+    public void onBackPressed() {
+        if (currentFragment != null) {
+            deleteFragment(currentFragment);
+            currentFragment = null;
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            deleteFragment(currentFragment);
+            currentFragment = null;
+            return true;
+        }
+        return false;
+    }
 }

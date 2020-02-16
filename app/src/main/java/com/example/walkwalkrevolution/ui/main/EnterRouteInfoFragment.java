@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.example.walkwalkrevolution.Constants;
 import com.example.walkwalkrevolution.DataKeys;
 import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.TabActivity;
@@ -29,14 +30,12 @@ import com.example.walkwalkrevolution.routemanagement.Route;
 import com.example.walkwalkrevolution.routemanagement.RouteFeatures.RouteFeatures;
 import com.example.walkwalkrevolution.walktracker.WalkInfo;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class EnterRouteInfoFragment extends Fragment {
+    public static final String TAG = "EnterRouteInfoFragment";
+
     IRouteManagement routesManager;
     TabActivity tabActivity;
-    RouteFeatures routeFeatures = new RouteFeatures();
-    String[] features = new String[DataKeys.NUM_FEAUTRES];
+    String[] features = new String[Constants.NUM_FEATURES];
     boolean isFavorited = false;
     WalkInfo walkInfo;
 
@@ -61,7 +60,7 @@ public class EnterRouteInfoFragment extends Fragment {
         Spinner surface = view.findViewById(R.id.surfaceType);
         Spinner routeType = view.findViewById(R.id.routeType);
 
-        Spinner[] spinners = { difficulty, road, terrain, surface, routeType };
+        Spinner[] spinners = { routeType, surface, road, difficulty, terrain };
 
         for(int i = 0; i < spinners.length; i++) {
             setSpinnerOptions(spinners[i], i);
@@ -93,7 +92,21 @@ public class EnterRouteInfoFragment extends Fragment {
                 }
                 String startLoc = startField.getText().toString();
 
-                Route route = new Route(name, startLoc, steps, distance, time, getFeatures());
+                String type = spinners[Constants.FEATURE_TYPE_INDEX].getSelectedItem().toString().equals(RouteFeatures.TYPE[0]) ?
+                        null : spinners[Constants.FEATURE_TYPE_INDEX].getSelectedItem().toString();
+                String surface = spinners[Constants.FEATURE_SURFACE_INDEX].getSelectedItem().toString().equals(RouteFeatures.SURFACE[0]) ?
+                        null : spinners[Constants.FEATURE_SURFACE_INDEX].getSelectedItem().toString();
+                String road = spinners[Constants.FEATURE_ROAD_INDEX].getSelectedItem().toString().equals(RouteFeatures.ROAD[0]) ?
+                        null : spinners[Constants.FEATURE_ROAD_INDEX].getSelectedItem().toString();
+                String difficulty = spinners[Constants.FEATURE_DIFFICULTY_INDEX].getSelectedItem().toString().equals(RouteFeatures.DIFFICULTY[0]) ?
+                        null : spinners[Constants.FEATURE_DIFFICULTY_INDEX].getSelectedItem().toString();
+                String terrain = spinners[Constants.FEATURE_TERRAIN_INDEX].getSelectedItem().toString().equals(RouteFeatures.TERRAIN[0]) ?
+                        null : spinners[Constants.FEATURE_TERRAIN_INDEX].getSelectedItem().toString();
+
+                String notes = ((EditText) view.findViewById(R.id.editNotes)).getText().toString();
+                notes = notes.equals("") ? null : notes;
+
+                Route route = new Route(name, startLoc, steps, distance, time, type, surface, road, difficulty, terrain, notes);
                 route.setFavorite(isFavorited);
                 routesManager.saveRoute(getActivity().getSharedPreferences(DataKeys.USER_NAME_KEY, Context.MODE_PRIVATE), route);
 
@@ -141,7 +154,7 @@ public class EnterRouteInfoFragment extends Fragment {
 
         // Initializing an ArrayAdapter
         final ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(
-                getActivity(), android.R.layout.simple_spinner_dropdown_item, routeFeatures.getFeature(index)){
+                getActivity(), android.R.layout.simple_spinner_dropdown_item, RouteFeatures.OPTIONS[index]){
             @Override
             public View getDropDownView(int position, View convertView,
                                         ViewGroup parent) {
@@ -162,14 +175,5 @@ public class EnterRouteInfoFragment extends Fragment {
         TextView tv = (TextView) view;
         tv.setTextColor(Color.GRAY);
         tv.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
-    }
-
-    private List<String> getFeatures() {
-        List<String> tags = new ArrayList<String>();
-        for(String s : features) {
-            if(s != null) { tags.add(s); }
-        }
-        return tags;
-
     }
 }

@@ -16,6 +16,8 @@ import com.example.walkwalkrevolution.TabActivity;
 import com.example.walkwalkrevolution.walktracker.WalkInfo;
 
 public class MockFragment extends Fragment {
+    public static final String TAG = "MockFragment";
+
     private EditText editStepCount;
     private Button buttonSetStepCount;
     private NumberPicker pickerHour;
