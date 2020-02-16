@@ -27,7 +27,7 @@ import java.util.List;
 public class EnterRouteInfoActivity extends AppCompatActivity {
     IRouteManagement routesManager;
     RouteFeatures routeFeatures = new RouteFeatures();
-    String[] features = new String[DataKeys.NUM_FEAUTRES];
+    String[] features = new String[Constants.NUM_FEATURES];
     boolean isFavorited = false;
 
     @Override

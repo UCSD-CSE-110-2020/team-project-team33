@@ -24,9 +24,10 @@ import com.example.walkwalkrevolution.walktracker.WalkUpdate;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class RouteInfoActivity extends AppCompatActivity  {
+public class RouteInfoActivity extends AppCompatActivity implements Serializable {
 
     private TextView route_info_title;
     private TextView route_info_startLoc;
@@ -42,27 +43,22 @@ public class RouteInfoActivity extends AppCompatActivity  {
     Handler stepUpdateHandler;
     Runnable stepUpdateTask;
 
-
     private SharedPreferences sharedPreferences;
     public IRouteManagement routesManager;
 
     IDelayedUpdate routeInfoUpdate;
 
-
-
-    public RouteInfoActivity(WalkInfo w, Route route){
-        walkInfo = w;
-        this.route = route;
-        features = route.getFeatures();
-        routeInfoUpdate = new RouteInfoUpdate(this, w, Constants.SECOND_MILLIS);
-
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route_info);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        walkInfo = getIntent().getSerializableExtra("walkObj");
+        route = getIntent().getSerializableExtra("routeObj");
+        features = route.getFeatures();
+        routeInfoUpdate = new RouteInfoUpdate(this, walkInfo, Constants.SECOND_MILLIS);
 
         route_info_title = findViewById(R.id.route_info_title);
         route_info_startLoc = findViewById(R.id.route_info_startLoc_value);
@@ -102,7 +98,7 @@ public class RouteInfoActivity extends AppCompatActivity  {
                 }else{
                     startBttn.setText("Start new walk/run");
                     getRouteInfoUpdate().stop();
-
+                    updateRouteInfo();
                 }
                 walkStarted = !walkStarted;
             }
@@ -123,7 +119,11 @@ public class RouteInfoActivity extends AppCompatActivity  {
         route_info_time.setText(formatTime(time));
     }
 
-
+    public void updateRouteInfo() {
+        route.setSteps(walkInfo.getSteps());
+        route.setDistance(walkInfo.getDistance());
+        route.setTime(walkInfo.getWalkTime());
+    }
     public String formatTime(long duration) {
         int seconds = (int)(duration % 60);
         int minutes = (int)((duration / 60) % 60);
