@@ -61,6 +61,7 @@ public class TabActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "Successfully launched step count activity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tab);
 
@@ -90,8 +91,10 @@ public class TabActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (walkStarted) {
+                    Log.i(TAG, "Stopping walk.");
                     stopWalk();
                 } else {
+                    Log.i(TAG, "Starting walk...");
                     startWalk();
                 }
                 mockFragment.setButtons();
@@ -108,6 +111,7 @@ public class TabActivity extends AppCompatActivity {
     }
 
     public void launchEnterRouteInfo(boolean isSavingWalk) {
+        Log.i(TAG, "Launching enter route info fragment");
         EnterRouteInfoFragment fragment = new EnterRouteInfoFragment(this, routesManager, walkInfo, isSavingWalk);
         currentFragment = fragment;
         fragmentManager.beginTransaction().add(R.id.fragmentContainer, fragment).commit();
@@ -115,6 +119,7 @@ public class TabActivity extends AppCompatActivity {
     }
 
     public void launchRouteInfo(Route route) {
+        Log.i(TAG, "Launching route info");
         RouteInfoFragment fragment = new RouteInfoFragment(this, route, walkInfo, routesManager);
         currentFragment = fragment;
         fragmentManager.beginTransaction().add(R.id.fragmentContainer, fragment).commit();
