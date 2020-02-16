@@ -52,7 +52,7 @@ public class SaveRouteUnitTest {
             activity.stepCountFragment.getWalkInfo().setMocking(true);
             activity.stepCountFragment.getWalkInfo().setSteps(DEFAULT_STEPS);
             activity.stepCountFragment.getWalkInfo().setWalkTime(DEFAULT_TIME);
-            activity.launchEnterRouteInfo();
+            activity.launchEnterRouteInfo(true);
         });
     }
 
