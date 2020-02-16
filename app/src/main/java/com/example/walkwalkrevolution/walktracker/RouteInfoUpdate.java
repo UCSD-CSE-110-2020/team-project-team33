@@ -3,7 +3,6 @@ package com.example.walkwalkrevolution.walktracker;
 import android.content.SharedPreferences;
 import android.os.Handler;
 
-import com.example.walkwalkrevolution.RouteInfoActivity;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
 
 public class RouteInfoUpdate implements IDelayedUpdate {

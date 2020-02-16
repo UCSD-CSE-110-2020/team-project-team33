@@ -15,8 +15,9 @@ public class Route implements Serializable, Comparable<Route> {
     private String difficulty;
     private String terrain;
     private String notes;
-    //Features eventually
     private boolean favorite;
+
+    private boolean walkStarted;
 
     // Constructor
     public Route(String name, String startLocation, long steps, double distance, long time,
@@ -115,6 +116,14 @@ public class Route implements Serializable, Comparable<Route> {
     }
 
     public String getNotes() { return notes; }
+
+    public void setWalkStarted(boolean b) {
+        walkStarted = b;
+    }
+
+    public boolean isWalkStarted() {
+        return walkStarted;
+    }
 
     @Override
     public int compareTo(Route route) {

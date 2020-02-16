@@ -2,6 +2,7 @@ package com.example.walkwalkrevolution.walktracker;
 
 import com.example.walkwalkrevolution.Distance;
 import com.example.walkwalkrevolution.fitness.FitnessService;
+import com.example.walkwalkrevolution.routemanagement.Route;
 
 import java.io.Serializable;
 
@@ -9,6 +10,8 @@ public class WalkInfo implements Serializable {
     private long steps;
     private long startSteps;
     private long walkTime;
+
+    private Route currentRoute;
 
     private Distance distance;
 
@@ -66,4 +69,12 @@ public class WalkInfo implements Serializable {
     public void setMocking(boolean b) { mocking = b; }
 
     public boolean isMocking() { return mocking; }
+
+    public void setCurrentRoute(Route r) {
+        currentRoute = r;
+    }
+
+    public Route getCurrentRoute() {
+        return currentRoute;
+    }
 }

@@ -8,15 +8,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.TabActivity;
 import com.example.walkwalkrevolution.routemanagement.Route;
+import com.example.walkwalkrevolution.walktracker.WalkInfo;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -24,6 +24,7 @@ public class RouteInfoFragment extends Fragment {
 
     private Route route;
     private TabActivity tabActivity;
+    private WalkInfo walkInfo;
 
     private TextView textSteps;
     private TextView textDistance;
@@ -40,9 +41,12 @@ public class RouteInfoFragment extends Fragment {
 
     private FloatingActionButton favoriteButton;
 
-    public RouteInfoFragment(TabActivity t, Route r) {
+    private Button startWalkButton;
+
+    public RouteInfoFragment(TabActivity t, Route r, WalkInfo w) {
         tabActivity = t;
         route = r;
+        walkInfo = w;
     }
 
     @Nullable
@@ -107,7 +111,21 @@ public class RouteInfoFragment extends Fragment {
             }
         });
 
-
+        startWalkButton = view.findViewById(R.id.buttonStartWalk);
+        startWalkButton.setText(walkInfo.getCurrentRoute() == route ? getString(R.string.stop_string) : getString(R.string.start_string));
+        startWalkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(walkInfo.getCurrentRoute() == route) {
+                    startWalkButton.setText(getString(R.string.start_string));
+                    tabActivity.stopWalk();
+                } else {
+                    startWalkButton.setText(getString(R.string.stop_string));
+                    walkInfo.setCurrentRoute(route);
+                    tabActivity.startWalk();
+                }
+            }
+        });
 
         return view;
     }
@@ -129,6 +147,17 @@ public class RouteInfoFragment extends Fragment {
     }
 
     public void setTextTime(long time) {
-        textTime.setText(String.valueOf(time));
+        textTime.setText(formatTime(time));
+    }
+
+    public String formatTime(long duration) {
+        int seconds = (int)(duration % 60);
+        int minutes = (int)((duration / 60) % 60);
+        int hours = (int)(duration / (60 * 60)) % 24;
+        return formatDigits(hours) + ":" + formatDigits(minutes) + ":" + formatDigits(seconds);
+    }
+
+    private String formatDigits(int x){
+        return x < 10 ? "0" + x : String.valueOf(x);
     }
 }

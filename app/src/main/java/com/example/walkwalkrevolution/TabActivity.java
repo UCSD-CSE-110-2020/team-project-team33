@@ -1,6 +1,7 @@
 package com.example.walkwalkrevolution;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,6 +43,7 @@ public class TabActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private AppBarLayout appbar;
     private Button btnStartWalk;
+    private TabLayout tabLayout;
 
     public StepCountFragment stepCountFragment;
     public RoutesFragment routesFragment;
@@ -64,7 +66,7 @@ public class TabActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tab);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
 
         routesManager = (IRouteManagement) getIntent().getSerializableExtra(DataKeys.ROUTE_MANAGER_KEY);
 
@@ -91,16 +93,10 @@ public class TabActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(walkStarted) {
-                    tabLayout.getTabAt(ROUTES_TAB_INDEX).select();
-                    btnStartWalk.setText(getString(R.string.start_string));
-                    stepCountFragment.getWalkUpdate().stop();
-                    launchEnterRouteInfo();
+                    stopWalk();
                 } else {
-                    tabLayout.getTabAt(HOME_TAB_INDEX).select();
-                    btnStartWalk.setText(getString(R.string.stop_string));
-                    stepCountFragment.getWalkUpdate().start();
+                    startWalk();
                 }
-                walkStarted = !walkStarted;
                 mockFragment.setButtons();
             }
         });
@@ -122,7 +118,7 @@ public class TabActivity extends AppCompatActivity {
     }
 
     public void launchRouteInfo(Route route) {
-        RouteInfoFragment fragment = new RouteInfoFragment(this, route);
+        RouteInfoFragment fragment = new RouteInfoFragment(this, route, walkInfo);
         currentFragment = fragment;
         fragmentManager.beginTransaction().add(R.id.fragmentContainer, fragment).commit();
         toggleViewPagerVisibility();
@@ -131,6 +127,29 @@ public class TabActivity extends AppCompatActivity {
     public void deleteFragment(Fragment fragment) {
         fragmentManager.beginTransaction().remove(fragment).commit();
         toggleViewPagerVisibility();
+    }
+
+    public void stopWalk() {
+        walkStarted = !walkStarted;
+        tabLayout.getTabAt(ROUTES_TAB_INDEX).select();
+        btnStartWalk.setText(getString(R.string.start_string));
+        stepCountFragment.getWalkUpdate().stop();
+        if(walkInfo.getCurrentRoute() == null) {
+            launchEnterRouteInfo();
+        } else {
+            walkInfo.getCurrentRoute().setSteps(walkInfo.getWalkSteps());
+            walkInfo.getCurrentRoute().setDistance(walkInfo.getWalkDistance());
+            walkInfo.getCurrentRoute().setTime(walkInfo.getWalkTime());
+            routesManager.saveRoute(getSharedPreferences(DataKeys.USER_NAME_KEY, Context.MODE_PRIVATE), walkInfo.getCurrentRoute());
+            walkInfo.setCurrentRoute(null);
+        }
+    }
+
+    public void startWalk() {
+        walkStarted = !walkStarted;
+        tabLayout.getTabAt(HOME_TAB_INDEX).select();
+        btnStartWalk.setText(getString(R.string.stop_string));
+        stepCountFragment.getWalkUpdate().start();
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -171,12 +190,18 @@ public class TabActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() { }
+    public void onBackPressed() {
+        if(currentFragment instanceof RouteInfoFragment) {
+            deleteFragment(currentFragment);
+            currentFragment = null;
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == android.R.id.home) {
             deleteFragment(currentFragment);
+            currentFragment = null;
             return true;
         }
         return false;
