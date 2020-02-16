@@ -47,12 +47,12 @@ public class SaveRouteUnitTest {
         intent.putExtra(DataKeys.USER_HEIGHT_KEY, DEFAULT_HEIGHT);
         scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
-            activity.stepCountFragment.getStepUpdate().stop();
-            activity.stepCountFragment.getWalkUpdate().stop();
-            activity.stepCountFragment.getWalkInfo().setMocking(true);
-            activity.stepCountFragment.getWalkInfo().setSteps(DEFAULT_STEPS);
-            activity.stepCountFragment.getWalkInfo().setWalkTime(DEFAULT_TIME);
-            activity.launchEnterRouteInfo();
+            activity.tabFragment.stepCountFragment.getStepUpdate().stop();
+            activity.tabFragment.stepCountFragment.getWalkUpdate().stop();
+            activity.getWalkInfo().setMocking(true);
+            activity.getWalkInfo().setSteps(DEFAULT_STEPS);
+            activity.getWalkInfo().setWalkTime(DEFAULT_TIME);
+            activity.launchEnterRouteInfo(true);
         });
     }
 

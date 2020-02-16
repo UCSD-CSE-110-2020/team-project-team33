@@ -13,6 +13,7 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
+import com.example.walkwalkrevolution.routemanagement.RoutesManager;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -44,7 +45,7 @@ public class ExampleEspressoTest {
             Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
             Intent intent = new Intent(targetContext, HeightActivity.class);
             intent.putExtra(DataKeys.FITNESS_SERVICE_KEY, TEST_SERVICE);
-            intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, new MockRoutesManager());
+            intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, new RoutesManager());
             return intent;
         }
     };

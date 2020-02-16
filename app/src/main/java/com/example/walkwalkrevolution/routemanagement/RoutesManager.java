@@ -19,6 +19,10 @@ public class RoutesManager extends Observable implements IRouteManagement, Seria
 
     RoutesData routes;
 
+    public RoutesManager() {
+        routes = new RoutesData();
+    }
+
     public RoutesManager(SharedPreferences sharedPreferences) {
         SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
         Gson gson = new Gson();

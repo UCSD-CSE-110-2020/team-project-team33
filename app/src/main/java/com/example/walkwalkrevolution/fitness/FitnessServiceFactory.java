@@ -23,6 +23,6 @@ public class FitnessServiceFactory {
     }
 
     public interface BluePrint {
-        FitnessService create(TabActivity TabActivity);
+        FitnessService create(TabActivity tabActivity);
     }
 }

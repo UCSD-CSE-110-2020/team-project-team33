@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,10 @@ import com.example.walkwalkrevolution.walktracker.StepUpdate;
 import com.example.walkwalkrevolution.walktracker.WalkInfo;
 import com.example.walkwalkrevolution.walktracker.WalkUpdate;
 
-public class StepCountFragment extends Fragment {
+import java.util.Observable;
+import java.util.Observer;
+
+public class StepCountFragment extends Fragment implements Observer {
     public static final String TAG = "StepCountFragment";
 
     private TextView dailyStepsText;
@@ -59,6 +63,8 @@ public class StepCountFragment extends Fragment {
         timerText = view.findViewById(R.id.walk_time);
 
         // Get values for most recent walk and set values to display on screen
+        setDailyStepsText(walkInfo.getSteps());
+        setDailyDistanceText(walkInfo.getDistance());
         setWalkStepsText(routesManager.getRecentSteps(sharedPreferences));
         setWalkDistanceText(routesManager.getRecentDistance(sharedPreferences));
         setTimerText(routesManager.getRecentTime(sharedPreferences));
@@ -99,15 +105,21 @@ public class StepCountFragment extends Fragment {
         return x < 10 ? "0" + x : String.valueOf(x);
     }
 
-    public WalkInfo getWalkInfo() {
-        return walkInfo;
-    }
-
     public IDelayedUpdate getStepUpdate() {
         return stepUpdate;
     }
 
     public IDelayedUpdate getWalkUpdate() {
         return walkUpdate;
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+        Log.d(TAG, "WalkInfo changed, updating...");
+        setDailyStepsText(walkInfo.getSteps());
+        setDailyDistanceText(walkInfo.getDistance());
+        setWalkStepsText(walkInfo.getWalkSteps());
+        setWalkDistanceText(walkInfo.getWalkSteps());
+        setTimerText(walkInfo.getWalkTime());
     }
 }
