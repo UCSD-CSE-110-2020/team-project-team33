@@ -37,4 +37,6 @@
     <string name="set_time_text">Set Time</string>
     <string name="toggle_mock_text_off">Start Mocking</string>
     <string name="toggle_mock_text_on">Stop Mocking</string>
+
+    <string name="enter_route_info_title">Route Information</string>
 </resources>

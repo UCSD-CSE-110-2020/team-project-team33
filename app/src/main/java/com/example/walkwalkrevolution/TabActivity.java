@@ -6,25 +6,27 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 
 import com.example.walkwalkrevolution.fitness.FitnessService;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
+import com.example.walkwalkrevolution.ui.main.EnterRouteInfoFragment;
 import com.example.walkwalkrevolution.ui.main.MockFragment;
 import com.example.walkwalkrevolution.ui.main.StepCountFragment;
 import com.example.walkwalkrevolution.ui.main.RoutesFragment;
-import com.example.walkwalkrevolution.walktracker.IDelayedUpdate;
-import com.example.walkwalkrevolution.walktracker.StepUpdate;
 import com.example.walkwalkrevolution.walktracker.WalkInfo;
-import com.example.walkwalkrevolution.walktracker.WalkUpdate;
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentContainerView;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.walkwalkrevolution.ui.main.SectionsPagerAdapter;
-
-import java.io.Serializable;
 
 public class TabActivity extends AppCompatActivity {
     private static final String TAG = "TabActivity";
@@ -33,19 +35,20 @@ public class TabActivity extends AppCompatActivity {
     private static final int ROUTES_TAB_INDEX = 1;
     private static final int MOCK_TAB_INDEX = 2;
 
-    private SectionsPagerAdapter sectionsPagerAdapter;
     private ViewPager viewPager;
+    private AppBarLayout appbar;
+    private Button btnStartWalk;
 
     public StepCountFragment stepCountFragment;
     public RoutesFragment routesFragment;
     public MockFragment mockFragment;
 
+    private FrameLayout fragmentContainer;
+    private FragmentManager fragmentManager;
+
     public IRouteManagement routesManager;
 
     private WalkInfo walkInfo;
-
-    private IDelayedUpdate stepCountUpdate;
-    private IDelayedUpdate walkUpdate;
 
     private FitnessService fitnessService;
 
@@ -68,12 +71,17 @@ public class TabActivity extends AppCompatActivity {
 
 
         // Keep these after all initializations
-        sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         setupViewPager(viewPager);
         tabLayout.setupWithViewPager(viewPager);
 
-        final Button btnStartWalk = findViewById(R.id.buttonStartWalk);
+        appbar = findViewById(R.id.appbar);
+
+        fragmentContainer = findViewById(R.id.fragmentContainer);
+        fragmentContainer.setVisibility(View.GONE);
+        fragmentManager = getSupportFragmentManager();
+
+        btnStartWalk = findViewById(R.id.buttonStartWalk);
         btnStartWalk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,8 +89,9 @@ public class TabActivity extends AppCompatActivity {
                     tabLayout.getTabAt(ROUTES_TAB_INDEX).select();
                     btnStartWalk.setText(getString(R.string.start_string));
                     stepCountFragment.getWalkUpdate().stop();
-                    launchEnterRouteInfoActivity();
+                    launchEnterRouteInfo();
                 } else {
+                    tabLayout.getTabAt(HOME_TAB_INDEX).select();
                     btnStartWalk.setText(getString(R.string.stop_string));
                     stepCountFragment.getWalkUpdate().start();
                 }
@@ -93,14 +102,22 @@ public class TabActivity extends AppCompatActivity {
 
     }
 
-    public void launchEnterRouteInfoActivity() {
-        Intent intent = new Intent (this, EnterRouteInfoActivity.class);
-        intent.putExtra(DataKeys.DISTANCE_KEY, stepCountFragment.getWalkInfo().getWalkDistance());
-        intent.putExtra(DataKeys.STEPS_KEY, stepCountFragment.getWalkInfo().getWalkSteps());
-        intent.putExtra(DataKeys.TIME_KEY, stepCountFragment.getWalkInfo().getWalkTime());
-        intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, (Serializable) routesManager);
+    private void toggleViewPagerVisibility() {
+        appbar.setVisibility(appbar.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+        viewPager.setVisibility(viewPager.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+        btnStartWalk.setVisibility(btnStartWalk.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+        fragmentContainer.setVisibility(fragmentContainer.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+    }
 
-        startActivity(intent);
+    private void launchEnterRouteInfo() {
+        EnterRouteInfoFragment fragment = new EnterRouteInfoFragment(this, routesManager, walkInfo);
+        fragmentManager.beginTransaction().add(R.id.fragmentContainer, fragment).commit();
+        toggleViewPagerVisibility();
+    }
+
+    public void deleteFragment(Fragment fragment) {
+        fragmentManager.beginTransaction().remove(fragment).commit();
+        toggleViewPagerVisibility();
     }
 
     private void setupViewPager(ViewPager viewPager) {
