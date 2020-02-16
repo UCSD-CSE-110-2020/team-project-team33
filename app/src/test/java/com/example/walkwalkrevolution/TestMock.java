@@ -1,7 +1,6 @@
 package com.example.walkwalkrevolution;
 
 import android.content.Intent;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.test.core.app.ActivityScenario;
@@ -9,7 +8,6 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
-import com.example.walkwalkrevolution.walktracker.WalkInfo;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -42,9 +40,9 @@ public class TestMock {
     public void testWalkInfoMocking() {
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
-            activity.stepCountFragment.getWalkInfo().setMocking(true);
-            activity.stepCountFragment.getWalkInfo().setSteps(POSATIVE_STEP_COUNT);
-            activity.stepCountFragment.getStepUpdate().update();
+            activity.getWalkInfo().setMocking(true);
+            activity.getWalkInfo().setSteps(POSATIVE_STEP_COUNT);
+            activity.tabFragment.stepCountFragment.getStepUpdate().update();
 
             TextView steps = activity.findViewById(R.id.overall_steps);
             assertThat(steps.getText().toString()).isEqualTo(Long.toString(POSATIVE_STEP_COUNT));
@@ -55,12 +53,12 @@ public class TestMock {
     public void testWalkInfoWalkMocking() {
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
-            activity.stepCountFragment.getWalkInfo().setMocking(true);
-            activity.stepCountFragment.getWalkInfo().setSteps(POSATIVE_STEP_COUNT);
-            activity.stepCountFragment.getStepUpdate().update();
-            activity.stepCountFragment.getWalkUpdate().update();
-            activity.stepCountFragment.getWalkInfo().startWalk();
-            activity.stepCountFragment.getWalkInfo().setSteps(POSATIVE_STEP_COUNT + POSATIVE_STEP_COUNT);
+            activity.getWalkInfo().setMocking(true);
+            activity.getWalkInfo().setSteps(POSATIVE_STEP_COUNT);
+            activity.tabFragment.stepCountFragment.getStepUpdate().update();
+            activity.tabFragment.stepCountFragment.getWalkUpdate().update();
+            activity.getWalkInfo().startWalk();
+            activity.getWalkInfo().setSteps(POSATIVE_STEP_COUNT + POSATIVE_STEP_COUNT);
 
 
             TextView steps = activity.findViewById(R.id.walk_steps);

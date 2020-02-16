@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.RouteItemAdapter;
-import com.example.walkwalkrevolution.TabActivity;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
 import com.example.walkwalkrevolution.routemanagement.Route;
 import com.example.walkwalkrevolution.walktracker.WalkInfo;
@@ -26,7 +25,7 @@ import java.util.Observer;
 public class RoutesFragment extends Fragment implements Observer {
     public static final String TAG = "RoutesFragment";
 
-    TabActivity tabActivity;
+    TabFragment tabFragment;
     IRouteManagement routesManager;
     WalkInfo walkInfo;
     RecyclerView rvRoutes;
@@ -34,10 +33,13 @@ public class RoutesFragment extends Fragment implements Observer {
     RouteItemAdapter routeAdapter;
     View view;
 
-    public RoutesFragment(TabActivity tabActivity, IRouteManagement routesManager, WalkInfo walkInfo) {
-        this.tabActivity = tabActivity;
+    public RoutesFragment(TabFragment tabFragment, IRouteManagement routesManager, WalkInfo walkInfo) {
+        this.tabFragment = tabFragment;
         this.routesManager = routesManager;
         this.walkInfo = walkInfo;
+        this.routeAdapter = new RouteItemAdapter(tabFragment.tabActivity);
+        routeAdapter.setRoutes(((Iterable<Route>) routesManager).iterator());
+        ((Observable) routesManager).addObserver(this);
     }
 
 
@@ -49,18 +51,14 @@ public class RoutesFragment extends Fragment implements Observer {
         rvRoutes.setLayoutManager(new LinearLayoutManager(view.getContext()));
         rvRoutes.addItemDecoration(new DividerItemDecoration(rvRoutes.getContext(), DividerItemDecoration.VERTICAL));
 
-        routeAdapter = new RouteItemAdapter(tabActivity);
         // These are causing problems with Espresso
-        routeAdapter.setRoutes(((Iterable<Route>) routesManager).iterator());
-        ((Observable) routesManager).addObserver(this);
-
         rvRoutes.setAdapter(routeAdapter);
 
         fab = view.findViewById(R.id.floatingActionButton);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tabActivity.launchEnterRouteInfo(false);
+                tabFragment.tabActivity.launchEnterRouteInfo(false);
             }
         });
 

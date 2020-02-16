@@ -63,7 +63,7 @@ public class DistanceUnitTest {
 
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
-            activity.stepCountFragment.getStepUpdate().update();
+            activity.tabFragment.stepCountFragment.getStepUpdate().update();
             TextView textDist = activity.findViewById(R.id.overall_dist);
             assertThat(textDist.getText().toString())
                     .isEqualTo(String.format(activity

@@ -12,7 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.walkwalkrevolution.R;
-import com.example.walkwalkrevolution.TabActivity;
 import com.example.walkwalkrevolution.walktracker.WalkInfo;
 
 public class MockFragment extends Fragment {
@@ -28,11 +27,11 @@ public class MockFragment extends Fragment {
 
     private WalkInfo walkInfo;
 
-    private TabActivity tabActivity;
+    private TabFragment tabFragment;
 
-    public MockFragment(TabActivity t, WalkInfo w) {
+    public MockFragment(TabFragment t, WalkInfo w) {
         walkInfo = w;
-        tabActivity = t;
+        tabFragment = t;
     }
 
     @Nullable
@@ -88,7 +87,7 @@ public class MockFragment extends Fragment {
     public void setButtons() {
         if(buttonSetStepCount != null && buttonSetTime != null && buttonToggleMock != null) {
             buttonSetStepCount.setEnabled(walkInfo.isMocking());
-            buttonSetTime.setEnabled(walkInfo.isMocking() && tabActivity.isWalkStarted());
+            buttonSetTime.setEnabled(walkInfo.isMocking() && tabFragment.isWalkStarted());
             buttonToggleMock.setText(walkInfo.isMocking() ? getString(R.string.toggle_mock_text_on) : getString(R.string.toggle_mock_text_off));
         }
     }
