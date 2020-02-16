@@ -17,6 +17,7 @@ import com.example.walkwalkrevolution.TabActivity;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
 import com.example.walkwalkrevolution.routemanagement.Route;
 import com.example.walkwalkrevolution.walktracker.WalkInfo;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Iterator;
 import java.util.Observable;
@@ -29,6 +30,7 @@ public class RoutesFragment extends Fragment implements Observer {
     IRouteManagement routesManager;
     WalkInfo walkInfo;
     RecyclerView rvRoutes;
+    FloatingActionButton fab;
     RouteItemAdapter routeAdapter;
     View view;
 
@@ -54,6 +56,15 @@ public class RoutesFragment extends Fragment implements Observer {
 
         rvRoutes.setAdapter(routeAdapter);
 
+        fab = view.findViewById(R.id.floatingActionButton);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tabActivity.launchEnterRouteInfo();
+            }
+        });
+
+
         return view;
     }
 
@@ -64,5 +75,4 @@ public class RoutesFragment extends Fragment implements Observer {
         routeAdapter.setRoutes((Iterator) arg);
         routeAdapter.notifyDataSetChanged();
     }
-
 }
