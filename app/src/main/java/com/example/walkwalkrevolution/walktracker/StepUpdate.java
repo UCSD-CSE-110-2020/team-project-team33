@@ -37,7 +37,9 @@ public class StepUpdate implements IDelayedUpdate {
 
     @Override
     public void update() {
-        stepCountFragment.setDailyStepsText(walkInfo.getSteps());
-        stepCountFragment.setDailyDistanceText(walkInfo.getDistance());
+        if(stepCountFragment.isAdded()) {
+            stepCountFragment.setDailyStepsText(walkInfo.getSteps());
+            stepCountFragment.setDailyDistanceText(walkInfo.getDistance());
+        }
     }
 }

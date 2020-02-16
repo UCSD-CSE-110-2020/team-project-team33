@@ -13,7 +13,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     private final List<String> fragmentTitleList = new ArrayList<String>();
 
     public SectionsPagerAdapter(FragmentManager fm) {
-        super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        super(fm);
     }
 
     public void addFragment(Fragment fragment, String title) {

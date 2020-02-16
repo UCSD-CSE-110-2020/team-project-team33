@@ -41,8 +41,10 @@ public class WalkUpdate implements IDelayedUpdate {
 
     @Override
     public void update() {
-        stepCountFragment.setWalkStepsText(walkInfo.getWalkSteps());
-        stepCountFragment.setWalkDistanceText(walkInfo.getWalkDistance());
-        stepCountFragment.setTimerText(walkInfo.getWalkTime());
+        if(stepCountFragment.isAdded()) {
+            stepCountFragment.setWalkStepsText(walkInfo.getWalkSteps());
+            stepCountFragment.setWalkDistanceText(walkInfo.getWalkDistance());
+            stepCountFragment.setTimerText(walkInfo.getWalkTime());
+        }
     }
 }
