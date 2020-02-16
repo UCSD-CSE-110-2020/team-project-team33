@@ -24,6 +24,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class RouteInfoFragment extends Fragment {
+    public static final String TAG = "RouteInfoFragment";
 
     private Route route;
     private TabActivity tabActivity;

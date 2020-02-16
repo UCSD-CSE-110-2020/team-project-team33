@@ -23,6 +23,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class RoutesFragment extends Fragment implements Observer {
+    public static final String TAG = "RoutesFragment";
 
     TabActivity tabActivity;
     IRouteManagement routesManager;
@@ -42,19 +43,16 @@ public class RoutesFragment extends Fragment implements Observer {
         view = inflater.inflate(R.layout.fragment_routes, container, false);
 
         rvRoutes = view.findViewById(R.id.rvRoutes);
-
-        routeAdapter = new RouteItemAdapter(tabActivity);
-        routeAdapter.setRoutes(((Iterable<Route>) routesManager).iterator());
-
-        ((Observable) routesManager).addObserver(this);
-
-
-        rvRoutes.setAdapter(routeAdapter);
-
+        rvRoutes.setHasFixedSize(true);
+        rvRoutes.setLayoutManager(new LinearLayoutManager(view.getContext()));
         rvRoutes.addItemDecoration(new DividerItemDecoration(rvRoutes.getContext(), DividerItemDecoration.VERTICAL));
 
-        rvRoutes.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        routeAdapter = new RouteItemAdapter(tabActivity);
+        // These are causing problems with Espresso
+        routeAdapter.setRoutes(((Iterable<Route>) routesManager).iterator());
+        ((Observable) routesManager).addObserver(this);
 
+        rvRoutes.setAdapter(routeAdapter);
 
         return view;
     }

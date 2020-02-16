@@ -81,20 +81,13 @@ public class RouteItemAdapter extends
 
         View routeView = inflater.inflate(R.layout.item_route, parent, false);
 
-        ViewHolder viewHolder = new ViewHolder(context, routeView);
+        ViewHolder viewHolder = new ViewHolder(routeView.getContext(), routeView);
         return viewHolder;
-
     }
 
     @Override
     public void onBindViewHolder(RouteItemAdapter.ViewHolder viewHolder, int position) {
         Route route = routes.get(position);
-
-        TextView routeName = viewHolder.routeName;
-        TextView startLoc = viewHolder.startLoc;
-        TextView dist = viewHolder.dist;
-        TextView steps = viewHolder.steps;
-        TextView time = viewHolder.time;
 
         viewHolder.routeName.setText(route.getName());
         viewHolder.startLoc.setText(route.getStartLoc());

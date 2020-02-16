@@ -31,6 +31,8 @@ import com.example.walkwalkrevolution.routemanagement.RouteFeatures.RouteFeature
 import com.example.walkwalkrevolution.walktracker.WalkInfo;
 
 public class EnterRouteInfoFragment extends Fragment {
+    public static final String TAG = "EnterRouteInfoFragment";
+
     IRouteManagement routesManager;
     TabActivity tabActivity;
     String[] features = new String[Constants.NUM_FEATURES];

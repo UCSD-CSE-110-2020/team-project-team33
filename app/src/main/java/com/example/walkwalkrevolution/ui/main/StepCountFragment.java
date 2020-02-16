@@ -22,7 +22,7 @@ import com.example.walkwalkrevolution.walktracker.WalkInfo;
 import com.example.walkwalkrevolution.walktracker.WalkUpdate;
 
 public class StepCountFragment extends Fragment {
-    private static final String TAG = "StepCountFragment";
+    public static final String TAG = "StepCountFragment";
 
     private TextView dailyStepsText;
     private TextView dailyDistanceText;
