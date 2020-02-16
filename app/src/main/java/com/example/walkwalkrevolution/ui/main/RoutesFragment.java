@@ -60,7 +60,7 @@ public class RoutesFragment extends Fragment implements Observer {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tabActivity.launchEnterRouteInfo();
+                tabActivity.launchEnterRouteInfo(false);
             }
         });
 

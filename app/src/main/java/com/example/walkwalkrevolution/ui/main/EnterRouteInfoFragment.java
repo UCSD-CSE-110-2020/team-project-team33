@@ -38,11 +38,16 @@ public class EnterRouteInfoFragment extends Fragment {
     String[] features = new String[Constants.NUM_FEATURES];
     boolean isFavorited = false;
     WalkInfo walkInfo;
+    boolean isSavingWalk = true;
+    double distance = 0;
+    long steps = 0;
+    long time = 0;
 
-    public EnterRouteInfoFragment(TabActivity tabs, IRouteManagement routeMan, WalkInfo walk) {
+    public EnterRouteInfoFragment(TabActivity tabs, IRouteManagement routeMan, WalkInfo walk, Boolean isSavingWalk) {
         tabActivity = tabs;
         routesManager = routeMan;
         walkInfo = walk;
+        this.isSavingWalk = isSavingWalk;
     }
 
     @Nullable
@@ -50,9 +55,11 @@ public class EnterRouteInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_enter_route_info, container, false);
 
-        double distance = walkInfo.getWalkDistance();
-        long steps = walkInfo.getWalkSteps();
-        long time = walkInfo.getWalkTime();
+        if (isSavingWalk) {
+            distance = walkInfo.getWalkDistance();
+            steps = walkInfo.getWalkSteps();
+            time = walkInfo.getWalkTime();
+        }
 
         Spinner difficulty = view.findViewById(R.id.difficultyType);
         Spinner road = view.findViewById(R.id.roadType);
