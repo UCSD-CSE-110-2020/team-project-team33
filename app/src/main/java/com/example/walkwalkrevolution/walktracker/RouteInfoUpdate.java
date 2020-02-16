@@ -43,8 +43,10 @@ public class RouteInfoUpdate implements IDelayedUpdate {
 
     @Override
     public void update() {
+        /*
         routeInfoActivity.setWalkStepsText(walkInfo.getSteps());
         routeInfoActivity.setWalkDistanceText(walkInfo.getDistance());
         routeInfoActivity.setTimerText(walkInfo.getWalkTime());
+         */
     }
 }

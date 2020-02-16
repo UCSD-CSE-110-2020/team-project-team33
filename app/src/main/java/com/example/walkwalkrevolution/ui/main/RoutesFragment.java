@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.walkwalkrevolution.DataKeys;
 import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.RouteItemAdapter;
 import com.example.walkwalkrevolution.TabActivity;
@@ -44,7 +43,7 @@ public class RoutesFragment extends Fragment implements Observer {
 
         rvRoutes = view.findViewById(R.id.rvRoutes);
 
-        routeAdapter = new RouteItemAdapter();
+        routeAdapter = new RouteItemAdapter(tabActivity);
         routeAdapter.setRoutes(((Iterable<Route>) routesManager).iterator());
 
         ((Observable) routesManager).addObserver(this);

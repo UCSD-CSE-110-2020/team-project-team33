@@ -28,7 +28,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class RouteInfoActivity extends AppCompatActivity implements Serializable {
-
+/*
     private TextView route_info_title;
     private TextView route_info_startLoc;
     private TextView route_info_features;
@@ -138,4 +138,5 @@ public class RouteInfoActivity extends AppCompatActivity implements Serializable
     public IDelayedUpdate getRouteInfoUpdate() {
         return routeInfoUpdate;
     }
+    */
 }

@@ -1,17 +1,11 @@
 package com.example.walkwalkrevolution.routemanagement.RouteFeatures;
-import  com.example.walkwalkrevolution.DataKeys;
-
 
 public final class RouteFeatures {
-    String[] difficultyOptions = {"Select a difficulty...", "Easy", "Moderate", "Hard"};
-    String[] roadOptions = {"Select Street/Trail...", "Street", "Trail"};
-    String[] routeOptions =  {"Select a Route Type...", "Loop", "Out-And-Back"};
-    String[] surfaceOptions = {"Select Even/Uneven...", "Even", "Uneven"};
-    String[] terrainOptions = {"Select a Terrain...", "Flat", "Hilly"};
+    public static final String[] TYPE =  {"Select a Route Type...", "Loop", "Out-And-Back"};
+    public static final String[] SURFACE = {"Select Even/Uneven...", "Even", "Uneven"};
+    public static final String[] ROAD = {"Select Street/Trail...", "Street", "Trail"};
+    public static final String[] DIFFICULTY = {"Select a difficulty...", "Easy", "Moderate", "Hard"};
+    public static final String[] TERRAIN = {"Select a Terrain...", "Flat", "Hilly"};
 
-    String[][] options = {difficultyOptions, roadOptions, terrainOptions, surfaceOptions, routeOptions};
-
-    public String[] getFeature(int index) {
-        return options[index];
-    }
+    public static final String[][] OPTIONS = {TYPE, SURFACE, ROAD, DIFFICULTY, TERRAIN};
 }

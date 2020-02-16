@@ -4,15 +4,19 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.example.walkwalkrevolution.fitness.FitnessService;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
+import com.example.walkwalkrevolution.routemanagement.Route;
 import com.example.walkwalkrevolution.ui.main.EnterRouteInfoFragment;
 import com.example.walkwalkrevolution.ui.main.MockFragment;
+import com.example.walkwalkrevolution.ui.main.RouteInfoFragment;
 import com.example.walkwalkrevolution.ui.main.StepCountFragment;
 import com.example.walkwalkrevolution.ui.main.RoutesFragment;
 import com.example.walkwalkrevolution.walktracker.WalkInfo;
@@ -45,6 +49,7 @@ public class TabActivity extends AppCompatActivity {
 
     private FrameLayout fragmentContainer;
     private FragmentManager fragmentManager;
+    private Fragment currentFragment;
 
     public IRouteManagement routesManager;
 
@@ -111,6 +116,14 @@ public class TabActivity extends AppCompatActivity {
 
     public void launchEnterRouteInfo() {
         EnterRouteInfoFragment fragment = new EnterRouteInfoFragment(this, routesManager, walkInfo);
+        currentFragment = fragment;
+        fragmentManager.beginTransaction().add(R.id.fragmentContainer, fragment).commit();
+        toggleViewPagerVisibility();
+    }
+
+    public void launchRouteInfo(Route route) {
+        RouteInfoFragment fragment = new RouteInfoFragment(this, route);
+        currentFragment = fragment;
         fragmentManager.beginTransaction().add(R.id.fragmentContainer, fragment).commit();
         toggleViewPagerVisibility();
     }
@@ -159,4 +172,13 @@ public class TabActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() { }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.R.id.home) {
+            deleteFragment(currentFragment);
+            return true;
+        }
+        return false;
+    }
 }

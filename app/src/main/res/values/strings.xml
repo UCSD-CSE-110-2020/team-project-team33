@@ -5,6 +5,7 @@
     <string name="routes_tab">Routes</string>
     <string name="mock_tab">Mock</string>
 
+    <string name="general_placeholder">{{Placeholder}}</string>
 
     <string name="step_placeholder">5000</string>
     <string name="dist_placeholder">3.5 mi</string>
@@ -40,4 +41,13 @@
     <string name="toggle_mock_text_on">Stop Mocking</string>
 
     <string name="enter_route_info_title">Route Information</string>
+
+    <string name="route_features_title">Route Features</string>
+    <string name="route_type_label">Type:</string>
+    <string name="route_surface_label">Surface:</string>
+    <string name="route_road_label">Road:</string>
+    <string name="route_difficulty_label">Difficulty:</string>
+    <string name="route_terrain_label">Terrain:</string>
+
+    <string name="notes_title">Notes</string>
 </resources>

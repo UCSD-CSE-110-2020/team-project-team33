@@ -23,6 +23,12 @@ import java.util.Observer;
 public class RouteItemAdapter extends
         RecyclerView.Adapter<RouteItemAdapter.ViewHolder> {
 
+    private List<Route> routes;
+    private TabActivity tabActivity;
+
+    public RouteItemAdapter(TabActivity t) {
+        tabActivity = t;
+    }
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
@@ -56,15 +62,10 @@ public class RouteItemAdapter extends
         @Override
         public void onClick(View view) {
             int position = getAdapterPosition();
-            if(position != RecyclerView.NO_POSITION) { /* do something */
-                Toast.makeText(context, routeName.getText(), Toast.LENGTH_SHORT).show();}
+            if(position != RecyclerView.NO_POSITION) {
+                tabActivity.launchRouteInfo(routes.get(position));
+            }
         }
-    }
-
-    private List<Route> routes;
-
-
-    public RouteItemAdapter() {
     }
 
     public void setRoutes(Iterator it) {
@@ -97,7 +98,7 @@ public class RouteItemAdapter extends
 
         viewHolder.routeName.setText(route.getName());
         viewHolder.startLoc.setText(route.getStartLoc());
-        viewHolder.dist.setText(route.getDistance() + " mi");
+        viewHolder.dist.setText(String.format("%.2f mi", route.getDistance()));
         viewHolder.steps.setText(route.getSteps() + " steps");
         viewHolder.time.setText(formatTime(route.getTime()));
     }
