@@ -118,7 +118,7 @@ public class TabActivity extends AppCompatActivity {
     }
 
     public void launchRouteInfo(Route route) {
-        RouteInfoFragment fragment = new RouteInfoFragment(this, route, walkInfo);
+        RouteInfoFragment fragment = new RouteInfoFragment(this, route, walkInfo, routesManager);
         currentFragment = fragment;
         fragmentManager.beginTransaction().add(R.id.fragmentContainer, fragment).commit();
         toggleViewPagerVisibility();

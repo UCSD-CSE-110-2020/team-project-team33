@@ -1,5 +1,6 @@
 package com.example.walkwalkrevolution.ui.main;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -13,8 +14,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.walkwalkrevolution.DataKeys;
 import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.TabActivity;
+import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
 import com.example.walkwalkrevolution.routemanagement.Route;
 import com.example.walkwalkrevolution.walktracker.WalkInfo;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -25,6 +28,7 @@ public class RouteInfoFragment extends Fragment {
     private Route route;
     private TabActivity tabActivity;
     private WalkInfo walkInfo;
+    private IRouteManagement routeManagement;
 
     private TextView textSteps;
     private TextView textDistance;
@@ -43,10 +47,11 @@ public class RouteInfoFragment extends Fragment {
 
     private Button startWalkButton;
 
-    public RouteInfoFragment(TabActivity t, Route r, WalkInfo w) {
+    public RouteInfoFragment(TabActivity t, Route r, WalkInfo w, IRouteManagement rm) {
         tabActivity = t;
         route = r;
         walkInfo = w;
+        routeManagement = rm;
     }
 
     @Nullable
@@ -108,6 +113,7 @@ public class RouteInfoFragment extends Fragment {
             public void onClick(View v) {
                 route.setFavorite(!route.getFavorite());
                 favoriteButton.setImageDrawable(getContext().getDrawable(route.getFavorite() ? R.drawable.ic_favorite_24px : R.drawable.ic_favorite_border_24px));
+                routeManagement.saveRoute(getActivity().getSharedPreferences(DataKeys.USER_NAME_KEY, Context.MODE_PRIVATE), route);
             }
         });
 
