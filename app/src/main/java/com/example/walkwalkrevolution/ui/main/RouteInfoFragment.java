@@ -119,18 +119,18 @@ public class RouteInfoFragment extends Fragment {
         });
 
         startWalkButton = view.findViewById(R.id.buttonStartWalk);
-        startWalkButton.setEnabled((walkInfo.getCurrentRoute() == null && ! tabActivity.isWalkStarted()) || walkInfo.getCurrentRoute() == route);
+        startWalkButton.setEnabled((walkInfo.getCurrentRoute() == null && ! tabActivity.tabFragment.isWalkStarted()) || walkInfo.getCurrentRoute() == route);
         startWalkButton.setText(walkInfo.getCurrentRoute() == route ? getString(R.string.stop_string) : getString(R.string.start_string));
         startWalkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(walkInfo.getCurrentRoute() == route) {
                     startWalkButton.setText(getString(R.string.start_string));
-                    tabActivity.stopWalk();
+                    tabActivity.tabFragment.stopWalk();
                 } else {
                     startWalkButton.setText(getString(R.string.stop_string));
                     walkInfo.setCurrentRoute(route);
-                    tabActivity.startWalk();
+                    tabActivity.tabFragment.startWalk();
                 }
             }
         });

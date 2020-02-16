@@ -62,7 +62,7 @@ public class StartWalkTests {
 
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
-            assertThat(activity.stepCountFragment.formatTime(VALID_TIME)).isEqualTo(VALID_TIME_STR);
+            assertThat(activity.tabFragment.stepCountFragment.formatTime(VALID_TIME)).isEqualTo(VALID_TIME_STR);
         });
     }
 
@@ -75,9 +75,9 @@ public class StartWalkTests {
             Button startWalkButton = activity.findViewById(R.id.buttonStartWalk);
             startWalkButton.performClick();
 
-            activity.stepCountFragment.getWalkInfo().setMocking(true);
-            activity.stepCountFragment.getWalkInfo().setWalkTime(VALID_TIME);
-            activity.stepCountFragment.getWalkUpdate().update();
+            activity.getWalkInfo().setMocking(true);
+            activity.getWalkInfo().setWalkTime(VALID_TIME);
+            activity.tabFragment.stepCountFragment.getWalkUpdate().update();
 
             TextView timer = activity.findViewById(R.id.walk_time);
             assertThat(timer.getText().toString()).isEqualTo(VALID_TIME_STR);
@@ -92,13 +92,13 @@ public class StartWalkTests {
         scenario.onActivity(activity -> {
             Button startWalkButton = activity.findViewById(R.id.buttonStartWalk);
 
-            update(activity.stepCountFragment);
+            update(activity.tabFragment.stepCountFragment);
 
             startWalkButton.performClick();
         });
         MockFitnessService.nextStepCount = VALID_STEP_COUNT;
         scenario.onActivity(activity -> {
-            update(activity.stepCountFragment);
+            update(activity.tabFragment.stepCountFragment);
 
             TextView walkSteps = activity.findViewById(R.id.walk_steps);
 
@@ -122,7 +122,7 @@ public class StartWalkTests {
         scenario.onActivity(activity -> {
             TextView walkDist = activity.findViewById(R.id.walk_dist);
 
-            update(activity.stepCountFragment);
+            update(activity.tabFragment.stepCountFragment);
 
             assertThat(walkDist.getText().toString()).isEqualTo(String.format(activity.getString(R.string.dist_format), EXPECTED_DIST));
         });

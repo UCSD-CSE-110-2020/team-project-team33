@@ -3,8 +3,6 @@ package com.example.walkwalkrevolution.ui.main;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.viewpager.widget.PagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +13,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     private final List<String> fragmentTitleList = new ArrayList<String>();
 
     public SectionsPagerAdapter(FragmentManager fm) {
-        super(fm);
+        super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
     }
 
     public void addFragment(Fragment fragment, String title) {

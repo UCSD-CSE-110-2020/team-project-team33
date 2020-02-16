@@ -99,10 +99,6 @@ public class StepCountFragment extends Fragment {
         return x < 10 ? "0" + x : String.valueOf(x);
     }
 
-    public WalkInfo getWalkInfo() {
-        return walkInfo;
-    }
-
     public IDelayedUpdate getStepUpdate() {
         return stepUpdate;
     }

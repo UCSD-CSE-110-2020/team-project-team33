@@ -42,7 +42,7 @@ public class UIStepCountUnitTest {
 
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
-            activity.stepCountFragment.getStepUpdate().update();
+            activity.tabFragment.stepCountFragment.getStepUpdate().update();
             TextView textSteps = activity.findViewById(R.id.overall_steps);
             assertThat(textSteps.getText().toString()).isEqualTo(Long.toString(MockFitnessService.nextStepCount));
         });
@@ -54,7 +54,7 @@ public class UIStepCountUnitTest {
 
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
-            activity.stepCountFragment.getStepUpdate().update();
+            activity.tabFragment.stepCountFragment.getStepUpdate().update();
             TextView textSteps = activity.findViewById(R.id.overall_steps);
             assertThat(textSteps.getText().toString()).isEqualTo(Long.toString(MockFitnessService.nextStepCount));
         });
@@ -66,11 +66,11 @@ public class UIStepCountUnitTest {
 
         ActivityScenario<TabActivity> scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
-            activity.stepCountFragment.getStepUpdate().update();
+            activity.tabFragment.stepCountFragment.getStepUpdate().update();
         });
         MockFitnessService.nextStepCount += MockFitnessService.nextStepCount;
         scenario.onActivity(activity -> {
-            activity.stepCountFragment.getStepUpdate().update();
+            activity.tabFragment.stepCountFragment.getStepUpdate().update();
             TextView textSteps = activity.findViewById(R.id.overall_steps);
             assertThat(textSteps.getText().toString()).isEqualTo(Long.toString(MockFitnessService.nextStepCount));
         });
