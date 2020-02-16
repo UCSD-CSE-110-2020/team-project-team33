@@ -13,7 +13,6 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
-import com.example.walkwalkrevolution.fitness.FitnessService;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
 
 import org.hamcrest.Description;
@@ -105,6 +104,25 @@ public class MockWalkTest {
             e.printStackTrace();
         }
 
+        ViewInteraction appCompatButton2 = onView(
+                allOf(withId(R.id.toggle_mock_button), withText("Start Mocking"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                        0),
+                                4),
+                        isDisplayed()));
+        appCompatButton2.perform(click());
+
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         ViewInteraction appCompatEditText = onView(
                 allOf(withId(R.id.editStepCount),
                         childAtPosition(
@@ -113,7 +131,7 @@ public class MockWalkTest {
                                         0),
                                 0),
                         isDisplayed()));
-        appCompatEditText.perform(replaceText("1"), closeSoftKeyboard());
+        appCompatEditText.perform(replaceText("10"), closeSoftKeyboard());
 
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
@@ -125,7 +143,7 @@ public class MockWalkTest {
         }
 
         ViewInteraction appCompatEditText2 = onView(
-                allOf(withId(R.id.editStepCount), withText("1"),
+                allOf(withId(R.id.editStepCount), withText("10"),
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
@@ -143,27 +161,6 @@ public class MockWalkTest {
                                 0),
                         isDisplayed()));
         appCompatEditText3.perform(closeSoftKeyboard());
-
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        pressBack();
-
-        ViewInteraction appCompatButton2 = onView(
-                allOf(withId(R.id.toggle_mock_button), withText("Start Mocking"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
-                                        0),
-                                4),
-                        isDisplayed()));
-        appCompatButton2.perform(click());
 
         ViewInteraction appCompatButton3 = onView(
                 allOf(withId(R.id.button_set_step_count), withText("Set Step Count"),
@@ -184,12 +181,14 @@ public class MockWalkTest {
             e.printStackTrace();
         }
 
+        pressBack();
+
         ViewInteraction appCompatButton4 = onView(
                 allOf(withId(R.id.buttonStartWalk), withText("Start new walk/run"),
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("androidx.coordinatorlayout.widget.CoordinatorLayout")),
-                                        0),
+                                        1),
                                 2),
                         isDisplayed()));
         appCompatButton4.perform(click());
@@ -203,15 +202,15 @@ public class MockWalkTest {
             e.printStackTrace();
         }
 
-        ViewInteraction appCompatButton5 = onView(
-                allOf(withId(R.id.set_time_button), withText("Set Time"),
+        ViewInteraction tabView2 = onView(
+                allOf(withContentDescription("Mock"),
                         childAtPosition(
                                 childAtPosition(
-                                        withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                        withId(R.id.tabs),
                                         0),
-                                3),
+                                2),
                         isDisplayed()));
-        appCompatButton5.perform(click());
+        tabView2.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
@@ -231,15 +230,6 @@ public class MockWalkTest {
                                 0),
                         isDisplayed()));
         appCompatEditText4.perform(click());
-
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
         ViewInteraction appCompatEditText5 = onView(
                 allOf(withId(R.id.editStepCount), withText("100"),
@@ -294,12 +284,12 @@ public class MockWalkTest {
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
         try {
-            Thread.sleep(700);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        ViewInteraction appCompatButton6 = onView(
+        ViewInteraction appCompatButton5 = onView(
                 allOf(withId(R.id.button_set_step_count), withText("Set Step Count"),
                         childAtPosition(
                                 childAtPosition(
@@ -307,7 +297,7 @@ public class MockWalkTest {
                                         0),
                                 1),
                         isDisplayed()));
-        appCompatButton6.perform(click());
+        appCompatButton5.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
@@ -324,12 +314,12 @@ public class MockWalkTest {
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
         try {
-            Thread.sleep(700);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        ViewInteraction tabView2 = onView(
+        ViewInteraction tabView3 = onView(
                 allOf(withContentDescription("Home"),
                         childAtPosition(
                                 childAtPosition(
@@ -337,17 +327,11 @@ public class MockWalkTest {
                                         0),
                                 0),
                         isDisplayed()));
-        tabView2.perform(click());
+        tabView3.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         ViewInteraction textView = onView(
                 allOf(withId(R.id.walk_steps), withText("100"),
                         childAtPosition(
