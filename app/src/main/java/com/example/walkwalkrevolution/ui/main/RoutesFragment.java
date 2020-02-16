@@ -14,9 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.walkwalkrevolution.DataKeys;
 import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.RouteItemAdapter;
+import com.example.walkwalkrevolution.TabActivity;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
 import com.example.walkwalkrevolution.routemanagement.Route;
-import com.example.walkwalkrevolution.routemanagement.RoutesManager;
 import com.example.walkwalkrevolution.walktracker.WalkInfo;
 
 import java.util.Iterator;
@@ -25,20 +25,22 @@ import java.util.Observer;
 
 public class RoutesFragment extends Fragment implements Observer {
 
+    TabActivity tabActivity;
     IRouteManagement routesManager;
     WalkInfo walkInfo;
     RecyclerView rvRoutes;
     RouteItemAdapter routeAdapter;
     View view;
 
-    public RoutesFragment(WalkInfo walkInfo) {
+    public RoutesFragment(TabActivity tabActivity, IRouteManagement routesManager, WalkInfo walkInfo) {
+        this.tabActivity = tabActivity;
+        this.routesManager = routesManager;
         this.walkInfo = walkInfo;
     }
 
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_routes, container, false);
-        routesManager = (IRouteManagement) getActivity().getIntent().getSerializableExtra(DataKeys.ROUTE_MANAGER_KEY);
 
         rvRoutes = view.findViewById(R.id.rvRoutes);
 

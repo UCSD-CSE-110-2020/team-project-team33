@@ -28,7 +28,7 @@ public class MockFragment extends Fragment {
 
     private TabActivity tabActivity;
 
-    public MockFragment(WalkInfo w, TabActivity t) {
+    public MockFragment(TabActivity t, WalkInfo w) {
         walkInfo = w;
         tabActivity = t;
     }

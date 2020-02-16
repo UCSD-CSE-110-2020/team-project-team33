@@ -56,9 +56,8 @@ public class RoutesManager extends Observable implements IRouteManagement, Seria
         prefsEditor.putLong(DataKeys.RECENT_TIME_KEY, route.getTime());
         routes.addRoute(route);
 
-        // should be updating observers..
         setChanged();
-        notifyObservers(route);
+        notifyObservers(iterator());
 
         prefsEditor.putString(DataKeys.ROUTES_DATA_KEY, gson.toJson(routes));
         prefsEditor.apply();

@@ -10,9 +10,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".EnterRouteInfoActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".TabActivity"
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait"
