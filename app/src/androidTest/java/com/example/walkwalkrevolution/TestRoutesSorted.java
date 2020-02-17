@@ -43,14 +43,14 @@ import static org.hamcrest.Matchers.is;
 @RunWith(AndroidJUnit4.class)
 public class TestRoutesSorted {
     private static final String TEST_SERVICE = "TEST_SERVICE";
-    
+
     @Rule
-    public ActivityTestRule<HeightActivity> mActivityTestRule = new ActivityTestRule<HeightActivity>(HeightActivity.class) {
+    public ActivityTestRule<TabActivity> mActivityTestRule = new ActivityTestRule<TabActivity>(TabActivity.class) {
         @Override
         protected Intent getActivityIntent() {
             FitnessServiceFactory.put(TEST_SERVICE, MockFitnessService::new);
             Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-            Intent intent = new Intent(targetContext, HeightActivity.class);
+            Intent intent = new Intent(targetContext, TabActivity.class);
             intent.putExtra(DataKeys.FITNESS_SERVICE_KEY, TEST_SERVICE);
             intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, new RoutesManager());
             return intent;
@@ -59,16 +59,6 @@ public class TestRoutesSorted {
     
     @Test
     public void testRoutesSorted() {
-        ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.saveBtn), withText("Save"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
-                                        0),
-                                2),
-                        isDisplayed()));
-        appCompatButton.perform(click());
-        
         ViewInteraction tabView = onView(
                 allOf(withContentDescription("Routes"),
                         childAtPosition(
