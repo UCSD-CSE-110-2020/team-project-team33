@@ -5,15 +5,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.walkwalkrevolution.fitness.*;
 import com.example.walkwalkrevolution.routemanagement.RoutesManager;
+
+import java.util.logging.Logger;
 
 public class MainActivity extends AppCompatActivity {
     private String fitnessServiceKey = "GOOGLE_FIT";
     private int userHeight;
     private SharedPreferences sharedPreferences;
     private RoutesManager routesManager;
+
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void launchStepCountActivity() {
+        Log.i(TAG, "Launching step count activity");
         Intent intent = new Intent(this, TabActivity.class);
         intent.putExtra(DataKeys.FITNESS_SERVICE_KEY, fitnessServiceKey);
         intent.putExtra(DataKeys.USER_HEIGHT_KEY, userHeight);
@@ -47,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void launchHeightActivity() {
+        Log.i(TAG, "Launching height activity");
         Intent intent = new Intent(this, HeightActivity.class);
         intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, routesManager);
         intent.putExtra(DataKeys.FITNESS_SERVICE_KEY, fitnessServiceKey);

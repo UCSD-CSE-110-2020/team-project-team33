@@ -15,6 +15,7 @@ import com.example.walkwalkrevolution.DataKeys;
 import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.TabActivity;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
+import com.example.walkwalkrevolution.routemanagement.Route;
 import com.example.walkwalkrevolution.walktracker.WalkInfo;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
@@ -96,7 +97,9 @@ public class TabFragment extends Fragment {
             walkInfo.getCurrentRoute().setDistance(walkInfo.getWalkDistance());
             walkInfo.getCurrentRoute().setTime(walkInfo.getWalkTime());
             routesManager.saveRoute(getActivity().getSharedPreferences(DataKeys.USER_NAME_KEY, Context.MODE_PRIVATE), walkInfo.getCurrentRoute());
+            Route tmp = walkInfo.getCurrentRoute();
             walkInfo.setCurrentRoute(null);
+            tabActivity.launchRouteInfo(tmp);
         }
     }
 

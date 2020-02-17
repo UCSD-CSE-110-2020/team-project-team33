@@ -10,4 +10,6 @@ public class Constants {
     public static final int FEATURE_ROAD_INDEX = 2;
     public static final int FEATURE_DIFFICULTY_INDEX = 3;
     public static final int FEATURE_TERRAIN_INDEX = 4;
+
+    public static final int MAX_NAME_LENGTH = 24;
 }

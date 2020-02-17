@@ -24,6 +24,7 @@
 
     <string name="saved_string">Saved</string>
     <string name="empty_name_err_string">Name cannot be empty</string>
+    <string name="long_name_err_string">Please enter a shorter name</string>
 
     <string name="height_text">Please enter your height</string>
     <string name="foot_text">ft</string>

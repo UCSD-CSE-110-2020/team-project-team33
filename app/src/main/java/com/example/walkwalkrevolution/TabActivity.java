@@ -36,6 +36,7 @@ public class TabActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "Successfully launched step count activity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tab);
 
@@ -54,6 +55,7 @@ public class TabActivity extends AppCompatActivity {
     }
 
     public void launchEnterRouteInfo(boolean isSavingWalk) {
+        Log.i(TAG, "Launching enter route info fragment");
         EnterRouteInfoFragment fragment = new EnterRouteInfoFragment(this, routesManager, walkInfo, isSavingWalk);
         fragmentManager.beginTransaction().hide(tabFragment).commit();
         currentFragment = fragment;
@@ -63,6 +65,7 @@ public class TabActivity extends AppCompatActivity {
     }
 
     public void launchRouteInfo(Route route) {
+        Log.i(TAG, "Launching route info");
         RouteInfoFragment fragment = new RouteInfoFragment(this, route, walkInfo, routesManager);
         fragmentManager.beginTransaction().hide(tabFragment).commit();
         currentFragment = fragment;

@@ -94,7 +94,10 @@ public class EnterRouteInfoFragment extends Fragment {
                 EditText startField = (EditText) view.findViewById(R.id.startLoc);
                 String name = nameField.getText().toString();
                 if(name.trim().length() == 0){
-                    Toast.makeText(view.getContext(), getString(R.string.empty_name_err_string), Toast.LENGTH_LONG).show();
+                    Toast.makeText(view.getContext(), getString(R.string.empty_name_err_string), Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (name.length() > Constants.MAX_NAME_LENGTH) {
+                    Toast.makeText(view.getContext(), getString(R.string.long_name_err_string), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 String startLoc = startField.getText().toString();
