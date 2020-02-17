@@ -34,6 +34,7 @@ public class SaveRouteUnitTest {
 
     private final int DEFAULT_HEIGHT = 72;
     private final String DEFAULT_NAME = "Route";
+    private final String LONG_NAME = "this is over 24 chars i hope";
     private final String DEFAULT_START = "Start";
 
 
@@ -92,6 +93,24 @@ public class SaveRouteUnitTest {
             activity.findViewById(R.id.saveButton).performClick();
 
             assertThat(ShadowToast.getTextOfLatestToast()).isEqualTo(activity.getString(R.string.empty_name_err_string));
+        });
+    }
+
+    @Test
+    public void testSavedRouteLongNameUI() {
+        scenario.onActivity(activity -> {
+            EnterRouteInfoFragment fragment = (EnterRouteInfoFragment) activity
+                    .getSupportFragmentManager()
+                    .getFragments()
+                    .get(activity.getSupportFragmentManager().getFragments().size() - 1);
+
+            EditText nameField = (EditText) fragment.getView().findViewById(R.id.routeName);
+
+            nameField.setText(LONG_NAME);
+
+            activity.findViewById(R.id.saveButton).performClick();
+
+            assertThat(ShadowToast.getTextOfLatestToast()).isEqualTo(activity.getString(R.string.long_name_err_string));
         });
     }
 

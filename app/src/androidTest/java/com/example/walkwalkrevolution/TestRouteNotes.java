@@ -25,9 +25,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static androidx.test.espresso.action.ViewActions.longClick;
 import static androidx.test.espresso.action.ViewActions.pressImeActionButton;
 import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.scrollTo;
@@ -43,7 +43,7 @@ import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class TestAddNewRoute {
+public class TestRouteNotes {
     private static final String TEST_SERVICE = "TEST_SERVICE";
 
     @Rule
@@ -60,7 +60,7 @@ public class TestAddNewRoute {
     };
 
     @Test
-    public void testAddNewRoute() {
+    public void testRouteNotes() {
         ViewInteraction tabView = onView(
                 allOf(withContentDescription("Routes"),
                         childAtPosition(
@@ -99,16 +99,16 @@ public class TestAddNewRoute {
                                         withClassName(is("android.widget.ScrollView")),
                                         0),
                                 0)));
-        appCompatEditText.perform(scrollTo(), replaceText("a"), closeSoftKeyboard());
+        appCompatEditText.perform(scrollTo(), replaceText("Test Route"), closeSoftKeyboard());
 
         ViewInteraction appCompatEditText2 = onView(
-                allOf(withId(R.id.startLoc),
+                allOf(withId(R.id.editNotes),
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("android.widget.ScrollView")),
                                         0),
-                                1)));
-        appCompatEditText2.perform(scrollTo(), replaceText("a"), closeSoftKeyboard());
+                                8)));
+        appCompatEditText2.perform(scrollTo(), replaceText("trail is near Starbucks"), closeSoftKeyboard());
 
         ViewInteraction appCompatButton2 = onView(
                 allOf(withId(R.id.saveButton), withText("Save"),
@@ -119,61 +119,44 @@ public class TestAddNewRoute {
                                 10)));
         appCompatButton2.perform(scrollTo(), click());
 
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
         try {
             Thread.sleep(700);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        
+
+        ViewInteraction linearLayout = onView(
+                allOf(childAtPosition(
+                        allOf(withId(R.id.rvRoutes),
+                                childAtPosition(
+                                        withId(R.id.constraintLayout),
+                                        0)),
+                        0),
+                        isDisplayed()));
+        linearLayout.perform(click());
+
+        // Added a sleep statement to match the app's execution delay.
+        // The recommended way to handle such scenarios is to use Espresso idling resources:
+        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         ViewInteraction textView = onView(
-                allOf(withId(R.id.itemRouteName), withText("a"),
+                allOf(withId(R.id.route_notes_text), withText("trail is near Starbucks"),
                         childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.rvRoutes),
-                                        0),
-                                0),
-                        isDisplayed()));
-        textView.check(matches(withText("a")));
-
-        ViewInteraction textView2 = onView(
-                allOf(withId(R.id.itemRouteStart), withText("a"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.rvRoutes),
-                                        0),
+                                allOf(withId(R.id.notes_layout),
+                                        childAtPosition(
+                                                IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
+                                                2)),
                                 1),
                         isDisplayed()));
-        textView2.check(matches(withText("a")));
-
-        ViewInteraction textView3 = onView(
-                allOf(withId(R.id.itemRouteSteps), withText("0 steps"),
-                        childAtPosition(
-                                childAtPosition(
-                                        IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
-                                        2),
-                                0),
-                        isDisplayed()));
-        textView3.check(matches(withText("0 steps")));
-
-        ViewInteraction textView4 = onView(
-                allOf(withId(R.id.itemRouteDist), withText("0.00 mi"),
-                        childAtPosition(
-                                childAtPosition(
-                                        IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
-                                        2),
-                                1),
-                        isDisplayed()));
-        textView4.check(matches(withText("0.00 mi")));
-
-        ViewInteraction textView5 = onView(
-                allOf(withId(R.id.itemRouteTime), withText("00:00:00"),
-                        childAtPosition(
-                                childAtPosition(
-                                        IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
-                                        2),
-                                2),
-                        isDisplayed()));
-        textView5.check(matches(withText("00:00:00")));
+        textView.check(matches(withText("trail is near Starbucks")));
     }
 
     private static Matcher<View> childAtPosition(
