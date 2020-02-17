@@ -58,15 +58,6 @@ public class TestMockWalk {
 
     @Test
     public void testMockWalk() {
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.saveBtn), withText("Save"),
                         childAtPosition(
@@ -81,7 +72,7 @@ public class TestMockWalk {
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
         try {
-            Thread.sleep(5000);
+            Thread.sleep(700);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -106,15 +97,6 @@ public class TestMockWalk {
                         isDisplayed()));
         appCompatButton2.perform(click());
 
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         ViewInteraction appCompatEditText = onView(
                 allOf(withId(R.id.editStepCount),
                         childAtPosition(
@@ -123,26 +105,7 @@ public class TestMockWalk {
                                         0),
                                 0),
                         isDisplayed()));
-        appCompatEditText.perform(replaceText("10"), closeSoftKeyboard());
-
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        ViewInteraction appCompatEditText2 = onView(
-                allOf(withId(R.id.editStepCount), withText("10"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
-                                        0),
-                                0),
-                        isDisplayed()));
-        appCompatEditText2.perform(replaceText("100"));
+        appCompatEditText.perform(replaceText("100"), closeSoftKeyboard());
 
         ViewInteraction appCompatEditText3 = onView(
                 allOf(withId(R.id.editStepCount), withText("100"),
@@ -168,7 +131,7 @@ public class TestMockWalk {
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
         try {
-            Thread.sleep(5000);
+            Thread.sleep(700);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -185,15 +148,6 @@ public class TestMockWalk {
                         isDisplayed()));
         appCompatButton4.perform(click());
 
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         ViewInteraction tabView2 = onView(
                 allOf(withContentDescription("Mock"),
                         childAtPosition(
@@ -208,7 +162,7 @@ public class TestMockWalk {
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
         try {
-            Thread.sleep(5000);
+            Thread.sleep(700);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -221,36 +175,7 @@ public class TestMockWalk {
                                         0),
                                 0),
                         isDisplayed()));
-        appCompatEditText4.perform(replaceText("00"));
-
-        ViewInteraction appCompatEditText5 = onView(
-                allOf(withId(R.id.editStepCount), withText("00"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
-                                        0),
-                                0),
-                        isDisplayed()));
-        appCompatEditText5.perform(closeSoftKeyboard());
-
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        ViewInteraction appCompatEditText6 = onView(
-                allOf(withId(R.id.editStepCount), withText("00"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
-                                        0),
-                                0),
-                        isDisplayed()));
-        appCompatEditText6.perform(replaceText("200"));
+        appCompatEditText4.perform(replaceText("200"));
 
         ViewInteraction appCompatEditText7 = onView(
                 allOf(withId(R.id.editStepCount), withText("200"),
@@ -262,15 +187,6 @@ public class TestMockWalk {
                         isDisplayed()));
         appCompatEditText7.perform(closeSoftKeyboard());
 
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         ViewInteraction appCompatButton5 = onView(
                 allOf(withId(R.id.button_set_step_count), withText("Set Step Count"),
                         childAtPosition(
@@ -280,16 +196,7 @@ public class TestMockWalk {
                                 1),
                         isDisplayed()));
         appCompatButton5.perform(click());
-
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
+        
         ViewInteraction tabView3 = onView(
                 allOf(withContentDescription("Home"),
                         childAtPosition(
@@ -304,7 +211,7 @@ public class TestMockWalk {
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
         try {
-            Thread.sleep(5000);
+            Thread.sleep(700);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

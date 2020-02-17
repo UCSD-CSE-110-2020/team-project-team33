@@ -131,6 +131,7 @@ public class RouteInfoFragment extends Fragment {
                     startWalkButton.setText(getString(R.string.stop_string));
                     walkInfo.setCurrentRoute(route);
                     tabActivity.tabFragment.startWalk();
+                    returnFromPage();
                 }
             }
         });
@@ -168,4 +169,9 @@ public class RouteInfoFragment extends Fragment {
     private String formatDigits(int x){
         return x < 10 ? "0" + x : String.valueOf(x);
     }
+    
+    private void returnFromPage() {
+        tabActivity.deleteFragment(this);
+    }
+    
 }
