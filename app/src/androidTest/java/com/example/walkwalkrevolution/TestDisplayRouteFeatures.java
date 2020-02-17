@@ -63,6 +63,8 @@ public class TestDisplayRouteFeatures {
 
     @Test
     public void testDisplayRouteFeatures() {
+        MockFitnessService.nextStepCount = 0;
+
         ViewInteraction tabView = onView(
                 allOf(withContentDescription("Routes"),
                         childAtPosition(

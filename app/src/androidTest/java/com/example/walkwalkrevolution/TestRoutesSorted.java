@@ -59,6 +59,7 @@ public class TestRoutesSorted {
     
     @Test
     public void testRoutesSorted() {
+        MockFitnessService.nextStepCount = 0;
         ViewInteraction tabView = onView(
                 allOf(withContentDescription("Routes"),
                         childAtPosition(

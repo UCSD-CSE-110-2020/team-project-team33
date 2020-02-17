@@ -55,6 +55,7 @@ public class TestStartAndStopWalk {
     // Testing that starting and stopping walk from home screen pulls up enter route details
     @Test
     public void testStartAndStopWalk() {
+        MockFitnessService.nextStepCount = 0;
         ViewInteraction appCompatButton2 = onView(
                 allOf(withId(R.id.buttonStartWalk), withText("Start new walk/run"),
                         childAtPosition(

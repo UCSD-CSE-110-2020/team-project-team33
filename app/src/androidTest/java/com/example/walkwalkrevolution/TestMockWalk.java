@@ -58,6 +58,8 @@ public class TestMockWalk {
 
     @Test
     public void testMockWalk() {
+        MockFitnessService.nextStepCount = 0;
+
         ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.saveBtn), withText("Save"),
                         childAtPosition(

@@ -61,6 +61,8 @@ public class TestAddNewRoute {
 
     @Test
     public void testAddNewRoute() {
+        MockFitnessService.nextStepCount = 0;
+
         ViewInteraction tabView = onView(
                 allOf(withContentDescription("Routes"),
                         childAtPosition(

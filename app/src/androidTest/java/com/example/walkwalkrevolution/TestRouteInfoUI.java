@@ -64,6 +64,8 @@ public class TestRouteInfoUI {
 
     @Test
     public void testRouteInfoUI() {
+        MockFitnessService.nextStepCount = 0;
+
         ViewInteraction tabView = onView(
             allOf(withContentDescription("Routes"),
                 childAtPosition(
