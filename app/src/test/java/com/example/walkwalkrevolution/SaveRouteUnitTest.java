@@ -7,6 +7,8 @@ import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
+import com.example.walkwalkrevolution.account.AccountFactory;
+import com.example.walkwalkrevolution.cloud.CloudAdapterFactory;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
 import com.example.walkwalkrevolution.ui.main.EnterRouteInfoFragment;
 
@@ -44,8 +46,16 @@ public class SaveRouteUnitTest {
         intent = new Intent(ApplicationProvider.getApplicationContext(), TabActivity.class);
         FitnessServiceFactory.put(TEST_SERVICE, MockFitnessService::new);
         intent.putExtra(DataKeys.FITNESS_SERVICE_KEY, TEST_SERVICE);
+
+        AccountFactory.put(TEST_SERVICE, MockAccountInfo::new);
+        intent.putExtra(DataKeys.ACCOUNT_KEY, TEST_SERVICE);
+
+        CloudAdapterFactory.put(TEST_SERVICE, MockCloud::new);
+        intent.putExtra(DataKeys.CLOUD_KEY, TEST_SERVICE);
+
         intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, routesManager);
         intent.putExtra(DataKeys.USER_HEIGHT_KEY, DEFAULT_HEIGHT);
+
         scenario = ActivityScenario.launch(intent);
         scenario.onActivity(activity -> {
             activity.tabFragment.stepCountFragment.getStepUpdate().stop();

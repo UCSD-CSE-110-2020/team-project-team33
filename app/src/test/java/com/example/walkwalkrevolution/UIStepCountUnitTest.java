@@ -3,6 +3,8 @@ package com.example.walkwalkrevolution;
 import android.content.Intent;
 import android.widget.TextView;
 
+import com.example.walkwalkrevolution.account.AccountFactory;
+import com.example.walkwalkrevolution.cloud.CloudAdapterFactory;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
 
 import androidx.test.core.app.ActivityScenario;
@@ -29,9 +31,17 @@ public class UIStepCountUnitTest {
 
     @Before
     public void setUp() {
-        FitnessServiceFactory.put(TEST_SERVICE, MockFitnessService::new);
         intent = new Intent(ApplicationProvider.getApplicationContext(), TabActivity.class);
+
+        FitnessServiceFactory.put(TEST_SERVICE, MockFitnessService::new);
         intent.putExtra(DataKeys.FITNESS_SERVICE_KEY, TEST_SERVICE);
+
+        AccountFactory.put(TEST_SERVICE, MockAccountInfo::new);
+        intent.putExtra(DataKeys.ACCOUNT_KEY, TEST_SERVICE);
+
+        CloudAdapterFactory.put(TEST_SERVICE, MockCloud::new);
+        intent.putExtra(DataKeys.CLOUD_KEY, TEST_SERVICE);
+
         intent.putExtra(DataKeys.USER_HEIGHT_KEY, VALID_HEIGHT);
         intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, new MockRoutesManager());
     }

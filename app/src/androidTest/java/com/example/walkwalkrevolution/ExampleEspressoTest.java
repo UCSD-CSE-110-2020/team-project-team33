@@ -12,6 +12,8 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
+import com.example.walkwalkrevolution.account.AccountFactory;
+import com.example.walkwalkrevolution.cloud.CloudAdapterFactory;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
 import com.example.walkwalkrevolution.routemanagement.RoutesManager;
 
@@ -41,10 +43,18 @@ public class ExampleEspressoTest {
     public ActivityTestRule<HeightActivity> mActivityTestRule = new ActivityTestRule<HeightActivity>(HeightActivity.class) {
         @Override
         protected Intent getActivityIntent() {
-            FitnessServiceFactory.put(TEST_SERVICE, MockFitnessService::new);
             Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
             Intent intent = new Intent(targetContext, HeightActivity.class);
+
+            FitnessServiceFactory.put(TEST_SERVICE, MockFitnessService::new);
             intent.putExtra(DataKeys.FITNESS_SERVICE_KEY, TEST_SERVICE);
+
+            AccountFactory.put(TEST_SERVICE, MockAccountInfo::new);
+            intent.putExtra(DataKeys.ACCOUNT_KEY, TEST_SERVICE);
+
+            CloudAdapterFactory.put(TEST_SERVICE, MockCloud::new);
+            intent.putExtra(DataKeys.CLOUD_KEY, TEST_SERVICE);
+
             intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, new RoutesManager());
             return intent;
         }
