@@ -58,7 +58,7 @@ public class TabActivity extends AppCompatActivity {
 
         String cloudKey = getIntent().getStringExtra(DataKeys.CLOUD_KEY);
         db = CloudAdapterFactory.create(cloudKey);
-        db.addAccount(account);
+        db.setUser(account);
 
         walkInfo = new WalkInfo(getIntent().getIntExtra(DataKeys.USER_HEIGHT_KEY, 0), fitnessService);
 

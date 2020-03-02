@@ -119,6 +119,9 @@ public class EnterRouteInfoFragment extends Fragment {
                 Route route = new Route(name, startLoc, steps, distance, time, type, surface, road, difficulty, terrain, notes);
                 route.setFavorite(isFavorited);
                 routesManager.saveRoute(getActivity().getSharedPreferences(DataKeys.USER_NAME_KEY, Context.MODE_PRIVATE), route);
+                if(isSavingWalk) {
+                    routesManager.saveRecentWalk(getActivity().getSharedPreferences(DataKeys.USER_NAME_KEY, Context.MODE_PRIVATE), route);
+                }
 
                 Toast.makeText(view.getContext(), getString(R.string.saved_string), Toast.LENGTH_SHORT).show();
 

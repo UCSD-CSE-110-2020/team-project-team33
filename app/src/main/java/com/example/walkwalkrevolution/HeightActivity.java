@@ -10,6 +10,10 @@ import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
+import com.example.walkwalkrevolution.account.AccountFactory;
+import com.example.walkwalkrevolution.account.IAccountInfo;
+import com.example.walkwalkrevolution.cloud.CloudAdapterFactory;
+import com.example.walkwalkrevolution.cloud.ICloudAdapter;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
 
 import java.io.Serializable;
@@ -46,6 +50,14 @@ public class HeightActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 save(view, ftOptions.getValue(), inOptions.getValue());
+
+                String accountKey = getIntent().getStringExtra(DataKeys.ACCOUNT_KEY);
+                IAccountInfo account = AccountFactory.create(accountKey, view.getContext());
+
+                String cloudKey = getIntent().getStringExtra(DataKeys.CLOUD_KEY);
+                ICloudAdapter db = CloudAdapterFactory.create(cloudKey);
+                db.addAccount(account);
+
                 launchStepCountActivity();
             }
         });
@@ -72,6 +84,7 @@ public class HeightActivity extends AppCompatActivity {
         intent.putExtra(DataKeys.USER_HEIGHT_KEY, totalHeight);
         intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, (Serializable) routesManager);
         startActivity(intent);
+        finish();
     }
 
     @Override

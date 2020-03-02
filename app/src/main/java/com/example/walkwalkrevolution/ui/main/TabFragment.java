@@ -25,7 +25,8 @@ public class TabFragment extends Fragment {
 
     private static final int HOME_TAB_INDEX = 0;
     private static final int ROUTES_TAB_INDEX = 1;
-    private static final int MOCK_TAB_INDEX = 2;
+    private static final int TEAM_TAB = 2;
+    private static final int MOCK_TAB_INDEX = 3;
 
     private ViewPager viewPager;
     private AppBarLayout appbar;
@@ -34,6 +35,7 @@ public class TabFragment extends Fragment {
 
     public StepCountFragment stepCountFragment;
     public RoutesFragment routesFragment;
+    public TeamFragment teamFragment;
     public MockFragment mockFragment;
 
     public TabActivity tabActivity;
@@ -111,6 +113,9 @@ public class TabFragment extends Fragment {
 
         routesFragment = new RoutesFragment(this, routesManager, walkInfo);
         adapter.addFragment(routesFragment, getString(R.string.routes_tab));
+
+        teamFragment = new TeamFragment();
+        adapter.addFragment(teamFragment, getString(R.string.team_tab));
 
         mockFragment = new MockFragment(this, walkInfo);
         adapter.addFragment(mockFragment, getString(R.string.mock_tab));

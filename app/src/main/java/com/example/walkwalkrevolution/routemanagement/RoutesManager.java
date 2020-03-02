@@ -55,15 +55,21 @@ public class RoutesManager extends Observable implements IRouteManagement, Seria
     public void saveRoute(SharedPreferences sharedPreferences, Route route) {
         SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
         Gson gson = new Gson();
-        prefsEditor.putLong(DataKeys.RECENT_STEPS_KEY, route.getSteps());
-        prefsEditor.putLong(DataKeys.RECENT_DIST_KEY, Double.doubleToRawLongBits(route.getDistance()));
-        prefsEditor.putLong(DataKeys.RECENT_TIME_KEY, route.getTime());
         routes.addRoute(route);
 
         setChanged();
         notifyObservers(iterator());
 
         prefsEditor.putString(DataKeys.ROUTES_DATA_KEY, gson.toJson(routes));
+        prefsEditor.apply();
+    }
+
+    @Override
+    public void saveRecentWalk(SharedPreferences sharedPreferences, Route route) {
+        SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
+        prefsEditor.putLong(DataKeys.RECENT_STEPS_KEY, route.getSteps());
+        prefsEditor.putLong(DataKeys.RECENT_DIST_KEY, Double.doubleToRawLongBits(route.getDistance()));
+        prefsEditor.putLong(DataKeys.RECENT_TIME_KEY, route.getTime());
         prefsEditor.apply();
     }
 
