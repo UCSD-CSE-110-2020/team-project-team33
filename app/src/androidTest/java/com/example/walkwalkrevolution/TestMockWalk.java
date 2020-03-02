@@ -61,7 +61,7 @@ public class TestMockWalk {
         MockFitnessService.nextStepCount = 0;
 
         ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.saveBtn), withText("Save"),
+                allOf(withId(R.id.save_button), withText("Save"),
                         childAtPosition(
                                 childAtPosition(
                                         withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),

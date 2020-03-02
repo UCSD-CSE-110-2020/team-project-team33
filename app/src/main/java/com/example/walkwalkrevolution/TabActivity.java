@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.example.walkwalkrevolution.account.AccountFactory;
+import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.fitness.FitnessService;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
@@ -34,6 +36,8 @@ public class TabActivity extends AppCompatActivity {
 
     private FitnessService fitnessService;
 
+    private IAccountInfo account;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.i(TAG, "Successfully launched step count activity");
@@ -45,6 +49,9 @@ public class TabActivity extends AppCompatActivity {
         String fitnessServiceKey = getIntent().getStringExtra(DataKeys.FITNESS_SERVICE_KEY);
         fitnessService = FitnessServiceFactory.create(fitnessServiceKey, this);
         fitnessService.setup();
+
+        String accountKey = getIntent().getStringExtra(DataKeys.ACCOUNT_KEY);
+        account = AccountFactory.create(accountKey, this);
 
         walkInfo = new WalkInfo(getIntent().getIntExtra(DataKeys.USER_HEIGHT_KEY, 0), fitnessService);
 

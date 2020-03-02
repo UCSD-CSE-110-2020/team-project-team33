@@ -41,7 +41,7 @@ public class HeightActivity extends AppCompatActivity {
         inOptions.setWrapSelectorWheel(false);
 
 
-        Button saveBtn = findViewById(R.id.saveBtn);
+        Button saveBtn = findViewById(R.id.save_button);
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -49,8 +49,6 @@ public class HeightActivity extends AppCompatActivity {
                 launchStepCountActivity();
             }
         });
-
-
     }
 
     public void save(View view, int feet, int inches) {
