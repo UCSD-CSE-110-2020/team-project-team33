@@ -14,6 +14,7 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
 import com.example.walkwalkrevolution.account.AccountFactory;
+import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.cloud.CloudAdapterFactory;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
 import com.example.walkwalkrevolution.routemanagement.RoutesManager;
@@ -55,8 +56,17 @@ public class MockStepCountTest {
             FitnessServiceFactory.put(TEST_SERVICE, MockFitnessService::new);
             intent.putExtra(DataKeys.FITNESS_SERVICE_KEY, TEST_SERVICE);
 
-            AccountFactory.put(TEST_SERVICE, MockAccountInfo::new);
-            intent.putExtra(DataKeys.ACCOUNT_KEY, TEST_SERVICE);
+            AccountFactory.put(TEST_SERVICE, new AccountFactory.BluePrint() {
+                @Override
+                public IAccountInfo create(Context context) {
+                    return new MockAccountInfo(context);
+                }
+
+                @Override
+                public IAccountInfo create(String first, String last, String gmail) {
+                    return new MockAccountInfo(first, last, gmail);
+                }
+            });            intent.putExtra(DataKeys.ACCOUNT_KEY, TEST_SERVICE);
 
             CloudAdapterFactory.put(TEST_SERVICE, MockCloud::new);
             intent.putExtra(DataKeys.CLOUD_KEY, TEST_SERVICE);
@@ -98,7 +108,7 @@ public class MockStepCountTest {
                                 childAtPosition(
                                         withId(R.id.tabs),
                                         0),
-                                2),
+                                3),
                         isDisplayed()));
         tabView.perform(click());
 

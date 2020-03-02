@@ -14,6 +14,12 @@ public class MockAccountInfo implements IAccountInfo {
         super();
     }
 
+    public MockAccountInfo(String f, String l, String g) {
+        firstName = f;
+        lastName = l;
+        gmail = g;
+    }
+
     @Override
     public String getFirstName() {
         return firstName;
