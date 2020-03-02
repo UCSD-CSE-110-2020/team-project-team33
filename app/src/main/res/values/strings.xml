@@ -26,10 +26,15 @@
     <string name="empty_name_err_string">Name cannot be empty</string>
     <string name="long_name_err_string">Please enter a shorter name</string>
 
+    <string name="first_name_text">First Name</string>
+    <string name="last_name_text">Last Name</string>
+    <string name="gmail_text">GMail</string>
+    <string name="signin_button_text">Sign-In</string>
     <string name="height_text">Please enter your height</string>
     <string name="foot_text">ft</string>
     <string name="inch_text">in</string>
     <string name="save_button_text">Save</string>
+    <string name="sign_up_text">Sign-Up</string>
     <string name="title_activity_route_info">RouteInfoActivity</string>
 
     <string name="step_count_button_text">Set Step Count</string>

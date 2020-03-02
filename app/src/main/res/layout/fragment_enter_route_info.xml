@@ -132,7 +132,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginBottom="4dp"
-                        android:text="Save" />
+                        android:text="@string/save_button_text" />
                 </LinearLayout>
             </ScrollView>
 
