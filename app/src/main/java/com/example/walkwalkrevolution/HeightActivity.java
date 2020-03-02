@@ -67,6 +67,8 @@ public class HeightActivity extends AppCompatActivity {
     public void launchStepCountActivity() {
         Intent intent = new Intent(this, TabActivity.class);
         intent.putExtra(DataKeys.FITNESS_SERVICE_KEY, getIntent().getStringExtra(DataKeys.FITNESS_SERVICE_KEY));
+        intent.putExtra(DataKeys.ACCOUNT_KEY, getIntent().getStringExtra(DataKeys.ACCOUNT_KEY));
+        intent.putExtra(DataKeys.CLOUD_KEY, getIntent().getStringExtra(DataKeys.CLOUD_KEY));
         intent.putExtra(DataKeys.USER_HEIGHT_KEY, totalHeight);
         intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, (Serializable) routesManager);
         startActivity(intent);

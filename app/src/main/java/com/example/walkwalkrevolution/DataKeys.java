@@ -3,9 +3,10 @@ package com.example.walkwalkrevolution;
 public class DataKeys {
     public static final String FITNESS_SERVICE_KEY = "FITNESS_SERVICE_KEY";
     public static final String ROUTE_MANAGER_KEY = "ROUTE_MANAGER";
+    public static final String ACCOUNT_KEY = "USER_ACCOUNT";
+    public static final String CLOUD_KEY = "CLOUD_MANAGER";
 
     public static final String USER_HEIGHT_KEY = "USER_HEIGHT";
-    public static final String ACCOUNT_KEY = "USER_ACCOUNT";
 
     public static final String USER_NAME_KEY = "USER_NAME";
 

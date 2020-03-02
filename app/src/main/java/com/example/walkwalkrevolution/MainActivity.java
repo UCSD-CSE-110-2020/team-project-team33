@@ -11,6 +11,9 @@ import android.util.Log;
 import com.example.walkwalkrevolution.account.AccountFactory;
 import com.example.walkwalkrevolution.account.AccountInfo;
 import com.example.walkwalkrevolution.account.IAccountInfo;
+import com.example.walkwalkrevolution.cloud.CloudAdapterFactory;
+import com.example.walkwalkrevolution.cloud.FirebaseAdapter;
+import com.example.walkwalkrevolution.cloud.ICloudAdapter;
 import com.example.walkwalkrevolution.fitness.*;
 import com.example.walkwalkrevolution.routemanagement.RoutesManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -21,12 +24,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 public class MainActivity extends AppCompatActivity {
     private String fitnessServiceKey = "GOOGLE_FIT";
     private String ACCOUNT_INFO_KEY = "GMAIL_ACCOUNT";
+    private String FIREBASE_KEY = "FIREBASE";
     private int userHeight;
     private GoogleSignInAccount account;
     private SharedPreferences sharedPreferences;
     private RoutesManager routesManager;
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "[MainActivity]";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public IAccountInfo create(Context context) {
                 return new AccountInfo(context);
+            }
+        });
+        CloudAdapterFactory.put(FIREBASE_KEY, new CloudAdapterFactory.BluePrint() {
+            @Override
+            public ICloudAdapter create() {
+                return new FirebaseAdapter();
             }
         });
 
@@ -65,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(DataKeys.ACCOUNT_KEY, ACCOUNT_INFO_KEY);
         intent.putExtra(DataKeys.USER_HEIGHT_KEY, userHeight);
         intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, routesManager);
+        intent.putExtra(DataKeys.CLOUD_KEY, FIREBASE_KEY);
         startActivity(intent);
     }
 
@@ -74,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, routesManager);
         intent.putExtra(DataKeys.FITNESS_SERVICE_KEY, fitnessServiceKey);
         intent.putExtra(DataKeys.ACCOUNT_KEY, ACCOUNT_INFO_KEY);
+        intent.putExtra(DataKeys.CLOUD_KEY, FIREBASE_KEY);
         startActivity(intent);
 
         if(account == null) {
