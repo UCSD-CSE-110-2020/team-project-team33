@@ -10,6 +10,7 @@ import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.routemanagement.Route;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -25,12 +26,16 @@ public class FirebaseAdapter implements ICloudAdapter {
     private static final String TAG = "[FirebaseAdapter]";
 
     private static final String USERS_COLLECTION = "USERS";
+    private static final String TEAMS_COLLECTION = "TEAMS";
 
+    private static final String TEAM_ID_KEY = "TEAM_ID";
     private static final String FIRST_NAME_KEY = "FIRST";
     private static final String LAST_NAME_KEY = "LAST";
     private static final String GMAIL_KEY = "GMAIL";
     private static final String ROUTES_KEY = "ROUTES";
     private static final String INVITES_KEY = "INVITES";
+
+    private static final String TEAMMATE_IDS_KEY = "TEAMMATE_IDS";
 
     private FirebaseFirestore db;
 
@@ -43,39 +48,77 @@ public class FirebaseAdapter implements ICloudAdapter {
 
     @Override
     public void addAccount(IAccountInfo account) {
-        Gson gson = new Gson();
-
-        Map<String, Object> user = new HashMap<>();
-        user.put(FIRST_NAME_KEY, account.getFirstName());
-        Log.d(TAG, "Account First Name: " + account.getFirstName());
-        user.put(LAST_NAME_KEY, account.getLastName());
-        Log.d(TAG, "Account Last Name: " + account.getLastName());
-        user.put(GMAIL_KEY, account.getGmail());
-        Log.d(TAG, "Account Gmail: " + account.getGmail());
-        ArrayList<Route> routes = new ArrayList<>();
-        user.put(ROUTES_KEY, gson.toJson(routes));
-        ArrayList<String> invites = new ArrayList<>();
-        user.put(INVITES_KEY, invites);
-
-        // Prevents the addition of duplicate accounts
-        db.collection(USERS_COLLECTION)
-                .whereEqualTo(GMAIL_KEY, account.getGmail())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        Map<String, Object> team = new HashMap<>();
+        team.put(TEAMMATE_IDS_KEY, new ArrayList<String>());
+        db.collection(TEAMS_COLLECTION)
+                .add(team)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            boolean accountExists = false;
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                accountExists = true;
-                                Log.i(TAG, "Account with gmail " + account.getGmail() + " already exists");
-                                break;
-                            }
-                        } else {
-                            Log.w(TAG, "Error getting users: ", task.getException());
-                        }
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.i(TAG, "Added team with ID: " + documentReference.getId());
+
+                        Gson gson = new Gson();
+                        Map<String, Object> user = new HashMap<>();
+
+                        user.put(FIRST_NAME_KEY, account.getFirstName());
+                        Log.d(TAG, "Account First Name: " + account.getFirstName());
+
+                        user.put(LAST_NAME_KEY, account.getLastName());
+                        Log.d(TAG, "Account Last Name: " + account.getLastName());
+
+                        user.put(GMAIL_KEY, account.getGmail());
+                        Log.d(TAG, "Account Gmail: " + account.getGmail());
+
+                        user.put(TEAM_ID_KEY, documentReference.getId());
+
+                        ArrayList<Route> routes = new ArrayList<>();
+                        user.put(ROUTES_KEY, gson.toJson(routes));
+
+                        ArrayList<String> invites = new ArrayList<>();
+                        user.put(INVITES_KEY, invites);
+
+                        // Prevents the addition of duplicate accounts
+                        db.collection(USERS_COLLECTION)
+                                .whereEqualTo(GMAIL_KEY, account.getGmail())
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            boolean accountExists = false;
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                accountExists = true;
+                                                Log.i(TAG, "Account with gmail " + account.getGmail() + " already exists");
+                                                break;
+                                            }
+                                            if(!accountExists) {
+                                                db.collection(USERS_COLLECTION)
+                                                        .add(user)
+                                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                            @Override
+                                                            public void onSuccess(DocumentReference documentReference) {
+                                                                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                                                            }
+                                                        })
+                                                        .addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+                                                                Log.w(TAG, "Error adding user", e);
+                                                            }
+                                                        });
+                                            }
+                                        } else {
+                                            Log.w(TAG, "Error getting users: ", task.getException());
+                                        }
+                                    }
+                                });
                     }
-                });
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Error adding team", e);
+            }
+        });
     }
 
     @Override
@@ -172,5 +215,29 @@ public class FirebaseAdapter implements ICloudAdapter {
                         }
                     }
                 });
+    }
+
+    @Override
+    public void saveRoutes(Iterable<Route> routeManager) {
+        Gson gson = new Gson();
+        ArrayList<Route> routes = new ArrayList<>();
+        for(Route r : routeManager) {
+            routes.add(r);
+        }
+
+        db.collection(USERS_COLLECTION)
+                .document(userId)
+                .update(ROUTES_KEY, gson.toJson(routes))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.i(TAG, "Routes saved to the cloud");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Routes failed to saved: ", e);
+            }
+        });
     }
 }

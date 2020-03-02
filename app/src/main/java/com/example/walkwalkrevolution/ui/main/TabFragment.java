@@ -14,6 +14,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.example.walkwalkrevolution.DataKeys;
 import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.TabActivity;
+import com.example.walkwalkrevolution.cloud.ICloudAdapter;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
 import com.example.walkwalkrevolution.routemanagement.Route;
 import com.example.walkwalkrevolution.walktracker.WalkInfo;
@@ -41,13 +42,15 @@ public class TabFragment extends Fragment {
     public TabActivity tabActivity;
     private WalkInfo walkInfo;
     private IRouteManagement routesManager;
+    private ICloudAdapter db;
 
     private boolean walkStarted;
 
-    public TabFragment(TabActivity t, WalkInfo w, IRouteManagement r) {
+    public TabFragment(TabActivity t, WalkInfo w, IRouteManagement r, ICloudAdapter c) {
         tabActivity = t;
         walkInfo = w;
         routesManager = r;
+        db = c;
     }
 
     @Nullable
@@ -99,6 +102,7 @@ public class TabFragment extends Fragment {
             walkInfo.getCurrentRoute().setDistance(walkInfo.getWalkDistance());
             walkInfo.getCurrentRoute().setTime(walkInfo.getWalkTime());
             routesManager.saveRoute(getActivity().getSharedPreferences(DataKeys.USER_NAME_KEY, Context.MODE_PRIVATE), walkInfo.getCurrentRoute());
+            db.saveRoutes((Iterable<Route>) routesManager);
             Route tmp = walkInfo.getCurrentRoute();
             walkInfo.setCurrentRoute(null);
             tabActivity.launchRouteInfo(tmp);

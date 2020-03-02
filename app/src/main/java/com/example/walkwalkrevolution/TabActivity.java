@@ -65,19 +65,19 @@ public class TabActivity extends AppCompatActivity {
 
         fragmentManager = getSupportFragmentManager();
 
-        tabFragment = new TabFragment(this, walkInfo, routesManager);
+        tabFragment = new TabFragment(this, walkInfo, routesManager, db);
         fragmentManager.beginTransaction().add(R.id.fragmentContainer, tabFragment).commit();
     }
 
     public void launchEnterRouteInfo(boolean isSavingWalk) {
         Log.i(TAG, "Launching enter route info fragment");
-        EnterRouteInfoFragment fragment = new EnterRouteInfoFragment(this, routesManager, walkInfo, isSavingWalk);
+        EnterRouteInfoFragment fragment = new EnterRouteInfoFragment(this, routesManager, walkInfo, isSavingWalk, db);
         launchFragment(fragment);
     }
 
     public void launchRouteInfo(Route route) {
         Log.i(TAG, "Launching route info fragment");
-        RouteInfoFragment fragment = new RouteInfoFragment(this, route, walkInfo, routesManager);
+        RouteInfoFragment fragment = new RouteInfoFragment(this, route, walkInfo, routesManager, db);
         launchFragment(fragment);
     }
 

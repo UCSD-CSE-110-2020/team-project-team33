@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-public class RoutesManager extends Observable implements IRouteManagement, Serializable, Iterable {
+public class RoutesManager extends Observable implements IRouteManagement, Serializable, Iterable<Route> {
 
     RoutesData routes;
 
