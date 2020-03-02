@@ -61,4 +61,7 @@
 
     <string name="invite_button">Invite</string>
     <string name="invite_fragment_title">Invite</string>
+    <string name="invite_first_name_error">Please enter a first name</string>
+    <string name="invite_last_name_error">Please enter a last name</string>
+    <string name="invite_email_error">Please enter a GMail</string>
 </resources>

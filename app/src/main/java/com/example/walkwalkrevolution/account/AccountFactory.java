@@ -21,7 +21,14 @@ public class AccountFactory {
         return blueprints.get(key).create(context);
     }
 
+    public static IAccountInfo create(String key, String first, String last, String gmail) {
+        Log.i(TAG, String.format("creating AccountInfo with key %s", key));
+        return blueprints.get(key).create(first, last, gmail);
+    }
+
     public interface BluePrint {
         IAccountInfo create(Context context);
+
+        IAccountInfo create(String first, String last, String gmail);
     }
 }

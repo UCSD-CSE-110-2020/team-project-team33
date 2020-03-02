@@ -83,7 +83,7 @@ public class TabActivity extends AppCompatActivity {
 
     public void launchInvite() {
         Log.i(TAG, "Launching invite fragment");
-        InviteFragment inviteFragment = new InviteFragment();
+        InviteFragment inviteFragment = new InviteFragment(db, this);
         launchFragment(inviteFragment);
     }
 
