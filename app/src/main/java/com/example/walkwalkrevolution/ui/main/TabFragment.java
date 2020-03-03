@@ -14,6 +14,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.example.walkwalkrevolution.DataKeys;
 import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.TabActivity;
+import com.example.walkwalkrevolution.cloud.ICloudAdapter;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
 import com.example.walkwalkrevolution.routemanagement.Route;
 import com.example.walkwalkrevolution.walktracker.WalkInfo;
@@ -25,7 +26,8 @@ public class TabFragment extends Fragment {
 
     private static final int HOME_TAB_INDEX = 0;
     private static final int ROUTES_TAB_INDEX = 1;
-    private static final int MOCK_TAB_INDEX = 2;
+    private static final int TEAM_TAB = 2;
+    private static final int MOCK_TAB_INDEX = 3;
 
     private ViewPager viewPager;
     private AppBarLayout appbar;
@@ -34,18 +36,21 @@ public class TabFragment extends Fragment {
 
     public StepCountFragment stepCountFragment;
     public RoutesFragment routesFragment;
+    public TeamFragment teamFragment;
     public MockFragment mockFragment;
 
     public TabActivity tabActivity;
     private WalkInfo walkInfo;
     private IRouteManagement routesManager;
+    private ICloudAdapter db;
 
     private boolean walkStarted;
 
-    public TabFragment(TabActivity t, WalkInfo w, IRouteManagement r) {
+    public TabFragment(TabActivity t, WalkInfo w, IRouteManagement r, ICloudAdapter c) {
         tabActivity = t;
         walkInfo = w;
         routesManager = r;
+        db = c;
     }
 
     @Nullable
@@ -97,6 +102,7 @@ public class TabFragment extends Fragment {
             walkInfo.getCurrentRoute().setDistance(walkInfo.getWalkDistance());
             walkInfo.getCurrentRoute().setTime(walkInfo.getWalkTime());
             routesManager.saveRoute(getActivity().getSharedPreferences(DataKeys.USER_NAME_KEY, Context.MODE_PRIVATE), walkInfo.getCurrentRoute());
+            db.saveRoutes((Iterable<Route>) routesManager);
             Route tmp = walkInfo.getCurrentRoute();
             walkInfo.setCurrentRoute(null);
             tabActivity.launchRouteInfo(tmp);
@@ -111,6 +117,9 @@ public class TabFragment extends Fragment {
 
         routesFragment = new RoutesFragment(this, routesManager, walkInfo);
         adapter.addFragment(routesFragment, getString(R.string.routes_tab));
+
+        teamFragment = new TeamFragment(this);
+        adapter.addFragment(teamFragment, getString(R.string.team_tab));
 
         mockFragment = new MockFragment(this, walkInfo);
         adapter.addFragment(mockFragment, getString(R.string.mock_tab));

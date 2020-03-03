@@ -15,6 +15,7 @@ import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
 import com.example.walkwalkrevolution.routemanagement.Route;
 import com.example.walkwalkrevolution.ui.main.EnterRouteInfoFragment;
+import com.example.walkwalkrevolution.ui.main.InviteFragment;
 import com.example.walkwalkrevolution.ui.main.RouteInfoFragment;
 import com.example.walkwalkrevolution.ui.main.TabFragment;
 import com.example.walkwalkrevolution.walktracker.WalkInfo;
@@ -58,29 +59,35 @@ public class TabActivity extends AppCompatActivity {
 
         String cloudKey = getIntent().getStringExtra(DataKeys.CLOUD_KEY);
         db = CloudAdapterFactory.create(cloudKey);
-        db.addAccount(account);
+        db.setUser(account);
 
         walkInfo = new WalkInfo(getIntent().getIntExtra(DataKeys.USER_HEIGHT_KEY, 0), fitnessService);
 
         fragmentManager = getSupportFragmentManager();
 
-        tabFragment = new TabFragment(this, walkInfo, routesManager);
+        tabFragment = new TabFragment(this, walkInfo, routesManager, db);
         fragmentManager.beginTransaction().add(R.id.fragmentContainer, tabFragment).commit();
     }
 
     public void launchEnterRouteInfo(boolean isSavingWalk) {
         Log.i(TAG, "Launching enter route info fragment");
-        EnterRouteInfoFragment fragment = new EnterRouteInfoFragment(this, routesManager, walkInfo, isSavingWalk);
-        fragmentManager.beginTransaction().hide(tabFragment).commit();
-        currentFragment = fragment;
-        fragmentManager.beginTransaction()
-                .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
-                .add(R.id.fragmentContainer, fragment).commit();
+        EnterRouteInfoFragment fragment = new EnterRouteInfoFragment(this, routesManager, walkInfo, isSavingWalk, db);
+        launchFragment(fragment);
     }
 
     public void launchRouteInfo(Route route) {
-        Log.i(TAG, "Launching route info");
-        RouteInfoFragment fragment = new RouteInfoFragment(this, route, walkInfo, routesManager);
+        Log.i(TAG, "Launching route info fragment");
+        RouteInfoFragment fragment = new RouteInfoFragment(this, route, walkInfo, routesManager, db);
+        launchFragment(fragment);
+    }
+
+    public void launchInvite() {
+        Log.i(TAG, "Launching invite fragment");
+        InviteFragment inviteFragment = new InviteFragment(db, this);
+        launchFragment(inviteFragment);
+    }
+
+    public void launchFragment(Fragment fragment) {
         fragmentManager.beginTransaction().hide(tabFragment).commit();
         currentFragment = fragment;
         fragmentManager.beginTransaction()

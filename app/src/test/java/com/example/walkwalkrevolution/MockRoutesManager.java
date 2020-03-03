@@ -38,14 +38,18 @@ public class MockRoutesManager extends Observable implements IRouteManagement, S
 
     @Override
     public void saveRoute(SharedPreferences sharedPreferences, Route route) {
+        routes.add(route);
+        setChanged();
+        notifyObservers(iterator());
+    }
+
+    @Override
+    public void saveRecentWalk(SharedPreferences sharedPreferences, Route route) {
         recentSteps = route.getSteps();
         recentDistance = route.getDistance();
         recentTime = route.getTime();
         recentName = route.getName();
         recentStart = route.getStartLoc();
-        routes.add(route);
-        setChanged();
-        notifyObservers(iterator());
     }
 
     @NonNull

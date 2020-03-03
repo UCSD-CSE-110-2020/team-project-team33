@@ -6,6 +6,8 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -25,6 +27,7 @@ import com.example.walkwalkrevolution.Constants;
 import com.example.walkwalkrevolution.DataKeys;
 import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.TabActivity;
+import com.example.walkwalkrevolution.cloud.ICloudAdapter;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
 import com.example.walkwalkrevolution.routemanagement.Route;
 import com.example.walkwalkrevolution.routemanagement.RouteFeatures.RouteFeatures;
@@ -33,27 +36,38 @@ import com.example.walkwalkrevolution.walktracker.WalkInfo;
 public class EnterRouteInfoFragment extends Fragment {
     public static final String TAG = "EnterRouteInfoFragment";
 
-    IRouteManagement routesManager;
-    TabActivity tabActivity;
-    String[] features = new String[Constants.NUM_FEATURES];
-    boolean isFavorited = false;
-    WalkInfo walkInfo;
-    boolean isSavingWalk = true;
-    double distance = 0;
-    long steps = 0;
-    long time = 0;
+    private IRouteManagement routesManager;
+    private TabActivity tabActivity;
+    private ICloudAdapter db;
+    private String[] features = new String[Constants.NUM_FEATURES];
+    private boolean isFavorited = false;
+    private WalkInfo walkInfo;
+    private boolean isSavingWalk = true;
+    private double distance = 0;
+    private long steps = 0;
+    private long time = 0;
 
-    public EnterRouteInfoFragment(TabActivity tabs, IRouteManagement routeMan, WalkInfo walk, Boolean isSavingWalk) {
+    public EnterRouteInfoFragment(TabActivity tabs, IRouteManagement routeMan, WalkInfo walk, Boolean isSavingWalk, ICloudAdapter c) {
         tabActivity = tabs;
         routesManager = routeMan;
         walkInfo = walk;
         this.isSavingWalk = isSavingWalk;
+        db = c;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_enter_route_info, container, false);
+
+        Toolbar toolbar = view.findViewById(R.id.route_toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
+        if (((AppCompatActivity) getActivity()).getSupportActionBar() != null){
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.enter_route_info_title);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
 
         if (isSavingWalk) {
             distance = walkInfo.getWalkDistance();
@@ -119,6 +133,10 @@ public class EnterRouteInfoFragment extends Fragment {
                 Route route = new Route(name, startLoc, steps, distance, time, type, surface, road, difficulty, terrain, notes);
                 route.setFavorite(isFavorited);
                 routesManager.saveRoute(getActivity().getSharedPreferences(DataKeys.USER_NAME_KEY, Context.MODE_PRIVATE), route);
+                db.saveRoutes((Iterable<Route>) routesManager);
+                if(isSavingWalk) {
+                    routesManager.saveRecentWalk(getActivity().getSharedPreferences(DataKeys.USER_NAME_KEY, Context.MODE_PRIVATE), route);
+                }
 
                 Toast.makeText(view.getContext(), getString(R.string.saved_string), Toast.LENGTH_SHORT).show();
 

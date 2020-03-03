@@ -23,6 +23,12 @@ public class AccountInfo implements IAccountInfo {
         gmail = account.getEmail();
     }
 
+    public AccountInfo(String f, String l, String g) {
+        firstName = f;
+        lastName = l;
+        gmail = g;
+    }
+
     public String getFirstName() {
         return firstName;
     }

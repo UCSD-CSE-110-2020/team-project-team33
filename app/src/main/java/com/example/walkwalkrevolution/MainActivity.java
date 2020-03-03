@@ -48,6 +48,11 @@ public class MainActivity extends AppCompatActivity {
             public IAccountInfo create(Context context) {
                 return new AccountInfo(context);
             }
+
+            @Override
+            public IAccountInfo create(String first, String last, String gmail) {
+                return new AccountInfo(first, last, gmail);
+            }
         });
         CloudAdapterFactory.put(FIREBASE_KEY, new CloudAdapterFactory.BluePrint() {
             @Override

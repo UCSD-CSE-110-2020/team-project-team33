@@ -46,6 +46,7 @@ public class StepCountFragment extends Fragment implements Observer {
         walkInfo = w;
         stepUpdate = new StepUpdate(this, w, Constants.UPDATE_STEPS_INTERVAL);
         walkUpdate = new WalkUpdate(this, w, Constants.SECOND_MILLIS);
+        stepUpdate.start();
     }
 
     @Nullable
@@ -68,8 +69,6 @@ public class StepCountFragment extends Fragment implements Observer {
         setWalkStepsText(routesManager.getRecentSteps(sharedPreferences));
         setWalkDistanceText(routesManager.getRecentDistance(sharedPreferences));
         setTimerText(routesManager.getRecentTime(sharedPreferences));
-
-        stepUpdate.start();
 
         return view;
     }

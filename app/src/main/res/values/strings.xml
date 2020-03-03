@@ -3,6 +3,7 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="home_tab">Home</string>
     <string name="routes_tab">Routes</string>
+    <string name="team_tab">Team</string>
     <string name="mock_tab">Mock</string>
 
     <string name="general_placeholder">{{Placeholder}}</string>
@@ -57,4 +58,10 @@
 
     <string name="notes_title">Notes</string>
     <string name="title_activity_main2">Main2Activity</string>
+
+    <string name="invite_button">Invite</string>
+    <string name="invite_fragment_title">Invite</string>
+    <string name="invite_first_name_error">Please enter a first name</string>
+    <string name="invite_last_name_error">Please enter a last name</string>
+    <string name="invite_email_error">Please enter a GMail</string>
 </resources>

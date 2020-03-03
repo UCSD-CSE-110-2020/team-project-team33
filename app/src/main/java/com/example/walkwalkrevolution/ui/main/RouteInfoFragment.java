@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.example.walkwalkrevolution.DataKeys;
 import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.TabActivity;
+import com.example.walkwalkrevolution.cloud.ICloudAdapter;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
 import com.example.walkwalkrevolution.routemanagement.Route;
 import com.example.walkwalkrevolution.walktracker.WalkInfo;
@@ -30,6 +31,7 @@ public class RouteInfoFragment extends Fragment {
     private TabActivity tabActivity;
     private WalkInfo walkInfo;
     private IRouteManagement routeManagement;
+    private ICloudAdapter db;
 
     private TextView textSteps;
     private TextView textDistance;
@@ -48,11 +50,12 @@ public class RouteInfoFragment extends Fragment {
 
     private Button startWalkButton;
 
-    public RouteInfoFragment(TabActivity t, Route r, WalkInfo w, IRouteManagement rm) {
+    public RouteInfoFragment(TabActivity t, Route r, WalkInfo w, IRouteManagement rm, ICloudAdapter c) {
         tabActivity = t;
         route = r;
         walkInfo = w;
         routeManagement = rm;
+        db = c;
     }
 
     @Nullable
@@ -115,6 +118,7 @@ public class RouteInfoFragment extends Fragment {
                 route.setFavorite(!route.getFavorite());
                 favoriteButton.setImageDrawable(getContext().getDrawable(route.getFavorite() ? R.drawable.ic_favorite_24px : R.drawable.ic_favorite_border_24px));
                 routeManagement.saveRoute(getActivity().getSharedPreferences(DataKeys.USER_NAME_KEY, Context.MODE_PRIVATE), route);
+                db.saveRoutes((Iterable<Route>) routeManagement);
             }
         });
 
