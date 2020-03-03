@@ -18,6 +18,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -48,77 +49,87 @@ public class FirebaseAdapter implements ICloudAdapter {
 
     @Override
     public void addAccount(IAccountInfo account) {
-        Map<String, Object> team = new HashMap<>();
-        team.put(TEAMMATE_IDS_KEY, new ArrayList<String>());
-        db.collection(TEAMS_COLLECTION)
-                .add(team)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        user = account;
+
+        Gson gson = new Gson();
+        Map<String, Object> user = new HashMap<>();
+
+        user.put(FIRST_NAME_KEY, account.getFirstName());
+        Log.d(TAG, "Account First Name: " + account.getFirstName());
+
+        user.put(LAST_NAME_KEY, account.getLastName());
+        Log.d(TAG, "Account Last Name: " + account.getLastName());
+
+        user.put(GMAIL_KEY, account.getGmail());
+        Log.d(TAG, "Account Gmail: " + account.getGmail());
+
+        user.put(TEAM_ID_KEY, "");
+
+        ArrayList<Route> routes = new ArrayList<>();
+        user.put(ROUTES_KEY, gson.toJson(routes));
+
+        ArrayList<String> invites = new ArrayList<>();
+        user.put(INVITES_KEY, invites);
+
+        // Prevents the addition of duplicate accounts
+        db.collection(USERS_COLLECTION)
+                .whereEqualTo(GMAIL_KEY, account.getGmail())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.i(TAG, "Added team with ID: " + documentReference.getId());
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            boolean accountExists = false;
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                accountExists = true;
+                                Log.i(TAG, "Account with gmail " + account.getGmail() + " already exists");
+                                break;
+                            }
+                            if (!accountExists) {
+                                db.collection(USERS_COLLECTION)
+                                        .add(user)
+                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                            @Override
+                                            public void onSuccess(DocumentReference documentReference) {
+                                                Log.d(TAG, "User added with ID: " + documentReference.getId());
+                                                userId = documentReference.getId();
 
-                        Gson gson = new Gson();
-                        Map<String, Object> user = new HashMap<>();
-
-                        user.put(FIRST_NAME_KEY, account.getFirstName());
-                        Log.d(TAG, "Account First Name: " + account.getFirstName());
-
-                        user.put(LAST_NAME_KEY, account.getLastName());
-                        Log.d(TAG, "Account Last Name: " + account.getLastName());
-
-                        user.put(GMAIL_KEY, account.getGmail());
-                        Log.d(TAG, "Account Gmail: " + account.getGmail());
-
-                        user.put(TEAM_ID_KEY, documentReference.getId());
-
-                        ArrayList<Route> routes = new ArrayList<>();
-                        user.put(ROUTES_KEY, gson.toJson(routes));
-
-                        ArrayList<String> invites = new ArrayList<>();
-                        user.put(INVITES_KEY, invites);
-
-                        // Prevents the addition of duplicate accounts
-                        db.collection(USERS_COLLECTION)
-                                .whereEqualTo(GMAIL_KEY, account.getGmail())
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            boolean accountExists = false;
-                                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                                accountExists = true;
-                                                Log.i(TAG, "Account with gmail " + account.getGmail() + " already exists");
-                                                break;
-                                            }
-                                            if(!accountExists) {
-                                                db.collection(USERS_COLLECTION)
-                                                        .add(user)
+                                                // Add the team the user is a part of
+                                                Map<String, Object> team = new HashMap<>();
+                                                ArrayList<String> ids = new ArrayList<>();
+                                                ids.add(documentReference.getId());
+                                                team.put(TEAMMATE_IDS_KEY, ids);
+                                                db.collection(TEAMS_COLLECTION)
+                                                        .add(team)
                                                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                                             @Override
                                                             public void onSuccess(DocumentReference documentReference) {
-                                                                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                                                                Log.i(TAG, "Added team with ID: " + documentReference.getId());
+
+                                                                db.collection(USERS_COLLECTION)
+                                                                        .document(userId)
+                                                                        .update(TEAM_ID_KEY, documentReference.getId());
                                                             }
-                                                        })
-                                                        .addOnFailureListener(new OnFailureListener() {
-                                                            @Override
-                                                            public void onFailure(@NonNull Exception e) {
-                                                                Log.w(TAG, "Error adding user", e);
-                                                            }
-                                                        });
+                                                        }).addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.w(TAG, "Error adding team", e);
+                                                    }
+                                                });
                                             }
-                                        } else {
-                                            Log.w(TAG, "Error getting users: ", task.getException());
-                                        }
-                                    }
-                                });
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w(TAG, "Error adding user", e);
+                                            }
+                                        });
+                            }
+                        } else {
+                            Log.w(TAG, "Error getting users: ", task.getException());
+                        }
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, "Error adding team", e);
-            }
-        });
+                });
     }
 
     @Override
@@ -135,11 +146,11 @@ public class FirebaseAdapter implements ICloudAdapter {
                         if (task.isSuccessful()) {
 
                             QueryDocumentSnapshot document = null;
-                            if(!task.getResult().isEmpty()) {
+                            if (!task.getResult().isEmpty()) {
                                 document = task.getResult().iterator().next();
                             }
 
-                            if(document == null) {
+                            if (document == null) {
                                 Log.i(TAG, account.getGmail() + " not found");
                             } else {
                                 userId = document.getId();
@@ -160,7 +171,7 @@ public class FirebaseAdapter implements ICloudAdapter {
 
     @Override
     public void invite(IAccountInfo recipient, Context context) {
-        if(recipient.getGmail().equals(user.getGmail())) {
+        if (recipient.getGmail().equals(user.getGmail())) {
             Toast.makeText(context, "You cannot invite yourself", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -176,11 +187,11 @@ public class FirebaseAdapter implements ICloudAdapter {
                         if (task.isSuccessful()) {
 
                             QueryDocumentSnapshot document = null;
-                            if(!task.getResult().isEmpty()) {
+                            if (!task.getResult().isEmpty()) {
                                 document = task.getResult().iterator().next();
                             }
 
-                            if(document == null) {
+                            if (document == null) {
                                 Log.i(TAG, recipient.getGmail() + " not found");
                                 Toast.makeText(context, "User not found", Toast.LENGTH_SHORT).show();
                             } else {
@@ -189,7 +200,7 @@ public class FirebaseAdapter implements ICloudAdapter {
                                         .document(document.getId());
 
                                 ArrayList<String> invites = (ArrayList<String>) document.get(INVITES_KEY);
-                                if(invites.contains(userId)) {
+                                if (invites.contains(userId)) {
                                     Toast.makeText(context, "You have already invited this user", Toast.LENGTH_SHORT).show();
                                 } else {
                                     invites.add(userId);
@@ -221,7 +232,7 @@ public class FirebaseAdapter implements ICloudAdapter {
     public void saveRoutes(Iterable<Route> routeManager) {
         Gson gson = new Gson();
         ArrayList<Route> routes = new ArrayList<>();
-        for(Route r : routeManager) {
+        for (Route r : routeManager) {
             routes.add(r);
         }
 

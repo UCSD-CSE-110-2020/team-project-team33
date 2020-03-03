@@ -18,15 +18,15 @@ public class AccountInfo implements IAccountInfo {
     public AccountInfo(Context context) {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(context);
         Log.d(TAG, "Populating with account: " + account);
-        firstName = account.getGivenName();
-        lastName = account.getFamilyName();
-        gmail = account.getEmail();
+        firstName = account.getGivenName().toLowerCase();
+        lastName = account.getFamilyName().toLowerCase();
+        gmail = account.getEmail().toLowerCase();
     }
 
     public AccountInfo(String f, String l, String g) {
-        firstName = f;
-        lastName = l;
-        gmail = g;
+        firstName = f.toLowerCase();
+        lastName = l.toLowerCase();
+        gmail = g.toLowerCase();
     }
 
     public String getFirstName() {
