@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.walkwalkrevolution.account.AccountInfo;
 import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.routemanagement.Route;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -13,6 +14,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -42,6 +44,12 @@ public class FirebaseAdapter implements ICloudAdapter {
 
     private IAccountInfo user;
     private String userId;
+    private String userFirst;
+    private String userLast;
+    private String userEmail;
+    
+    private ArrayList<String> teammateIDs;
+    private ArrayList<String> invitees;
 
     public FirebaseAdapter() {
         db = FirebaseFirestore.getInstance();
@@ -162,6 +170,122 @@ public class FirebaseAdapter implements ICloudAdapter {
                         }
                     }
                 });
+    }
+    
+    @Override
+    public ArrayList<IAccountInfo> getTeam(IAccountInfo account) {
+        db.collection(USERS_COLLECTION)
+            .whereEqualTo(FIRST_NAME_KEY, account.getFirstName())
+            .whereEqualTo(LAST_NAME_KEY, account.getLastName())
+            .whereEqualTo(GMAIL_KEY, account.getGmail())
+            .get()
+            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        
+                        QueryDocumentSnapshot document = null;
+                        if (!task.getResult().isEmpty()) {
+                            document = task.getResult().iterator().next();
+                        }
+                        
+                        if (document == null) {
+                            Log.w(TAG, "Error getting document", task.getException());
+                        } else {
+                            String teamID = (String) document.get(TEAM_ID_KEY);
+                            
+                            db.collection(TEAMS_COLLECTION)
+                                .document(teamID)
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            teammateIDs = (ArrayList<String>) task.getResult().get(TEAMMATE_IDS_KEY);
+                                        } else {
+                                            Log.w(TAG, "Error: Unable to get team", task.getException());
+                                        }
+                                    }
+                                });
+                        }
+                    } else {
+                        Log.w(TAG, "Error getting users: ", task.getException());
+                    }
+                }
+            });
+        ArrayList<IAccountInfo> teammates = new ArrayList<IAccountInfo>();
+        for (String user : teammateIDs) {
+            teammates.add(this.getAccount(user));
+        }
+        return teammates;
+    }
+    
+    @Override
+    public ArrayList<IAccountInfo> getInvites(IAccountInfo account) {
+        db.collection(USERS_COLLECTION)
+            .whereEqualTo(FIRST_NAME_KEY, account.getFirstName())
+            .whereEqualTo(LAST_NAME_KEY, account.getLastName())
+            .whereEqualTo(GMAIL_KEY, account.getGmail())
+            .get()
+            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        
+                        QueryDocumentSnapshot document = null;
+                        if (!task.getResult().isEmpty()) {
+                            document = task.getResult().iterator().next();
+                        }
+                        
+                        if (document == null) {
+                            Log.w(TAG, "Error getting document", task.getException());
+                        } else {
+                            String teamID = (String) document.get(TEAM_ID_KEY);
+                            
+                            db.collection(TEAMS_COLLECTION)
+                                .document(teamID)
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            invitees = (ArrayList<String>) task.getResult().get(TEAMMATE_IDS_KEY);
+                                        } else {
+                                            Log.w(TAG, "Error: Unable to get invites", task.getException());
+                                        }
+                                    }
+                                });
+                        }
+                    } else {
+                        Log.w(TAG, "Error getting users: ", task.getException());
+                    }
+                }
+            });
+        ArrayList<IAccountInfo> invites = new ArrayList<IAccountInfo>();
+        for (String user : invitees) {
+            invites.add(this.getAccount(user));
+        }
+        return invites;
+    }
+    
+    // helper method that will get accounts from their userID
+    private IAccountInfo getAccount(String accountID) {
+        db.collection(USERS_COLLECTION)
+            .document(accountID)
+            .get()
+            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        userFirst = task.getResult().get(FIRST_NAME_KEY).toString();
+                        userLast = task.getResult().get(LAST_NAME_KEY).toString();
+                        userEmail = task.getResult().get(GMAIL_KEY).toString();
+                    } else {
+                        Log.w(TAG, "Error getting user: ", task.getException());
+                    }
+                }
+            });
+        return new AccountInfo(userFirst, userLast, userEmail);
     }
 
     @Override
