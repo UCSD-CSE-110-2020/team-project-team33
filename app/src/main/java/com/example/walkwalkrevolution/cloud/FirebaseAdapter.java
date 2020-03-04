@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import com.example.walkwalkrevolution.account.AccountInfo;
 import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.routemanagement.Route;
+import com.example.walkwalkrevolution.team.ITeamSubject;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -21,6 +22,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -50,6 +52,8 @@ public class FirebaseAdapter implements ICloudAdapter {
     
     private ArrayList<String> teammateIDs;
     private ArrayList<String> invitees;
+    private ArrayList<IAccountInfo> teamInfo = new ArrayList<>();
+    private ArrayList<IAccountInfo> inviteInfo = new ArrayList<>();
 
     public FirebaseAdapter() {
         db = FirebaseFirestore.getInstance();
@@ -173,119 +177,36 @@ public class FirebaseAdapter implements ICloudAdapter {
     }
     
     @Override
-    public ArrayList<IAccountInfo> getTeam(IAccountInfo account) {
-        db.collection(USERS_COLLECTION)
-            .whereEqualTo(FIRST_NAME_KEY, account.getFirstName())
-            .whereEqualTo(LAST_NAME_KEY, account.getLastName())
-            .whereEqualTo(GMAIL_KEY, account.getGmail())
-            .get()
-            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        
-                        QueryDocumentSnapshot document = null;
-                        if (!task.getResult().isEmpty()) {
-                            document = task.getResult().iterator().next();
-                        }
-                        
-                        if (document == null) {
-                            Log.w(TAG, "Error getting document", task.getException());
-                        } else {
-                            String teamID = (String) document.get(TEAM_ID_KEY);
-                            
-                            db.collection(TEAMS_COLLECTION)
-                                .document(teamID)
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            teammateIDs = (ArrayList<String>) task.getResult().get(TEAMMATE_IDS_KEY);
-                                        } else {
-                                            Log.w(TAG, "Error: Unable to get team", task.getException());
-                                        }
-                                    }
-                                });
-                        }
-                    } else {
-                        Log.w(TAG, "Error getting users: ", task.getException());
-                    }
+    public void getTeam(ITeamSubject teamSubject) {
+        db.collection(USERS_COLLECTION).document(userId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    teammateIDs = (ArrayList<String>) task.getResult().get(TEAMMATE_IDS_KEY);
+                } else {
+                    Log.w(TAG, "Error getting team members", task.getException());
                 }
-            });
-        ArrayList<IAccountInfo> teammates = new ArrayList<IAccountInfo>();
-        for (String user : teammateIDs) {
-            teammates.add(this.getAccount(user));
-        }
-        return teammates;
+            }
+        });
+        this.setTeamInfo();
+        teamSubject.update(teamInfo);
     }
     
-    @Override
-    public ArrayList<IAccountInfo> getInvites(IAccountInfo account) {
-        db.collection(USERS_COLLECTION)
-            .whereEqualTo(FIRST_NAME_KEY, account.getFirstName())
-            .whereEqualTo(LAST_NAME_KEY, account.getLastName())
-            .whereEqualTo(GMAIL_KEY, account.getGmail())
-            .get()
-            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        
-                        QueryDocumentSnapshot document = null;
-                        if (!task.getResult().isEmpty()) {
-                            document = task.getResult().iterator().next();
-                        }
-                        
-                        if (document == null) {
-                            Log.w(TAG, "Error getting document", task.getException());
-                        } else {
-                            String teamID = (String) document.get(TEAM_ID_KEY);
-                            
-                            db.collection(TEAMS_COLLECTION)
-                                .document(teamID)
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                        if (task.isSuccessful()) {
-                                            invitees = (ArrayList<String>) task.getResult().get(TEAMMATE_IDS_KEY);
-                                        } else {
-                                            Log.w(TAG, "Error: Unable to get invites", task.getException());
-                                        }
-                                    }
-                                });
-                        }
-                    } else {
-                        Log.w(TAG, "Error getting users: ", task.getException());
-                    }
-                }
-            });
-        ArrayList<IAccountInfo> invites = new ArrayList<IAccountInfo>();
-        for (String user : invitees) {
-            invites.add(this.getAccount(user));
-        }
-        return invites;
-    }
-    
-    // helper method that will get accounts from their userID
-    private IAccountInfo getAccount(String accountID) {
-        db.collection(USERS_COLLECTION)
-            .document(accountID)
-            .get()
-            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+    private void setTeamInfo() {
+        for(String user : teammateIDs) {
+            db.collection(USERS_COLLECTION).document(user).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()) {
-                        userFirst = task.getResult().get(FIRST_NAME_KEY).toString();
-                        userLast = task.getResult().get(LAST_NAME_KEY).toString();
-                        userEmail = task.getResult().get(GMAIL_KEY).toString();
-                    } else {
-                        Log.w(TAG, "Error getting user: ", task.getException());
+                        String first = task.getResult().getString(FIRST_NAME_KEY);
+                        String last = task.getResult().getString(LAST_NAME_KEY);
+                        String gmail = task.getResult().getString(GMAIL_KEY);
+                        IAccountInfo userAccount = new AccountInfo(first, last, gmail);
+                        teamInfo.add(userAccount);
                     }
                 }
             });
-        return new AccountInfo(userFirst, userLast, userEmail);
+        }
     }
 
     @Override
