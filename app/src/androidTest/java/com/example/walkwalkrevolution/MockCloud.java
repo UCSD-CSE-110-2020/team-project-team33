@@ -35,6 +35,9 @@ public class MockCloud implements ICloudAdapter {
 
     }
 
-    public void getTeam(ITeamSubject teamSubject) {}
+    @Override
+    public void getTeam(ITeamSubject teamSubject) {
+
+    }
 
 }
