@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.example.walkwalkrevolution.account.AccountFactory;
+import com.example.walkwalkrevolution.account.AccountInfo;
 import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.cloud.CloudAdapterFactory;
 import com.example.walkwalkrevolution.cloud.ICloudAdapter;
@@ -14,6 +15,8 @@ import com.example.walkwalkrevolution.fitness.FitnessService;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
 import com.example.walkwalkrevolution.routemanagement.Route;
+import com.example.walkwalkrevolution.team.ITeamSubject;
+import com.example.walkwalkrevolution.team.TeamSubject;
 import com.example.walkwalkrevolution.ui.main.EnterRouteInfoFragment;
 import com.example.walkwalkrevolution.ui.main.InviteFragment;
 import com.example.walkwalkrevolution.ui.main.RouteInfoFragment;
@@ -24,6 +27,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+
 public class TabActivity extends AppCompatActivity {
     private static final String TAG = "[TabActivity]";
 
@@ -33,6 +38,8 @@ public class TabActivity extends AppCompatActivity {
     private Fragment currentFragment;
 
     public IRouteManagement routesManager;
+
+    public ITeamSubject teamSubject;
 
     private WalkInfo walkInfo;
 
@@ -50,7 +57,7 @@ public class TabActivity extends AppCompatActivity {
 
         routesManager = (IRouteManagement) getIntent().getSerializableExtra(DataKeys.ROUTE_MANAGER_KEY);
         
-        
+        teamSubject =  new TeamSubject();
 
         String fitnessServiceKey = getIntent().getStringExtra(DataKeys.FITNESS_SERVICE_KEY);
         fitnessService = FitnessServiceFactory.create(fitnessServiceKey, this);
@@ -62,12 +69,13 @@ public class TabActivity extends AppCompatActivity {
         String cloudKey = getIntent().getStringExtra(DataKeys.CLOUD_KEY);
         db = CloudAdapterFactory.create(cloudKey);
         db.setUser(account);
+        //db.getTeam(teamSubject);
 
         walkInfo = new WalkInfo(getIntent().getIntExtra(DataKeys.USER_HEIGHT_KEY, 0), fitnessService);
 
         fragmentManager = getSupportFragmentManager();
 
-        tabFragment = new TabFragment(this, walkInfo, routesManager, db);
+        tabFragment = new TabFragment(this, walkInfo, routesManager, teamSubject, db);
         fragmentManager.beginTransaction().add(R.id.fragmentContainer, tabFragment).commit();
     }
 

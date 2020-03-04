@@ -17,6 +17,7 @@ import com.example.walkwalkrevolution.TabActivity;
 import com.example.walkwalkrevolution.cloud.ICloudAdapter;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
 import com.example.walkwalkrevolution.routemanagement.Route;
+import com.example.walkwalkrevolution.team.ITeamSubject;
 import com.example.walkwalkrevolution.walktracker.WalkInfo;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.tabs.TabLayout;
@@ -43,13 +44,15 @@ public class TabFragment extends Fragment {
     private WalkInfo walkInfo;
     private IRouteManagement routesManager;
     private ICloudAdapter db;
+    private ITeamSubject teamSubject;
 
     private boolean walkStarted;
 
-    public TabFragment(TabActivity t, WalkInfo w, IRouteManagement r, ICloudAdapter c) {
+    public TabFragment(TabActivity t, WalkInfo w, IRouteManagement r, ITeamSubject ts, ICloudAdapter c) {
         tabActivity = t;
         walkInfo = w;
         routesManager = r;
+        teamSubject = ts;
         db = c;
     }
 
@@ -118,7 +121,7 @@ public class TabFragment extends Fragment {
         routesFragment = new RoutesFragment(this, routesManager, walkInfo);
         adapter.addFragment(routesFragment, getString(R.string.routes_tab));
 
-        teamFragment = new TeamFragment(this);
+        teamFragment = new TeamFragment(this, teamSubject);
         adapter.addFragment(teamFragment, getString(R.string.team_tab));
 
         mockFragment = new MockFragment(this, walkInfo);
