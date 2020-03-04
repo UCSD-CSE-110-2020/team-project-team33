@@ -4,7 +4,11 @@ import android.content.Context;
 
 import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.cloud.ICloudAdapter;
+import com.example.walkwalkrevolution.invite.IInviteSubject;
 import com.example.walkwalkrevolution.routemanagement.Route;
+import com.example.walkwalkrevolution.team.ITeamSubject;
+
+import java.util.ArrayList;
 
 public class MockCloud implements ICloudAdapter {
     public static IAccountInfo account;
@@ -18,6 +22,12 @@ public class MockCloud implements ICloudAdapter {
     public void setUser(IAccountInfo account) {
 
     }
+
+    @Override
+    public void getTeam(ITeamSubject teamSubject) {teamSubject.update(new ArrayList<IAccountInfo>());}
+
+    @Override
+    public void getInvites(IInviteSubject inviteSubject) {inviteSubject.update(new ArrayList<>());}
 
     @Override
     public boolean userSet() {
