@@ -1,17 +1,21 @@
 package com.example.walkwalkrevolution;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.walkwalkrevolution.account.AccountInfo;
 import com.example.walkwalkrevolution.account.IAccountInfo;
-import com.example.walkwalkrevolution.routemanagement.Route;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TeammateItemAdapter extends
@@ -19,7 +23,9 @@ public class TeammateItemAdapter extends
 
     private List<IAccountInfo> teammates;
 
-    public TeammateItemAdapter() {}
+    public TeammateItemAdapter() {
+        this.teammates = new ArrayList<IAccountInfo>();
+    }
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
@@ -27,6 +33,7 @@ public class TeammateItemAdapter extends
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public TextView name;
+        public TextView initials;
         Context context;
 
         // We also create a constructor that accepts the entire item row
@@ -36,6 +43,7 @@ public class TeammateItemAdapter extends
             // to access the context from any ViewHolder instance.
             super(itemView);
             name = itemView.findViewById(R.id.name);
+            initials = itemView.findViewById(R.id.initials);
             this.context = context;
         }
     }
@@ -53,10 +61,14 @@ public class TeammateItemAdapter extends
 
     @Override
     public void onBindViewHolder(TeammateItemAdapter.ViewHolder viewHolder, int position) {
-
+        System.out.println(getItemCount());
+        IAccountInfo teammate = teammates.get(position);
+        String firstName = teammate.getFirstName();
+        String lastName = teammate.getLastName();
+        String color = String.format("#%X", teammate.getGmail().hashCode());
         // need to set text based on position
-
-        viewHolder.name.setText("idk");
+        viewHolder.name.setText(firstName + " " + lastName);
+        viewHolder.initials.setText(firstName.substring(0, 1).toUpperCase() + lastName.substring(0,1).toUpperCase());
     }
 
     @Override
@@ -64,7 +76,7 @@ public class TeammateItemAdapter extends
         return teammates.size();
     }
 
-    public void setTeammates(List<IAccountInfo> teammates) {
+    public void setTeammates(ArrayList<IAccountInfo> teammates) {
         this.teammates = teammates;
     }
 
