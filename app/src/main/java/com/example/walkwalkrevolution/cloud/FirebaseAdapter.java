@@ -225,7 +225,31 @@ public class FirebaseAdapter implements ICloudAdapter {
     }
     
     @Override
-    public void getInvites(II)
+    public void getTeam(IInviteSubject inviteSubject) {
+        db.collection(USERS_COLLECTION).document(userId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    teamID = task.getResult().getString(TEAM_ID_KEY);
+                    
+                    db.collection(TEAMS_COLLECTION).document(teamID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                teammateIDs = (ArrayList<String>) task.getResult().get(TEAMMATE_IDS_KEY);
+                            } else {
+                                Log.w(TAG, "Error getting team members", task.getException());
+                            }
+                        }
+                    })
+                } else {
+                    Log.w(TAG, "Error getting team ID", task.getException());
+                }
+            }
+        });
+        this.setTeamInfo();
+        teamSubject.update(teamInfo);
+    }
 
     @Override
     public boolean userSet() {
