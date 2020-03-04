@@ -49,6 +49,8 @@ public class TabActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tab);
 
         routesManager = (IRouteManagement) getIntent().getSerializableExtra(DataKeys.ROUTE_MANAGER_KEY);
+        
+        
 
         String fitnessServiceKey = getIntent().getStringExtra(DataKeys.FITNESS_SERVICE_KEY);
         fitnessService = FitnessServiceFactory.create(fitnessServiceKey, this);

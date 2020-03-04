@@ -51,6 +51,7 @@ public class FirebaseAdapter implements ICloudAdapter {
     private String userFirst;
     private String userLast;
     private String userEmail;
+    private String teamID;
     
     private ArrayList<String> teammateIDs;
     private ArrayList<String> invitees;
@@ -184,9 +185,20 @@ public class FirebaseAdapter implements ICloudAdapter {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    teammateIDs = (ArrayList<String>) task.getResult().get(TEAMMATE_IDS_KEY);
+                    teamID = task.getResult().getString(TEAM_ID_KEY);
+                    
+                    db.collection(TEAMS_COLLECTION).document(teamID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                teammateIDs = (ArrayList<String>) task.getResult().get(TEAMMATE_IDS_KEY);
+                            } else {
+                                Log.w(TAG, "Error getting team members", task.getException());
+                            }
+                        }
+                    })
                 } else {
-                    Log.w(TAG, "Error getting team members", task.getException());
+                    Log.w(TAG, "Error getting team ID", task.getException());
                 }
             }
         });
@@ -211,6 +223,9 @@ public class FirebaseAdapter implements ICloudAdapter {
             });
         }
     }
+    
+    @Override
+    public void getInvites(II)
 
     @Override
     public boolean userSet() {
