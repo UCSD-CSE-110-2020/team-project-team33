@@ -1,5 +1,6 @@
 package com.example.walkwalkrevolution.ui.main;
 
+import android.accounts.Account;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -19,8 +20,10 @@ import com.example.walkwalkrevolution.team.ITeamSubject;
 import com.example.walkwalkrevolution.team.TeamSubject;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -39,6 +42,8 @@ public class TeamFragment extends Fragment implements Observer {
         tabFragment = t;
         this.team = team;
         this.teammateItemAdapter = new TeammateItemAdapter();
+
+        // should call this.itemAdapter.setTeammates(..)  here
         team.registerObserver(this);
     }
 
@@ -71,7 +76,6 @@ public class TeamFragment extends Fragment implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        System.out.println("I've been updated!");
         teammateItemAdapter.setTeammates((ArrayList) arg);
         teammateItemAdapter.notifyDataSetChanged();
     }

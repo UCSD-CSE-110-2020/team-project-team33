@@ -2,6 +2,7 @@ package com.example.walkwalkrevolution;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -65,9 +67,10 @@ public class TeammateItemAdapter extends
         IAccountInfo teammate = teammates.get(position);
         String firstName = teammate.getFirstName();
         String lastName = teammate.getLastName();
-        String color = String.format("#%X", teammate.getGmail().hashCode());
-        // need to set text based on position
+        Drawable icon = ContextCompat.getDrawable(viewHolder.context, R.drawable.teammate_icon);
+        icon.setColorFilter(teammate.getGmail().hashCode(), PorterDuff.Mode.SRC_OVER);
         viewHolder.name.setText(firstName + " " + lastName);
+        viewHolder.initials.setBackground(icon);
         viewHolder.initials.setText(firstName.substring(0, 1).toUpperCase() + lastName.substring(0,1).toUpperCase());
     }
 
@@ -76,7 +79,7 @@ public class TeammateItemAdapter extends
         return teammates.size();
     }
 
-    public void setTeammates(ArrayList<IAccountInfo> teammates) {
+    public void setTeammates(List<IAccountInfo> teammates) {
         this.teammates = teammates;
     }
 
