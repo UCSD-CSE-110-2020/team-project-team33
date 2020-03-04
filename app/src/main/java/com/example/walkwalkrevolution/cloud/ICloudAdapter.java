@@ -3,6 +3,7 @@ package com.example.walkwalkrevolution.cloud;
 import android.content.Context;
 
 import com.example.walkwalkrevolution.account.IAccountInfo;
+import com.example.walkwalkrevolution.invite.IInviteSubject;
 import com.example.walkwalkrevolution.routemanagement.Route;
 import com.example.walkwalkrevolution.team.ITeamSubject;
 
@@ -14,6 +15,8 @@ public interface ICloudAdapter {
     public void setUser(IAccountInfo account);
     
     public void getTeam(ITeamSubject teamSubject);
+    
+    public void getInvites(IInviteSubject inviteSubject);
 
     public boolean userSet();
 

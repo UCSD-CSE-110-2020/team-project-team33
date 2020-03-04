@@ -10,6 +10,7 @@ import com.example.walkwalkrevolution.DataKeys;
 import com.example.walkwalkrevolution.account.AccountFactory;
 import com.example.walkwalkrevolution.account.AccountInfo;
 import com.example.walkwalkrevolution.account.IAccountInfo;
+import com.example.walkwalkrevolution.invite.IInviteSubject;
 import com.example.walkwalkrevolution.routemanagement.Route;
 import com.example.walkwalkrevolution.team.ITeamSubject;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -196,7 +197,7 @@ public class FirebaseAdapter implements ICloudAdapter {
                                 Log.w(TAG, "Error getting team members", task.getException());
                             }
                         }
-                    })
+                    });
                 } else {
                     Log.w(TAG, "Error getting team ID", task.getException());
                 }
@@ -225,30 +226,37 @@ public class FirebaseAdapter implements ICloudAdapter {
     }
     
     @Override
-    public void getTeam(IInviteSubject inviteSubject) {
+    public void getInvites(IInviteSubject inviteSubject) {
         db.collection(USERS_COLLECTION).document(userId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    teamID = task.getResult().getString(TEAM_ID_KEY);
-                    
-                    db.collection(TEAMS_COLLECTION).document(teamID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                teammateIDs = (ArrayList<String>) task.getResult().get(TEAMMATE_IDS_KEY);
-                            } else {
-                                Log.w(TAG, "Error getting team members", task.getException());
-                            }
-                        }
-                    })
+                    invitees = (ArrayList<String>) task.getResult().get(INVITES_KEY);
                 } else {
-                    Log.w(TAG, "Error getting team ID", task.getException());
+                    Log.w(TAG, "Error getting invites", task.getException());
                 }
             }
         });
-        this.setTeamInfo();
-        teamSubject.update(teamInfo);
+        this.setInviteInfo();
+        inviteSubject.update(inviteInfo);
+    }
+    
+    private void setInviteInfo() {
+        for(String user : invitees) {
+            db.collection(USERS_COLLECTION).document(user).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        String first = task.getResult().getString(FIRST_NAME_KEY);
+                        String last = task.getResult().getString(LAST_NAME_KEY);
+                        String gmail = task.getResult().getString(GMAIL_KEY);
+                        String key = DataKeys.ACCOUNT_KEY;
+                        IAccountInfo userAccount = AccountFactory.create(key, first, last, gmail);
+                        teamInfo.add(userAccount);
+                    }
+                }
+            });
+        }
     }
 
     @Override
