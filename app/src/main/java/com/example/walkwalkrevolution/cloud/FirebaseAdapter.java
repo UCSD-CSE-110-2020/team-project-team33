@@ -6,6 +6,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.walkwalkrevolution.DataKeys;
+import com.example.walkwalkrevolution.account.AccountFactory;
 import com.example.walkwalkrevolution.account.AccountInfo;
 import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.routemanagement.Route;
@@ -201,7 +203,8 @@ public class FirebaseAdapter implements ICloudAdapter {
                         String first = task.getResult().getString(FIRST_NAME_KEY);
                         String last = task.getResult().getString(LAST_NAME_KEY);
                         String gmail = task.getResult().getString(GMAIL_KEY);
-                        IAccountInfo userAccount = new AccountInfo(first, last, gmail);
+                        String key = DataKeys.ACCOUNT_KEY;
+                        IAccountInfo userAccount = AccountFactory.create(key, first, last, gmail);
                         teamInfo.add(userAccount);
                     }
                 }
