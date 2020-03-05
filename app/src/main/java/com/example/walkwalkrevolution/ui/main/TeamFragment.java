@@ -1,5 +1,6 @@
 package com.example.walkwalkrevolution.ui.main;
 
+import android.accounts.Account;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -18,6 +19,7 @@ import com.example.walkwalkrevolution.cloud.ICloudAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+
 
 
 public class TeamFragment extends Fragment implements ICloudAdapter.ITeamSubject {
@@ -67,10 +69,8 @@ public class TeamFragment extends Fragment implements ICloudAdapter.ITeamSubject
 
 
     @Override
+
     public void update(ArrayList<IAccountInfo> teamMembers) {
-        for(IAccountInfo i : teamMembers) {
-            System.out.println(i.getGmail());
-        }
         teammateItemAdapter.setTeammates(teamMembers);
         teammateItemAdapter.notifyDataSetChanged();
     }

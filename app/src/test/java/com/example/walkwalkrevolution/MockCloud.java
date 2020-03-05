@@ -47,3 +47,4 @@ public class MockCloud implements ICloudAdapter {
 
     }
 }
+
