@@ -69,7 +69,7 @@ public class RouteSection extends Section {
             dist = itemView.findViewById(R.id.itemRouteDist);
             steps = itemView.findViewById(R.id.itemRouteSteps);
             time = itemView.findViewById(R.id.itemRouteTime);
-            icon = itemView.findViewsWithText(R.id.initialsIcon);
+            icon = itemView.findViewById(R.id.initialsIcon);
             itemView.setOnClickListener(this);
         }
 

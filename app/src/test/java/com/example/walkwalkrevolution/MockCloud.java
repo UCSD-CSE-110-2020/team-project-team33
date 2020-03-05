@@ -5,7 +5,6 @@ import android.content.Context;
 import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.cloud.ICloudAdapter;
 import com.example.walkwalkrevolution.routemanagement.Route;
-import com.example.walkwalkrevolution.team.ITeamSubject;
 
 import java.util.ArrayList;
 
@@ -45,11 +44,6 @@ public class MockCloud implements ICloudAdapter {
 
     @Override
     public void saveRoutes(Iterable<Route> routeManager) {
-
-    }
-
-    @Override
-    public void getTeam(ITeamSubject teamSubject) {
 
     }
 }

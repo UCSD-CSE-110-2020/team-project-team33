@@ -20,8 +20,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 
 
-
-
 public class TeamFragment extends Fragment implements ICloudAdapter.ITeamSubject {
 
     private TabFragment tabFragment;
