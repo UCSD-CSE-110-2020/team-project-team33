@@ -14,12 +14,12 @@ public class CloudAdapterFactory {
         blueprints.put(key, bluePrint);
     }
 
-    public static ICloudAdapter create(String key) {
+    public static ICloudAdapter create(String key, String accountKey) {
         Log.i(TAG, String.format("creating AccountInfo with key %s", key));
-        return blueprints.get(key).create();
+        return blueprints.get(key).create(accountKey);
     }
 
     public interface BluePrint {
-        ICloudAdapter create();
+        ICloudAdapter create(String accountKey);
     }
 }
