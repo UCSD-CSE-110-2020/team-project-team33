@@ -12,6 +12,6 @@ public class RoutesHeaderViewHolder extends RecyclerView.ViewHolder {
 
     public RoutesHeaderViewHolder(@NonNull final View view) {
         super(view);
-        view.findViewById(R.id.routeHeaderTitle);
+        headerTitle = view.findViewById(R.id.routeHeaderTitle);
     }
 }

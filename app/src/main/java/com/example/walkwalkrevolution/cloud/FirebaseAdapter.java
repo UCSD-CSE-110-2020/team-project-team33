@@ -1,18 +1,22 @@
 package com.example.walkwalkrevolution.cloud;
 
 import android.content.Context;
+import android.media.session.MediaSession;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.walkwalkrevolution.RoutesHeaderViewHolder;
 import com.example.walkwalkrevolution.account.AccountFactory;
 import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.routemanagement.Route;
+import com.example.walkwalkrevolution.routemanagement.TeammateRoutes;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.common.reflect.TypeToken;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -20,6 +24,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -356,4 +361,78 @@ public class FirebaseAdapter implements ICloudAdapter {
             }
         });
     }
+
+    @Override
+    public void getTeamRoutes(ITeammateRoutesSubject teammateRoutesSubject) {
+        System.out.println("Inside Get TeamRoutes");
+        db.collection(USERS_COLLECTION)
+                .document(userId)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        System.out.println("Inside Get TeamRoutes 2");
+
+                        db.collection(TEAMS_COLLECTION)
+                                .document(documentSnapshot.getString(TEAM_ID_KEY))
+                                .get()
+                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                        System.out.println("Inside Get TeamRoutes 3");
+                                        ArrayList<String> teammateIds = (ArrayList<String>) documentSnapshot.get(TEAMMATE_IDS_KEY);
+
+                                        db.collection(USERS_COLLECTION)
+                                                .get()
+                                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+
+                                                    @Override
+                                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                        System.out.println("Inside Get TeamRoutes 4");
+                                                        ArrayList<TeammateRoutes> teamRoutes = new ArrayList<>();
+
+                                                        for(String teammateId : teammateIds) {
+                                                            for(QueryDocumentSnapshot user : queryDocumentSnapshots) {
+                                                                System.out.println("Printing TeammateID:" + teammateId);
+                                                                if(teammateId.equals(user.getId()) && !teammateId.equals(userId)) {
+                                                                    System.out.println("I should be calling strToRoutes");
+
+                                                                    teamRoutes.addAll(stringToRoutes(user.getString(ROUTES_KEY),
+                                                                            AccountFactory.create(accountInfoKey,
+                                                                                    user.getString(FIRST_NAME_KEY),
+                                                                                    user.getString(LAST_NAME_KEY),
+                                                                                    user.getString(GMAIL_KEY))));
+                                                                }
+                                                            }
+                                                        }
+                                                        teammateRoutesSubject.update(teamRoutes);
+
+                                                    }
+                                                });
+                                    }
+                                });
+                    }
+                });
+    }
+
+
+    private ArrayList<TeammateRoutes> stringToRoutes(String str, IAccountInfo info){
+        System.out.print("Inside StrToRoutes");
+        Gson gson = new Gson();
+        TypeToken<ArrayList<Route>> token = new TypeToken<ArrayList<Route>>(){};
+        ArrayList<Route> routesList = gson.fromJson(str, token.getType());
+
+        ArrayList<TeammateRoutes> teamRoutes = new ArrayList<TeammateRoutes>();
+
+        for(Route route : routesList){
+            teamRoutes.add(new TeammateRoutes(route, info));
+        }
+
+        return teamRoutes;
+    }
+
+
 }
+
+

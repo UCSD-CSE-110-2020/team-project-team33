@@ -6,6 +6,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.walkwalkrevolution.routemanagement.Route;
+import com.example.walkwalkrevolution.routemanagement.TeammateRoutes;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -78,7 +79,7 @@ public class RouteSection extends Section {
         public void onClick(View view) {
             int position = getAdapterPosition();
             if(position != RecyclerView.NO_POSITION) {
-                tabActivity.launchRouteInfo(routes.get(position));
+                tabActivity.launchRouteInfo(routes.get(position -1));
             }
         }
     }
@@ -91,13 +92,23 @@ public class RouteSection extends Section {
     @Override
     public void onBindHeaderViewHolder(RecyclerView.ViewHolder holder, List<Object> routes) {
         RoutesHeaderViewHolder headerHolder = (RoutesHeaderViewHolder) holder;
-        if(isPersonal) { headerHolder.headerTitle.setText("Personal Routes");}
-        else { headerHolder.headerTitle.setText("Team Routes");}
+        if (isPersonal) {
+            headerHolder.headerTitle.setText("Personal Routes");
+        } else {
+            headerHolder.headerTitle.setText("Team Routes");
+        }
     }
-
     public void setRoutes(Iterator it) {
         ArrayList<Route> routes = new ArrayList<>();
         while(it.hasNext()) { routes.add((Route)it.next());}
+        this.routes = routes;
+    }
+
+    public void setTeamRoutes(ArrayList<TeammateRoutes> list){
+        ArrayList<Route> routes = new ArrayList<>();
+        for(TeammateRoutes teamRoute : list){
+            routes.add(teamRoute.getRoute());
+        }
         this.routes = routes;
     }
 

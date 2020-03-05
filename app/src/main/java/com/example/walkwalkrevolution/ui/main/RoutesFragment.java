@@ -14,11 +14,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.RouteItemAdapter;
 import com.example.walkwalkrevolution.RouteSection;
+import com.example.walkwalkrevolution.cloud.ICloudAdapter;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
 import com.example.walkwalkrevolution.routemanagement.Route;
+import com.example.walkwalkrevolution.routemanagement.TeammateRoutes;
 import com.example.walkwalkrevolution.walktracker.WalkInfo;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
@@ -26,7 +29,7 @@ import java.util.Observer;
 import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
 
-public class RoutesFragment extends Fragment implements Observer {
+public class RoutesFragment extends Fragment implements Observer, ICloudAdapter.ITeammateRoutesSubject {
     public static final String TAG = "RoutesFragment";
 
     TabFragment tabFragment;
@@ -37,23 +40,32 @@ public class RoutesFragment extends Fragment implements Observer {
     RouteItemAdapter routeAdapter;
     SectionedRecyclerViewAdapter sectionedAdapter;
     RouteSection personalRoutes;
+    RouteSection teammateRoutes;
     View view;
+    ICloudAdapter db;
 
-    public RoutesFragment(TabFragment tabFragment, IRouteManagement routesManager, WalkInfo walkInfo) {
+    public RoutesFragment(TabFragment tabFragment, IRouteManagement routesManager, WalkInfo walkInfo, ICloudAdapter db) {
         this.tabFragment = tabFragment;
         this.routesManager = routesManager;
         this.walkInfo = walkInfo;
+        this.db = db;
 
         sectionedAdapter = new SectionedRecyclerViewAdapter();
         personalRoutes = new RouteSection(tabFragment.tabActivity, true);
         personalRoutes.setRoutes(((Iterable<Route>) routesManager).iterator());
+
+        teammateRoutes = new RouteSection(tabFragment.tabActivity, false);
+
+
         sectionedAdapter.addSection(personalRoutes);
+        sectionedAdapter.addSection(teammateRoutes);
         ((Observable) routesManager).addObserver(this);
     }
 
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_routes, container, false);
+
 
         rvRoutes = view.findViewById(R.id.rvRoutes);
         rvRoutes.setHasFixedSize(true);
@@ -64,6 +76,8 @@ public class RoutesFragment extends Fragment implements Observer {
         rvRoutes.setAdapter(sectionedAdapter);
 
         fab = view.findViewById(R.id.floatingActionButton);
+
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,7 +85,9 @@ public class RoutesFragment extends Fragment implements Observer {
             }
         });
 
-
+        if(db.userSet()) {
+            db.getTeamRoutes(this);
+        }
         return view;
     }
 
@@ -80,6 +96,12 @@ public class RoutesFragment extends Fragment implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         personalRoutes.setRoutes((Iterator) arg);
+        sectionedAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void update(ArrayList<TeammateRoutes> teamRoutes) {
+        teammateRoutes.setTeamRoutes(teamRoutes);
         sectionedAdapter.notifyDataSetChanged();
     }
 }
