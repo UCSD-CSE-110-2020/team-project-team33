@@ -59,7 +59,6 @@ public class TeammateItemAdapter extends
 
     @Override
     public void onBindViewHolder(TeammateItemAdapter.ViewHolder viewHolder, int position) {
-        System.out.println(getItemCount());
         IAccountInfo teammate = teammates.get(position);
         String firstName = teammate.getFirstName();
         String lastName = teammate.getLastName();

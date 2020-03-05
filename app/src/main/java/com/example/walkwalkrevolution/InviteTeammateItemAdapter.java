@@ -47,6 +47,7 @@ public class InviteTeammateItemAdapter extends
             // Stores the itemView in a public final member variable that can be used
             // to access the context from any ViewHolder instance.
             super(itemView);
+            itemView.setOnClickListener(this);
             name = itemView.findViewById(R.id.name);
             initials = itemView.findViewById(R.id.initials);
             this.context = context;
@@ -82,7 +83,6 @@ public class InviteTeammateItemAdapter extends
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
-        System.out.println(getItemCount());
         IAccountInfo teammate = teammates.get(position);
         String firstName = teammate.getFirstName();
         String lastName = teammate.getLastName();
