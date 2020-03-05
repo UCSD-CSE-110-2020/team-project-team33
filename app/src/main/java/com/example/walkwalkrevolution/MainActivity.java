@@ -13,7 +13,6 @@ import com.example.walkwalkrevolution.account.AccountInfo;
 import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.cloud.CloudAdapterFactory;
 import com.example.walkwalkrevolution.cloud.FirebaseAdapter;
-import com.example.walkwalkrevolution.cloud.ICloudAdapter;
 import com.example.walkwalkrevolution.fitness.*;
 import com.example.walkwalkrevolution.routemanagement.RoutesManager;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -37,12 +36,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FitnessServiceFactory.put(fitnessServiceKey, new FitnessServiceFactory.BluePrint() {
-            @Override
-            public FitnessService create(TabActivity tabActivity) {
-                return new GoogleFitAdapter(tabActivity);
-            }
-        });
+        FitnessServiceFactory.put(fitnessServiceKey, GoogleFitAdapter::new);
         AccountFactory.put(ACCOUNT_INFO_KEY, new AccountFactory.BluePrint() {
             @Override
             public IAccountInfo create(Context context) {
@@ -54,12 +48,7 @@ public class MainActivity extends AppCompatActivity {
                 return new AccountInfo(first, last, gmail);
             }
         });
-        CloudAdapterFactory.put(FIREBASE_KEY, new CloudAdapterFactory.BluePrint() {
-            @Override
-            public ICloudAdapter create() {
-                return new FirebaseAdapter();
-            }
-        });
+        CloudAdapterFactory.put(FIREBASE_KEY, FirebaseAdapter::new);
 
         sharedPreferences = getSharedPreferences(DataKeys.USER_NAME_KEY, MODE_PRIVATE);
         routesManager = new RoutesManager(sharedPreferences);

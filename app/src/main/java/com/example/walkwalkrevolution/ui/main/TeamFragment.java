@@ -13,39 +13,31 @@ import android.view.ViewGroup;
 
 import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.TeammateItemAdapter;
-import com.example.walkwalkrevolution.account.AccountInfo;
 import com.example.walkwalkrevolution.account.IAccountInfo;
-import com.example.walkwalkrevolution.team.ITeamSubject;
-import com.example.walkwalkrevolution.team.TeamSubject;
+import com.example.walkwalkrevolution.cloud.ICloudAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Observable;
-import java.util.Observer;
 
 
-public class TeamFragment extends Fragment implements Observer {
+public class TeamFragment extends Fragment implements ICloudAdapter.ITeamSubject {
 
     private TabFragment tabFragment;
-    RecyclerView rvTeammates;
-    TeammateItemAdapter teammateItemAdapter;
-    ITeamSubject team;
-
+    private ICloudAdapter db;
+    private RecyclerView rvTeammates;
+    private TeammateItemAdapter teammateItemAdapter;
 
     private FloatingActionButton FAB;
 
-    public TeamFragment(TabFragment t, ITeamSubject team) {
+    public TeamFragment(TabFragment t, ICloudAdapter c) {
         tabFragment = t;
-        this.team = team;
+        db = c;
         this.teammateItemAdapter = new TeammateItemAdapter();
-        team.registerObserver(this);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -66,15 +58,17 @@ public class TeamFragment extends Fragment implements Observer {
         rvTeammates.addItemDecoration(new DividerItemDecoration(rvTeammates.getContext(), DividerItemDecoration.VERTICAL));
         rvTeammates.setAdapter(teammateItemAdapter);
 
+        if(db.userSet()) {
+            db.getTeam(this);
+        }
+
         return view;
     }
 
+
     @Override
-    public void update(Observable o, Object arg) {
-        System.out.println("I've been updated!");
-        teammateItemAdapter.setTeammates((ArrayList) arg);
+    public void update(ArrayList<IAccountInfo> teamMembers) {
+        teammateItemAdapter.setTeammates(teamMembers);
         teammateItemAdapter.notifyDataSetChanged();
     }
-
-
 }

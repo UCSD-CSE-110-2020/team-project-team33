@@ -8,9 +8,7 @@ import androidx.annotation.NonNull;
 
 import com.example.walkwalkrevolution.account.AccountFactory;
 import com.example.walkwalkrevolution.account.IAccountInfo;
-import com.example.walkwalkrevolution.invite.IInviteSubject;
 import com.example.walkwalkrevolution.routemanagement.Route;
-import com.example.walkwalkrevolution.team.ITeamSubject;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,7 +20,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,7 +44,6 @@ public class FirebaseAdapter implements ICloudAdapter {
 
     private IAccountInfo user;
     private String userId;
-    private String teamID;
 
     public FirebaseAdapter(String ACKey) {
         accountInfoKey = ACKey;
