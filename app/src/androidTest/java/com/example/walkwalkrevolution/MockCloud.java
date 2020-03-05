@@ -8,6 +8,11 @@ import com.example.walkwalkrevolution.routemanagement.Route;
 
 public class MockCloud implements ICloudAdapter {
     public static IAccountInfo account;
+    private String accountKey;
+
+    public MockCloud(String accountKey) {
+        this.accountKey = accountKey;
+    }
 
     @Override
     public void addAccount(IAccountInfo account) {
@@ -16,6 +21,16 @@ public class MockCloud implements ICloudAdapter {
 
     @Override
     public void setUser(IAccountInfo account) {
+
+    }
+
+    @Override
+    public void getTeam(ITeamSubject teamSubject) {
+
+    }
+
+    @Override
+    public void getInvites(IInviteSubject inviteSubject) {
 
     }
 
