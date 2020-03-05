@@ -64,6 +64,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
     implementation 'com.google.firebase:firebase-firestore:17.1.2'
     implementation 'io.github.luizgrp.sectionedrecyclerviewadapter:sectionedrecyclerviewadapter:3.1.0'
+    implementation 'com.google.firebase:firebase-admin:6.12.2'
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.robolectric:robolectric:4.3.1'
     testImplementation 'androidx.test.ext:junit:1.1.1'
