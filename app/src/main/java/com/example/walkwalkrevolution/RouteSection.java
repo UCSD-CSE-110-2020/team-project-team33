@@ -77,9 +77,10 @@ public class RouteSection extends Section {
 
         @Override
         public void onClick(View view) {
+            // TODO: Fix this, causes out of bounds errors with new layout
             int position = getAdapterPosition();
             if(position != RecyclerView.NO_POSITION) {
-                tabActivity.launchRouteInfo(routes.get(position -1));
+                tabActivity.launchRouteInfo(routes.get(position));
             }
         }
     }
