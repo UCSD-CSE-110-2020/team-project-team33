@@ -173,18 +173,21 @@ public class FirebaseAdapter implements ICloudAdapter {
                 .document(userId)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         db.collection(TEAMS_COLLECTION)
                                 .document(task.getResult().getString(TEAM_ID_KEY))
                                 .get()
                                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                         ArrayList<String> teammateIds = (ArrayList<String>) task.getResult().get(TEAMMATE_IDS_KEY);
                                         db.collection(USERS_COLLECTION)
                                                 .get()
                                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+
                                                     @Override
                                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                         ArrayList<IAccountInfo> teammates = new ArrayList<>();
@@ -196,13 +199,29 @@ public class FirebaseAdapter implements ICloudAdapter {
                                                                         user.getString(GMAIL_KEY)));
                                                             }
                                                         }
+                                                        Log.i(TAG, "Teammates successfully found");
                                                         teamSubject.update(teammates);
                                                     }
-                                                });
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w(TAG, "Error retrieving user collection", e);
+                                            }
+                                        });
                                     }
-                                });
+                                }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Error retrieving teams collection", e);
+                            }
+                        });
                     }
-                });
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Error retrieving user collection", e);
+            }
+        });
     }
     
     @Override
@@ -211,12 +230,14 @@ public class FirebaseAdapter implements ICloudAdapter {
                 .document(userId)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         ArrayList<String> invites = (ArrayList<String>) task.getResult().get(INVITES_KEY);
                         db.collection(USERS_COLLECTION)
                                 .get()
                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+
                                     @Override
                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                         ArrayList<IAccountInfo> inviters = new ArrayList<>();
@@ -228,11 +249,23 @@ public class FirebaseAdapter implements ICloudAdapter {
                                                         user.getString(GMAIL_KEY)));
                                             }
                                         }
+                                        Log.i(TAG, "Invites successfully retrieved");
                                         inviteSubject.update(inviters);
                                     }
-                                });
+                                }).addOnFailureListener(new OnFailureListener() {
+
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Error retrieving users collection", e);
+                            }
+                        });
                     }
-                });
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG, "Error retrieving users collection", e);
+            }
+        });
     }
 
     @Override
