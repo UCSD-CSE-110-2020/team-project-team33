@@ -64,4 +64,6 @@
     <string name="invite_first_name_error">Please enter a first name</string>
     <string name="invite_last_name_error">Please enter a last name</string>
     <string name="invite_email_error">Please enter a GMail</string>
+
+    <string name="invites_string">Invites</string>
 </resources>
