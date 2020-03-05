@@ -68,6 +68,9 @@ public class TeamFragment extends Fragment implements ICloudAdapter.ITeamSubject
 
     @Override
     public void update(ArrayList<IAccountInfo> teamMembers) {
+        for(IAccountInfo i : teamMembers) {
+            System.out.println(i.getGmail());
+        }
         teammateItemAdapter.setTeammates(teamMembers);
         teammateItemAdapter.notifyDataSetChanged();
     }

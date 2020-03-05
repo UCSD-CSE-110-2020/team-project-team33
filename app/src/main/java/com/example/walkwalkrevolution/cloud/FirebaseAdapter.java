@@ -184,6 +184,7 @@ public class FirebaseAdapter implements ICloudAdapter {
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                         ArrayList<String> teammateIds = (ArrayList<String>) task.getResult().get(TEAMMATE_IDS_KEY);
+                                        System.out.println(teammateIds);
                                         db.collection(USERS_COLLECTION)
                                                 .get()
                                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -192,7 +193,7 @@ public class FirebaseAdapter implements ICloudAdapter {
                                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                         ArrayList<IAccountInfo> teammates = new ArrayList<>();
                                                         for(QueryDocumentSnapshot user : task.getResult()) {
-                                                            if(teammates.contains(user.getId())) {
+                                                            if(teammateIds.contains(user.getId())) {
                                                                 teammates.add(AccountFactory.create(accountInfoKey,
                                                                         user.getString(FIRST_NAME_KEY),
                                                                         user.getString(LAST_NAME_KEY),
