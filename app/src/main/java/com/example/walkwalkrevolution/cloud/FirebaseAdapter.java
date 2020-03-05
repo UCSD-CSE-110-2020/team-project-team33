@@ -6,9 +6,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.example.walkwalkrevolution.DataKeys;
 import com.example.walkwalkrevolution.account.AccountFactory;
-import com.example.walkwalkrevolution.account.AccountInfo;
 import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.invite.IInviteSubject;
 import com.example.walkwalkrevolution.routemanagement.Route;
@@ -24,8 +22,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.InvocationTargetException;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,20 +43,14 @@ public class FirebaseAdapter implements ICloudAdapter {
     private static final String TEAMMATE_IDS_KEY = "TEAMMATE_IDS";
 
     private FirebaseFirestore db;
+    private final String accountInfoKey;
 
     private IAccountInfo user;
     private String userId;
-    private String userFirst;
-    private String userLast;
-    private String userEmail;
     private String teamID;
-    
-    private ArrayList<String> teammateIDs;
-    private ArrayList<String> invitees;
-    private ArrayList<IAccountInfo> teamInfo = new ArrayList<>();
-    private ArrayList<IAccountInfo> inviteInfo = new ArrayList<>();
 
-    public FirebaseAdapter() {
+    public FirebaseAdapter(String ACKey) {
+        accountInfoKey = ACKey;
         db = FirebaseFirestore.getInstance();
     }
 
@@ -182,81 +173,70 @@ public class FirebaseAdapter implements ICloudAdapter {
     
     @Override
     public void getTeam(ITeamSubject teamSubject) {
-        db.collection(USERS_COLLECTION).document(userId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    teamID = task.getResult().getString(TEAM_ID_KEY);
-                    
-                    db.collection(TEAMS_COLLECTION).document(teamID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                teammateIDs = (ArrayList<String>) task.getResult().get(TEAMMATE_IDS_KEY);
-                            } else {
-                                Log.w(TAG, "Error getting team members", task.getException());
-                            }
-                        }
-                    });
-                } else {
-                    Log.w(TAG, "Error getting team ID", task.getException());
-                }
-            }
-        });
-        this.setTeamInfo();
-        teamSubject.update(teamInfo);
-    }
-    
-    private void setTeamInfo() {
-        for(String user : teammateIDs) {
-            db.collection(USERS_COLLECTION).document(user).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        String first = task.getResult().getString(FIRST_NAME_KEY);
-                        String last = task.getResult().getString(LAST_NAME_KEY);
-                        String gmail = task.getResult().getString(GMAIL_KEY);
-                        String key = DataKeys.ACCOUNT_KEY;
-                        IAccountInfo userAccount = AccountFactory.create(key, first, last, gmail);
-                        teamInfo.add(userAccount);
+        db.collection(USERS_COLLECTION)
+                .document(userId)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        db.collection(TEAMS_COLLECTION)
+                                .document(task.getResult().getString(TEAM_ID_KEY))
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        ArrayList<String> teammateIds = (ArrayList<String>) task.getResult().get(TEAMMATE_IDS_KEY);
+                                        db.collection(USERS_COLLECTION)
+                                                .get()
+                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                        ArrayList<IAccountInfo> teammates = new ArrayList<>();
+                                                        for(QueryDocumentSnapshot user : task.getResult()) {
+                                                            if(teammates.contains(user.getId())) {
+                                                                teammates.add(AccountFactory.create(accountInfoKey,
+                                                                        user.getString(FIRST_NAME_KEY),
+                                                                        user.getString(LAST_NAME_KEY),
+                                                                        user.getString(GMAIL_KEY)));
+                                                            }
+                                                        }
+                                                        teamSubject.update(teammates);
+                                                    }
+                                                });
+                                    }
+                                });
                     }
-                }
-            });
-        }
+                });
     }
     
     @Override
     public void getInvites(IInviteSubject inviteSubject) {
-        db.collection(USERS_COLLECTION).document(userId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    invitees = (ArrayList<String>) task.getResult().get(INVITES_KEY);
-                } else {
-                    Log.w(TAG, "Error getting invites", task.getException());
-                }
-            }
-        });
-        this.setInviteInfo();
-        inviteSubject.update(inviteInfo);
-    }
-    
-    private void setInviteInfo() {
-        for(String user : invitees) {
-            db.collection(USERS_COLLECTION).document(user).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        String first = task.getResult().getString(FIRST_NAME_KEY);
-                        String last = task.getResult().getString(LAST_NAME_KEY);
-                        String gmail = task.getResult().getString(GMAIL_KEY);
-                        String key = DataKeys.ACCOUNT_KEY;
-                        IAccountInfo userAccount = AccountFactory.create(key, first, last, gmail);
-                        teamInfo.add(userAccount);
+        db.collection(USERS_COLLECTION)
+                .document(userId)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        ArrayList<String> invites = (ArrayList<String>) task.getResult().get(INVITES_KEY);
+                        db.collection(USERS_COLLECTION)
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        ArrayList<IAccountInfo> inviters = new ArrayList<>();
+                                        for(QueryDocumentSnapshot user : task.getResult()) {
+                                            if(invites.contains(user.getId())) {
+                                                inviters.add(AccountFactory.create(accountInfoKey,
+                                                        user.getString(FIRST_NAME_KEY),
+                                                        user.getString(LAST_NAME_KEY),
+                                                        user.getString(GMAIL_KEY)));
+                                            }
+                                        }
+                                        inviteSubject.update(inviters);
+                                    }
+                                });
                     }
-                }
-            });
-        }
+                });
     }
 
     @Override
