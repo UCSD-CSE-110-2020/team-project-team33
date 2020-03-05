@@ -45,7 +45,7 @@ public class RoutesFragment extends Fragment implements Observer {
         this.walkInfo = walkInfo;
 
         sectionedAdapter = new SectionedRecyclerViewAdapter();
-        personalRoutes = new RouteSection(tabFragment.tabActivity);
+        personalRoutes = new RouteSection(tabFragment.tabActivity, true);
         personalRoutes.setRoutes(((Iterable<Route>) routesManager).iterator());
         sectionedAdapter.addSection(personalRoutes);
         ((Observable) routesManager).addObserver(this);

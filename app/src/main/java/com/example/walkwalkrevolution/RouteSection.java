@@ -21,7 +21,8 @@ public class RouteSection extends Section {
 
     public RouteSection(TabActivity t, boolean personal) {
         super(SectionParameters.builder()
-                .itemResourceId(R.layout.item_route).
+                .itemResourceId(R.layout.item_route)
+                .headerResourceId(R.layout.routes_header).
                 build());
         tabActivity = t;
         routes = new ArrayList<Route>();
@@ -80,6 +81,18 @@ public class RouteSection extends Section {
                 tabActivity.launchRouteInfo(routes.get(position));
             }
         }
+    }
+
+    @Override
+    public RecyclerView.ViewHolder getHeaderViewHolder(View view) {
+        return new RoutesHeaderViewHolder(view);
+    }
+
+    @Override
+    public void onBindHeaderViewHolder(RecyclerView.ViewHolder holder, List<Object> routes) {
+        RoutesHeaderViewHolder headerHolder = (RoutesHeaderViewHolder) holder;
+        if(isPersonal) { headerHolder.headerTitle.setText("Personal Routes");}
+        else { headerHolder.headerTitle.setText("Team Routes");}
     }
 
     public void setRoutes(Iterator it) {
