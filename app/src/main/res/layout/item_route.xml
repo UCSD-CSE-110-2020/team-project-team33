@@ -6,14 +6,34 @@
     android:orientation="vertical"
     android:padding="@dimen/general_padding">
 
-    <TextView
-        android:id="@+id/itemRouteName"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:padding="@dimen/text_margin"
-        android:text="TextView"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/itemRouteName"
+            android:layout_width="314dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="@dimen/text_margin"
+            android:text="TextView"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+        <TextView
+            android:id="@+id/icon"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/teammate_icon"
+            android:gravity="center"
+            android:padding="@dimen/general_padding"
+            android:text="JL"
+            android:layout_marginLeft="@dimen/text_margin"
+            android:textSize="12dp" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/itemRouteStart"

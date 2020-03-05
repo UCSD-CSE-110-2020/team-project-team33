@@ -38,11 +38,7 @@ public class TeammateItemAdapter extends
         public TextView initials;
         Context context;
 
-        // We also create a constructor that accepts the entire item row
-        // and does the view lookups to find each subview
         public ViewHolder(Context context, View itemView) {
-            // Stores the itemView in a public final member variable that can be used
-            // to access the context from any ViewHolder instance.
             super(itemView);
             name = itemView.findViewById(R.id.name);
             initials = itemView.findViewById(R.id.initials);
