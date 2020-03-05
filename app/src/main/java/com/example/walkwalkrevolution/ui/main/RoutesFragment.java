@@ -43,19 +43,17 @@ public class RoutesFragment extends Fragment implements Observer {
         this.tabFragment = tabFragment;
         this.routesManager = routesManager;
         this.walkInfo = walkInfo;
-        this.routeAdapter = new RouteItemAdapter(tabFragment.tabActivity);
-        routeAdapter.setRoutes(((Iterable<Route>) routesManager).iterator());
+
+        sectionedAdapter = new SectionedRecyclerViewAdapter();
+        personalRoutes = new RouteSection(tabFragment.tabActivity);
+        personalRoutes.setRoutes(((Iterable<Route>) routesManager).iterator());
+        sectionedAdapter.addSection(personalRoutes);
         ((Observable) routesManager).addObserver(this);
     }
 
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_routes, container, false);
-
-        sectionedAdapter = new SectionedRecyclerViewAdapter();
-        personalRoutes = new RouteSection(tabFragment.tabActivity);
-
-        sectionedAdapter.addSection(personalRoutes);
 
         rvRoutes = view.findViewById(R.id.rvRoutes);
         rvRoutes.setHasFixedSize(true);

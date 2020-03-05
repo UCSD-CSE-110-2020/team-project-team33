@@ -16,14 +16,16 @@ import io.github.luizgrp.sectionedrecyclerviewadapter.SectionParameters;
 
 public class RouteSection extends Section {
    private List<Route> routes;
-    private TabActivity tabActivity;
+   private TabActivity tabActivity;
+   private boolean isPersonal;
 
-    public RouteSection(TabActivity t) {
+    public RouteSection(TabActivity t, boolean personal) {
         super(SectionParameters.builder()
                 .itemResourceId(R.layout.item_route).
                 build());
         tabActivity = t;
         routes = new ArrayList<Route>();
+        isPersonal = personal;
    }
 
    @Override
@@ -44,6 +46,9 @@ public class RouteSection extends Section {
         viewHolder.dist.setText(String.format("%.2f mi", route.getDistance()));
         viewHolder.steps.setText(route.getSteps() + " steps");
         viewHolder.time.setText(formatTime(route.getTime()));
+
+        if(isPersonal) { viewHolder.icon.setVisibility(View.GONE); }
+        else { viewHolder.icon.setVisibility(View.VISIBLE); }
     }
 
     public class RouteItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -54,6 +59,7 @@ public class RouteSection extends Section {
         public TextView dist;
         public TextView steps;
         public TextView time;
+        public TextView icon;
 
 
         public RouteItemViewHolder(View itemView) {
@@ -63,6 +69,7 @@ public class RouteSection extends Section {
             dist = itemView.findViewById(R.id.itemRouteDist);
             steps = itemView.findViewById(R.id.itemRouteSteps);
             time = itemView.findViewById(R.id.itemRouteTime);
+            icon = itemView.findViewsWithText(R.id.initialsIcon);
             itemView.setOnClickListener(this);
         }
 
