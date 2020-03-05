@@ -118,7 +118,7 @@ public class TabFragment extends Fragment {
         routesFragment = new RoutesFragment(this, routesManager, walkInfo);
         adapter.addFragment(routesFragment, getString(R.string.routes_tab));
 
-        teamFragment = new TeamFragment(this);
+        teamFragment = new TeamFragment(this, db);
         adapter.addFragment(teamFragment, getString(R.string.team_tab));
 
         mockFragment = new MockFragment(this, walkInfo);

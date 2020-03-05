@@ -6,8 +6,15 @@ import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.cloud.ICloudAdapter;
 import com.example.walkwalkrevolution.routemanagement.Route;
 
+import java.util.ArrayList;
+
 public class MockCloud implements ICloudAdapter {
     public static IAccountInfo account;
+    private String accountKey;
+
+    public MockCloud(String accountKey) {
+        this.accountKey = accountKey;
+    }
 
     @Override
     public void addAccount(IAccountInfo account) {
@@ -18,6 +25,12 @@ public class MockCloud implements ICloudAdapter {
     public void setUser(IAccountInfo account) {
 
     }
+
+    @Override
+    public void getTeam(ITeamSubject teamSubject) {teamSubject.update(new ArrayList<IAccountInfo>());}
+
+    @Override
+    public void getInvites(IInviteSubject inviteSubject) {inviteSubject.update(new ArrayList<>());}
 
     @Override
     public boolean userSet() {

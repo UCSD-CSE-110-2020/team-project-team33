@@ -107,5 +107,4 @@ public class RouteItemAdapter extends
     public int getItemCount() {
         return routes.size();
     }
-
 }
