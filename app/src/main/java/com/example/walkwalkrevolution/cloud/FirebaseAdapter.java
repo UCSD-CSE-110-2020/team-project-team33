@@ -15,7 +15,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
@@ -23,6 +25,8 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.annotation.Nullable;
 
 public class FirebaseAdapter implements ICloudAdapter {
     private static final String TAG = "[FirebaseAdapter]";
@@ -163,6 +167,23 @@ public class FirebaseAdapter implements ICloudAdapter {
                         } else {
                             Log.w(TAG, "Error getting users: ", task.getException());
                         }
+                    }
+                });
+    }
+    
+    @Override
+    public void setUserListener() {
+        db.collection(USERS_COLLECTION)
+                .document(userId)
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(TAG, "Listener for user doc failed");
+                            return;
+                        }
+                        
+                        // insert code here to call methods to update team and invites
                     }
                 });
     }

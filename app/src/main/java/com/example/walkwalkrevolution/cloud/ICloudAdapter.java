@@ -12,6 +12,8 @@ public interface ICloudAdapter {
 
     public void setUser(IAccountInfo account);
     
+    public void setUserListener();
+    
     public void getTeam(ITeamSubject teamSubject);
     
     public void getInvites(IInviteSubject inviteSubject);
@@ -29,4 +31,9 @@ public interface ICloudAdapter {
     public interface ITeamSubject {
         public void update(ArrayList<IAccountInfo> teamMembers);
     }
+    /*
+    public interface ITeamRoutes {
+        public void update(ArrayList<> teamRoutes);
+    }
+     */
 }
