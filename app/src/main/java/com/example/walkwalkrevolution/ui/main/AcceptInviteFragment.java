@@ -12,9 +12,8 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.walkwalkrevolution.InviteTeammateItemAdapter;
 import com.example.walkwalkrevolution.R;
-import com.example.walkwalkrevolution.TabActivity;
-import com.example.walkwalkrevolution.TeammateItemAdapter;
 import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.cloud.ICloudAdapter;
 
@@ -25,11 +24,11 @@ public class AcceptInviteFragment extends Fragment implements ICloudAdapter.IInv
 
     private ICloudAdapter db;
     private RecyclerView rvTeammates;
-    private TeammateItemAdapter teammateItemAdapter;
+    private InviteTeammateItemAdapter teammateItemAdapter;
 
     public AcceptInviteFragment(ICloudAdapter c) {
         db = c;
-        this.teammateItemAdapter = new TeammateItemAdapter();
+        this.teammateItemAdapter = new InviteTeammateItemAdapter(db, this);
     }
 
     @Override

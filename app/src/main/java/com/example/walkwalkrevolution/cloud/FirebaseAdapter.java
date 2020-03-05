@@ -184,7 +184,6 @@ public class FirebaseAdapter implements ICloudAdapter {
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                         ArrayList<String> teammateIds = (ArrayList<String>) task.getResult().get(TEAMMATE_IDS_KEY);
-                                        System.out.println(teammateIds);
                                         db.collection(USERS_COLLECTION)
                                                 .get()
                                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -355,5 +354,10 @@ public class FirebaseAdapter implements ICloudAdapter {
                 Log.w(TAG, "Routes failed to saved: ", e);
             }
         });
+    }
+
+    @Override
+    public void acceptInvite(IAccountInfo account, IAcceptSubject acceptSubject) {
+
     }
 }

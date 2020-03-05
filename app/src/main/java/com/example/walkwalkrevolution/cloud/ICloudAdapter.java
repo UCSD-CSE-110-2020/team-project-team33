@@ -22,11 +22,17 @@ public interface ICloudAdapter {
     
     public void saveRoutes(Iterable<Route> routeManager);
 
+    public void acceptInvite(IAccountInfo account, IAcceptSubject acceptSubject);
+
     public interface IInviteSubject {
         public void update(ArrayList<IAccountInfo> invites);
     }
 
     public interface ITeamSubject {
         public void update(ArrayList<IAccountInfo> teamMembers);
+    }
+
+    public interface IAcceptSubject {
+        public void update(String message);
     }
 }

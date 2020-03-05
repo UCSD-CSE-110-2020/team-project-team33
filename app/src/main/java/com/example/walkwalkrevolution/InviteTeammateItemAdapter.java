@@ -7,27 +7,34 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.walkwalkrevolution.account.IAccountInfo;
+import com.example.walkwalkrevolution.cloud.ICloudAdapter;
+import com.example.walkwalkrevolution.ui.main.AcceptInviteFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TeammateItemAdapter extends
-        RecyclerView.Adapter<TeammateItemAdapter.ViewHolder>  {
+public class InviteTeammateItemAdapter extends
+        RecyclerView.Adapter<InviteTeammateItemAdapter.ViewHolder> {
 
-    protected List<IAccountInfo> teammates;
+    private List<IAccountInfo> teammates;
+    private ICloudAdapter db;
+    private AcceptInviteFragment acceptInviteFragment;
 
-    public TeammateItemAdapter() {
+    public InviteTeammateItemAdapter(ICloudAdapter c, AcceptInviteFragment a) {
         this.teammates = new ArrayList<IAccountInfo>();
+        db = c;
+        acceptInviteFragment = a;
     }
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements ICloudAdapter.IAcceptSubject, View.OnClickListener {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public TextView name;
@@ -44,21 +51,37 @@ public class TeammateItemAdapter extends
             initials = itemView.findViewById(R.id.initials);
             this.context = context;
         }
+
+        @Override
+        public void update(String message) {
+            if(db.userSet()) {
+                db.getInvites(acceptInviteFragment);
+            }
+            Toast.makeText(acceptInviteFragment.getContext(), message, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onClick(View view) {
+            int position = getAdapterPosition();
+            if(position != RecyclerView.NO_POSITION) {
+                db.acceptInvite(teammates.get(position), this);
+            }
+        }
     }
 
     @Override
-    public TeammateItemAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
         View teammateView = inflater.inflate(R.layout.item_teammate, parent, false);
 
-        TeammateItemAdapter.ViewHolder viewHolder = new TeammateItemAdapter.ViewHolder(teammateView.getContext(), teammateView);
+        ViewHolder viewHolder = new ViewHolder(teammateView.getContext(), teammateView);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(TeammateItemAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(ViewHolder viewHolder, int position) {
         System.out.println(getItemCount());
         IAccountInfo teammate = teammates.get(position);
         String firstName = teammate.getFirstName();
