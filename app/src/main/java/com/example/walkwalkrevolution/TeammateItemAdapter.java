@@ -19,7 +19,7 @@ import java.util.List;
 public class TeammateItemAdapter extends
         RecyclerView.Adapter<TeammateItemAdapter.ViewHolder>  {
 
-    private List<IAccountInfo> teammates;
+    protected List<IAccountInfo> teammates;
 
     public TeammateItemAdapter() {
         this.teammates = new ArrayList<IAccountInfo>();
@@ -27,7 +27,7 @@ public class TeammateItemAdapter extends
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public TextView name;

@@ -25,6 +25,8 @@ public interface ICloudAdapter {
 
     public void getTeamRoutes(ITeammateRoutesSubject teammateRoutesSubject);
 
+    public void acceptInvite(IAccountInfo account, IAcceptSubject acceptSubject);
+
     public interface IInviteSubject {
         public void update(ArrayList<IAccountInfo> invites);
     }
@@ -37,4 +39,7 @@ public interface ICloudAdapter {
         public void update(ArrayList<TeammateRoutes> teamRoutes);
     }
 
+    public interface IAcceptSubject {
+        public void update(String message);
+    }
 }

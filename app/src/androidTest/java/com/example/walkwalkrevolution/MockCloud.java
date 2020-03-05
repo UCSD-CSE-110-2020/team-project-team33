@@ -48,4 +48,14 @@ public class MockCloud implements ICloudAdapter {
     public void saveRoutes(Iterable<Route> routeManager) {
 
     }
+
+    @Override
+    public void getTeamRoutes(ITeammateRoutesSubject teammateRoutesSubject) {
+
+    }
+
+    @Override
+    public void acceptInvite(IAccountInfo account, IAcceptSubject acceptSubject) {
+
+    }
 }
