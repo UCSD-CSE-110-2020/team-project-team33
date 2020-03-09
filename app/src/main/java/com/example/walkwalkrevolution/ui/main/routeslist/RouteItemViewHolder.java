@@ -1,6 +1,5 @@
 package com.example.walkwalkrevolution.ui.main.routeslist;
 
-import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 

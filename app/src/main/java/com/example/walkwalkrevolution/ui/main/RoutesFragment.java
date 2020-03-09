@@ -52,7 +52,7 @@ public class RoutesFragment extends Fragment implements Observer, ICloudAdapter.
         personalRoutes = new PersonalRouteSection(tabFragment.tabActivity, this);
         personalRoutes.setRoutes(((Iterable<Route>) routesManager).iterator());
 
-        teammateRoutes = new TeamRouteSection(tabFragment.tabActivity, this);
+        teammateRoutes = new TeamRouteSection(tabFragment.tabActivity, this, personalRoutes);
 
         sectionedAdapter = new SectionedRecyclerViewAdapter();
         sectionedAdapter.addSection(personalRoutes);
@@ -105,7 +105,7 @@ public class RoutesFragment extends Fragment implements Observer, ICloudAdapter.
     }
 
     @Override
-    public void onItemRootViewClicked(Route route) {
-        tabFragment.tabActivity.launchRouteInfo(route);
+    public void onItemRootViewClicked(Route route, RouteSection routeSection) {
+        tabFragment.tabActivity.launchRouteInfo(route, routeSection == personalRoutes);
     }
 }

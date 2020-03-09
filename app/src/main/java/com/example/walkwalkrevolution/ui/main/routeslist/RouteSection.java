@@ -67,7 +67,7 @@ public abstract class RouteSection extends Section {
     }
 
     public interface ClickListener {
-        void onItemRootViewClicked(Route route);
+        void onItemRootViewClicked(Route route, RouteSection routeSection);
     }
 
 }

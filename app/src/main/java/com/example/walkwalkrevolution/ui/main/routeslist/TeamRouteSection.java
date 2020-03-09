@@ -17,10 +17,12 @@ import java.util.Iterator;
 public class TeamRouteSection extends RouteSection {
     private ArrayList<TeammateRoute> routes;
     private static final String title = "Team Routes";
+    private RouteSection personalRoutes;
 
-    public TeamRouteSection(TabActivity t, ClickListener clickListener) {
+    public TeamRouteSection(TabActivity t, ClickListener clickListener, RouteSection personalRoutes) {
         super(t, clickListener, title);
         routes = new ArrayList<>();
+        this.personalRoutes = personalRoutes;
     }
 
     @Override
@@ -48,10 +50,13 @@ public class TeamRouteSection extends RouteSection {
         itemViewHolder.initials.setBackground(icon);
         itemViewHolder.initials.setText( firstInitial + lastInitial );
 
+        TeamRouteSection teamRouteSection = this;
         itemViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clickListener.onItemRootViewClicked(routes.get(itemViewHolder.getAdapterPosition()).getRoute());
+                clickListener.onItemRootViewClicked(
+                        routes.get(itemViewHolder.getAdapterPosition() - personalRoutes.getContentItemsTotal() - 2)
+                                .getRoute(), teamRouteSection);
             }
         });
     }

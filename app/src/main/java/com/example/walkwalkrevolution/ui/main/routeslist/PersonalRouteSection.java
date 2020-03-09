@@ -12,7 +12,7 @@ import java.util.Iterator;
 
 public class PersonalRouteSection extends RouteSection {
     private ArrayList<Route> routes;
-    private static final String title = "Personal Routes";
+    private static final String title = "Your Routes";
 
     public PersonalRouteSection(TabActivity t, ClickListener clickListener) {
         super(t, clickListener, title);
@@ -36,10 +36,12 @@ public class PersonalRouteSection extends RouteSection {
         itemViewHolder.time.setText(formatTime(route.getTime()));
         itemViewHolder.initials.setVisibility(View.GONE);
 
+        PersonalRouteSection personalRouteSection = this;
         itemViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                clickListener.onItemRootViewClicked(routes.get(itemViewHolder.getAdapterPosition()));
+                clickListener.onItemRootViewClicked(routes.get(itemViewHolder.getAdapterPosition() - 1),
+                        personalRouteSection);
             }
         });
     }

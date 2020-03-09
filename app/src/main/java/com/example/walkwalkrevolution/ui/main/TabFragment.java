@@ -130,7 +130,7 @@ public class TabFragment extends Fragment {
             db.saveRoutes((Iterable<Route>) routesManager);
             Route tmp = walkInfo.getCurrentRoute();
             walkInfo.setCurrentRoute(null);
-            tabActivity.launchRouteInfo(tmp);
+            tabActivity.launchRouteInfo(tmp, true);
         }
     }
 
