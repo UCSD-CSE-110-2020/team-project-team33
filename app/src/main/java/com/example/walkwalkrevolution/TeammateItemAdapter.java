@@ -56,13 +56,18 @@ public class TeammateItemAdapter extends
     @Override
     public void onBindViewHolder(TeammateItemAdapter.ViewHolder viewHolder, int position) {
         IAccountInfo teammate = teammates.get(position);
+
         String firstName = teammate.getFirstName();
         String lastName = teammate.getLastName();
+
         String firstInitial = firstName.substring(0, 1).toUpperCase();
         String lastInitial = lastName.substring(0,1).toUpperCase();
+
         Drawable icon = ContextCompat.getDrawable(viewHolder.context, R.drawable.teammate_icon);
         icon.setColorFilter(teammate.getGmail().hashCode(), PorterDuff.Mode.SRC_OVER);
+
         viewHolder.name.setText(firstInitial + firstName.substring(1) + " " + lastInitial + lastName.substring(1));
+
         viewHolder.initials.setBackground(icon);
         viewHolder.initials.setText( firstInitial + lastInitial );
     }

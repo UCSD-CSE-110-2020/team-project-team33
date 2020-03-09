@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import com.example.walkwalkrevolution.account.AccountFactory;
 import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.routemanagement.Route;
-import com.example.walkwalkrevolution.routemanagement.TeammateRoutes;
+import com.example.walkwalkrevolution.routemanagement.TeammateRoute;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -45,7 +45,6 @@ public class FirebaseAdapter implements ICloudAdapter {
     private final String accountInfoKey;
 
     private IAccountInfo user;
-    private String userId;
 
     public FirebaseAdapter(String ACKey) {
         accountInfoKey = ACKey;
@@ -97,7 +96,7 @@ public class FirebaseAdapter implements ICloudAdapter {
                                             @Override
                                             public void onSuccess(DocumentReference documentReference) {
                                                 Log.d(TAG, "User added with ID: " + documentReference.getId());
-                                                userId = documentReference.getId();
+                                                String userId = documentReference.getId();
 
                                                 // Add the team the user is a part of
                                                 Map<String, Object> team = new HashMap<>();
@@ -140,139 +139,146 @@ public class FirebaseAdapter implements ICloudAdapter {
     @Override
     public void setUser(IAccountInfo account) {
         user = account;
+    }
+    
+    @Override
+    public void getTeam(ITeamSubject teamSubject) {
         db.collection(USERS_COLLECTION)
-                .whereEqualTo(FIRST_NAME_KEY, account.getFirstName())
-                .whereEqualTo(LAST_NAME_KEY, account.getLastName())
-                .whereEqualTo(GMAIL_KEY, account.getGmail())
+                .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
+                .whereEqualTo(LAST_NAME_KEY, user.getLastName())
+                .whereEqualTo(GMAIL_KEY, user.getGmail())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
 
-                            QueryDocumentSnapshot document = null;
                             if (!task.getResult().isEmpty()) {
-                                document = task.getResult().iterator().next();
-                            }
+                                String userId = task.getResult().iterator().next().getId();
 
-                            if (document == null) {
-                                Log.i(TAG, account.getGmail() + " not found");
-                            } else {
-                                userId = document.getId();
-                                Log.i(TAG, "User with id " + userId + " set");
-                            }
+                                db.collection(USERS_COLLECTION)
+                                        .document(userId)
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
 
-                        } else {
-                            Log.w(TAG, "Error getting users: ", task.getException());
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                db.collection(TEAMS_COLLECTION)
+                                                        .document(task.getResult().getString(TEAM_ID_KEY))
+                                                        .get()
+                                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                                ArrayList<String> teammateIds = (ArrayList<String>) task.getResult().get(TEAMMATE_IDS_KEY);
+                                                                db.collection(USERS_COLLECTION)
+                                                                        .get()
+                                                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+
+                                                                            @Override
+                                                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                                ArrayList<IAccountInfo> teammates = new ArrayList<>();
+                                                                                for(QueryDocumentSnapshot user : task.getResult()) {
+                                                                                    if(teammateIds.contains(user.getId())) {
+                                                                                        teammates.add(AccountFactory.create(accountInfoKey,
+                                                                                                user.getString(FIRST_NAME_KEY),
+                                                                                                user.getString(LAST_NAME_KEY),
+                                                                                                user.getString(GMAIL_KEY)));
+                                                                                    }
+                                                                                }
+                                                                                Log.i(TAG, "Teammates successfully found");
+                                                                                teamSubject.update(teammates);
+                                                                            }
+                                                                        }).addOnFailureListener(new OnFailureListener() {
+                                                                    @Override
+                                                                    public void onFailure(@NonNull Exception e) {
+                                                                        Log.w(TAG, "Error retrieving user collection", e);
+                                                                    }
+                                                                });
+                                                            }
+                                                        }).addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.w(TAG, "Error retrieving teams collection", e);
+                                                    }
+                                                });
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(TAG, "Error retrieving user collection", e);
+                                    }
+                                });
+                            }
                         }
                     }
                 });
-    }
-    
-    @Override
-    public void getTeam(ITeamSubject teamSubject) {
-        db.collection(USERS_COLLECTION)
-                .document(userId)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
 
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        db.collection(TEAMS_COLLECTION)
-                                .document(task.getResult().getString(TEAM_ID_KEY))
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-
-                                    @Override
-                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                        ArrayList<String> teammateIds = (ArrayList<String>) task.getResult().get(TEAMMATE_IDS_KEY);
-                                        db.collection(USERS_COLLECTION)
-                                                .get()
-                                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                        ArrayList<IAccountInfo> teammates = new ArrayList<>();
-                                                        for(QueryDocumentSnapshot user : task.getResult()) {
-                                                            if(teammateIds.contains(user.getId())) {
-                                                                teammates.add(AccountFactory.create(accountInfoKey,
-                                                                        user.getString(FIRST_NAME_KEY),
-                                                                        user.getString(LAST_NAME_KEY),
-                                                                        user.getString(GMAIL_KEY)));
-                                                            }
-                                                        }
-                                                        Log.i(TAG, "Teammates successfully found");
-                                                        teamSubject.update(teammates);
-                                                    }
-                                                }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Log.w(TAG, "Error retrieving user collection", e);
-                                            }
-                                        });
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Error retrieving teams collection", e);
-                            }
-                        });
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, "Error retrieving user collection", e);
-            }
-        });
     }
     
     @Override
     public void getInvites(IInviteSubject inviteSubject) {
         db.collection(USERS_COLLECTION)
-                .document(userId)
+                .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
+                .whereEqualTo(LAST_NAME_KEY, user.getLastName())
+                .whereEqualTo(GMAIL_KEY, user.getGmail())
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        ArrayList<String> invites = (ArrayList<String>) task.getResult().get(INVITES_KEY);
-                        db.collection(USERS_COLLECTION)
-                                .get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
 
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        ArrayList<IAccountInfo> inviters = new ArrayList<>();
-                                        for(QueryDocumentSnapshot user : task.getResult()) {
-                                            if(invites.contains(user.getId())) {
-                                                inviters.add(AccountFactory.create(accountInfoKey,
-                                                        user.getString(FIRST_NAME_KEY),
-                                                        user.getString(LAST_NAME_KEY),
-                                                        user.getString(GMAIL_KEY)));
+                            if (!task.getResult().isEmpty()) {
+                                String userId = task.getResult().iterator().next().getId();
+                                db.collection(USERS_COLLECTION)
+                                        .document(userId)
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                ArrayList<String> invites = (ArrayList<String>) task.getResult().get(INVITES_KEY);
+                                                db.collection(USERS_COLLECTION)
+                                                        .get()
+                                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                ArrayList<IAccountInfo> inviters = new ArrayList<>();
+                                                                for (QueryDocumentSnapshot user : task.getResult()) {
+                                                                    if (invites.contains(user.getId())) {
+                                                                        inviters.add(AccountFactory.create(accountInfoKey,
+                                                                                user.getString(FIRST_NAME_KEY),
+                                                                                user.getString(LAST_NAME_KEY),
+                                                                                user.getString(GMAIL_KEY)));
+                                                                    }
+                                                                }
+                                                                Log.i(TAG, "Invites successfully retrieved");
+                                                                inviteSubject.update(inviters);
+                                                            }
+                                                        }).addOnFailureListener(new OnFailureListener() {
+
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.w(TAG, "Error retrieving users collection", e);
+                                                    }
+                                                });
                                             }
-                                        }
-                                        Log.i(TAG, "Invites successfully retrieved");
-                                        inviteSubject.update(inviters);
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(TAG, "Error retrieving users collection", e);
                                     }
-                                }).addOnFailureListener(new OnFailureListener() {
-
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG, "Error retrieving users collection", e);
+                                });
                             }
-                        });
+                        }
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, "Error retrieving users collection", e);
-            }
-        });
+                });
     }
 
     @Override
     public boolean userSet() {
-        return user != null && userId != null;
+        return user != null;
     }
 
     @Override
@@ -283,52 +289,69 @@ public class FirebaseAdapter implements ICloudAdapter {
         }
 
         db.collection(USERS_COLLECTION)
-                .whereEqualTo(FIRST_NAME_KEY, recipient.getFirstName())
-                .whereEqualTo(LAST_NAME_KEY, recipient.getLastName())
-                .whereEqualTo(GMAIL_KEY, recipient.getGmail())
+                .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
+                .whereEqualTo(LAST_NAME_KEY, user.getLastName())
+                .whereEqualTo(GMAIL_KEY, user.getGmail())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
 
-                            QueryDocumentSnapshot document = null;
                             if (!task.getResult().isEmpty()) {
-                                document = task.getResult().iterator().next();
-                            }
+                                String userId = task.getResult().iterator().next().getId();
 
-                            if (document == null) {
-                                Log.i(TAG, recipient.getGmail() + " not found");
-                                Toast.makeText(context, "User not found", Toast.LENGTH_SHORT).show();
-                            } else {
+                                db.collection(USERS_COLLECTION)
+                                        .whereEqualTo(FIRST_NAME_KEY, recipient.getFirstName())
+                                        .whereEqualTo(LAST_NAME_KEY, recipient.getLastName())
+                                        .whereEqualTo(GMAIL_KEY, recipient.getGmail())
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                if (task.isSuccessful()) {
 
-                                DocumentReference dRecipient = db.collection(USERS_COLLECTION)
-                                        .document(document.getId());
+                                                    QueryDocumentSnapshot document = null;
+                                                    if (!task.getResult().isEmpty()) {
+                                                        document = task.getResult().iterator().next();
+                                                    }
 
-                                ArrayList<String> invites = (ArrayList<String>) document.get(INVITES_KEY);
-                                if (invites.contains(userId)) {
-                                    Toast.makeText(context, "You have already invited this user", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    invites.add(userId);
-                                    dRecipient.update(INVITES_KEY, invites)
-                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    Log.i(TAG, "User found, sending invite...");
-                                                    Toast.makeText(context, "Invite Sent", Toast.LENGTH_SHORT).show();
+                                                    if (document == null) {
+                                                        Log.i(TAG, recipient.getGmail() + " not found");
+                                                        Toast.makeText(context, "User not found", Toast.LENGTH_SHORT).show();
+                                                    } else {
 
+                                                        DocumentReference dRecipient = db.collection(USERS_COLLECTION)
+                                                                .document(document.getId());
+
+                                                        ArrayList<String> invites = (ArrayList<String>) document.get(INVITES_KEY);
+                                                        if (invites.contains(userId)) {
+                                                            Toast.makeText(context, "You have already invited this user", Toast.LENGTH_SHORT).show();
+                                                        } else {
+                                                            invites.add(userId);
+                                                            dRecipient.update(INVITES_KEY, invites)
+                                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                            Log.i(TAG, "User found, sending invite...");
+                                                                            Toast.makeText(context, "Invite Sent", Toast.LENGTH_SHORT).show();
+
+                                                                        }
+                                                                    }).addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    Log.w(TAG, "Error updating invites", e);
+                                                                }
+                                                            });
+                                                        }
+                                                    }
+
+                                                } else {
+                                                    Log.w(TAG, "Error getting users: ", task.getException());
                                                 }
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.w(TAG, "Error updating invites", e);
-                                        }
-                                    });
-                                }
+                                            }
+                                        });
                             }
-
-                        } else {
-                            Log.w(TAG, "Error getting users: ", task.getException());
                         }
                     }
                 });
@@ -343,86 +366,117 @@ public class FirebaseAdapter implements ICloudAdapter {
         }
 
         db.collection(USERS_COLLECTION)
-                .document(userId)
-                .update(ROUTES_KEY, gson.toJson(routes))
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
+                .whereEqualTo(LAST_NAME_KEY, user.getLastName())
+                .whereEqualTo(GMAIL_KEY, user.getGmail())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.i(TAG, "Routes saved to the cloud");
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+
+                            if (!task.getResult().isEmpty()) {
+                                String userId = task.getResult().iterator().next().getId();
+                                db.collection(USERS_COLLECTION)
+                                        .document(userId)
+                                        .update(ROUTES_KEY, gson.toJson(routes))
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.i(TAG, "Routes saved to the cloud");
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(TAG, "Routes failed to saved: ", e);
+                                    }
+                                });
+                            }
+                        }
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w(TAG, "Routes failed to saved: ", e);
-            }
-        });
+                });
     }
 
     @Override
     public void getTeamRoutes(ITeammateRoutesSubject teammateRoutesSubject) {
-        System.out.println("Inside Get TeamRoutes");
         db.collection(USERS_COLLECTION)
-                .document(userId)
+                .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
+                .whereEqualTo(LAST_NAME_KEY, user.getLastName())
+                .whereEqualTo(GMAIL_KEY, user.getGmail())
                 .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        System.out.println("Inside Get TeamRoutes 2");
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
 
-                        db.collection(TEAMS_COLLECTION)
-                                .document(documentSnapshot.getString(TEAM_ID_KEY))
-                                .get()
-                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            if (!task.getResult().isEmpty()) {
+                                String userId = task.getResult().iterator().next().getId();
+                                db.collection(USERS_COLLECTION)
+                                        .document(userId)
+                                        .get()
+                                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                System.out.println("Inside Get TeamRoutes 2");
 
-                                    @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                        System.out.println("Inside Get TeamRoutes 3");
-                                        ArrayList<String> teammateIds = (ArrayList<String>) documentSnapshot.get(TEAMMATE_IDS_KEY);
+                                                db.collection(TEAMS_COLLECTION)
+                                                        .document(documentSnapshot.getString(TEAM_ID_KEY))
+                                                        .get()
+                                                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
 
-                                        db.collection(USERS_COLLECTION)
-                                                .get()
-                                                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                                            @Override
+                                                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                                System.out.println("Inside Get TeamRoutes 3");
+                                                                ArrayList<String> teammateIds = (ArrayList<String>) documentSnapshot.get(TEAMMATE_IDS_KEY);
 
-                                                    @Override
-                                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                                        System.out.println("Inside Get TeamRoutes 4");
-                                                        ArrayList<TeammateRoutes> teamRoutes = new ArrayList<>();
+                                                                db.collection(USERS_COLLECTION)
+                                                                        .get()
+                                                                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
 
-                                                        for(String teammateId : teammateIds) {
-                                                            for(QueryDocumentSnapshot user : queryDocumentSnapshots) {
-                                                                System.out.println("Printing TeammateID:" + teammateId);
-                                                                if(teammateId.equals(user.getId()) && !teammateId.equals(userId)) {
-                                                                    System.out.println("I should be calling strToRoutes");
+                                                                            @Override
+                                                                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                                                                System.out.println("Inside Get TeamRoutes 4");
+                                                                                ArrayList<TeammateRoute> teamRoutes = new ArrayList<>();
 
-                                                                    teamRoutes.addAll(stringToRoutes(user.getString(ROUTES_KEY),
-                                                                            AccountFactory.create(accountInfoKey,
-                                                                                    user.getString(FIRST_NAME_KEY),
-                                                                                    user.getString(LAST_NAME_KEY),
-                                                                                    user.getString(GMAIL_KEY))));
-                                                                }
+                                                                                for (String teammateId : teammateIds) {
+                                                                                    for (QueryDocumentSnapshot user : queryDocumentSnapshots) {
+                                                                                        System.out.println("Printing TeammateID:" + teammateId);
+                                                                                        if (teammateId.equals(user.getId()) && !teammateId.equals(userId)) {
+                                                                                            System.out.println("I should be calling strToRoutes");
+
+                                                                                            teamRoutes.addAll(stringToRoutes(user.getString(ROUTES_KEY),
+                                                                                                    AccountFactory.create(accountInfoKey,
+                                                                                                            user.getString(FIRST_NAME_KEY),
+                                                                                                            user.getString(LAST_NAME_KEY),
+                                                                                                            user.getString(GMAIL_KEY))));
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                                teammateRoutesSubject.update(teamRoutes);
+
+                                                                            }
+                                                                        });
                                                             }
-                                                        }
-                                                        teammateRoutesSubject.update(teamRoutes);
-
-                                                    }
-                                                });
-                                    }
-                                });
+                                                        });
+                                            }
+                                        });
+                            }
+                        }
                     }
                 });
     }
 
 
-    private ArrayList<TeammateRoutes> stringToRoutes(String str, IAccountInfo info){
+    private ArrayList<TeammateRoute> stringToRoutes(String str, IAccountInfo info){
         System.out.print("Inside StrToRoutes");
         Gson gson = new Gson();
         TypeToken<ArrayList<Route>> token = new TypeToken<ArrayList<Route>>(){};
         ArrayList<Route> routesList = gson.fromJson(str, token.getType());
 
-        ArrayList<TeammateRoutes> teamRoutes = new ArrayList<TeammateRoutes>();
+        ArrayList<TeammateRoute> teamRoutes = new ArrayList<TeammateRoute>();
 
         for(Route route : routesList){
-            teamRoutes.add(new TeammateRoutes(route, info));
+            teamRoutes.add(new TeammateRoute(route, info));
         }
 
         return teamRoutes;
@@ -430,70 +484,86 @@ public class FirebaseAdapter implements ICloudAdapter {
 
     public void acceptInvite(IAccountInfo account, IAcceptSubject acceptSubject) {
         db.collection(USERS_COLLECTION)
-                .whereEqualTo(FIRST_NAME_KEY, account.getFirstName())
-                .whereEqualTo(LAST_NAME_KEY, account.getLastName())
-                .whereEqualTo(GMAIL_KEY, account.getGmail())
+                .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
+                .whereEqualTo(LAST_NAME_KEY, user.getLastName())
+                .whereEqualTo(GMAIL_KEY, user.getGmail())
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
 
-                            QueryDocumentSnapshot hostUser;
-                            hostUser = task.getResult().iterator().next();
+                            if (!task.getResult().isEmpty()) {
+                                String userId = task.getResult().iterator().next().getId();
+                                db.collection(USERS_COLLECTION)
+                                        .whereEqualTo(FIRST_NAME_KEY, account.getFirstName())
+                                        .whereEqualTo(LAST_NAME_KEY, account.getLastName())
+                                        .whereEqualTo(GMAIL_KEY, account.getGmail())
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                if (task.isSuccessful()) {
 
-                            db.collection(TEAMS_COLLECTION)
-                                    .document(hostUser.getString(TEAM_ID_KEY))
-                                    .get()
-                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                            ArrayList<String> teammateIds = (ArrayList<String>) documentSnapshot.get(TEAMMATE_IDS_KEY);
-                                            teammateIds.add(userId);
-                                            db.collection(TEAMS_COLLECTION)
-                                                    .document(hostUser.getString(TEAM_ID_KEY))
-                                                    .update(TEAMMATE_IDS_KEY, teammateIds);
-                                        }
-                                    });
+                                                    QueryDocumentSnapshot hostUser;
+                                                    hostUser = task.getResult().iterator().next();
 
-                            db.collection(USERS_COLLECTION)
-                                    .document(userId)
-                                    .get()
-                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                            String teamId = documentSnapshot.getString(TEAM_ID_KEY);
-                                            ArrayList<String> invites = (ArrayList<String>) documentSnapshot.get(INVITES_KEY);
-                                            db.collection(TEAMS_COLLECTION)
-                                                    .document(teamId)
-                                                    .get()
-                                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                        @Override
-                                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                            ArrayList<String> teammateIds = (ArrayList<String>) documentSnapshot.get(TEAMMATE_IDS_KEY);
-                                                            teammateIds.remove(userId);
-                                                            db.collection(TEAMS_COLLECTION)
-                                                                    .document(teamId)
-                                                                    .update(TEAMMATE_IDS_KEY,teammateIds);
+                                                    db.collection(TEAMS_COLLECTION)
+                                                            .document(hostUser.getString(TEAM_ID_KEY))
+                                                            .get()
+                                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                                @Override
+                                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                                    ArrayList<String> teammateIds = (ArrayList<String>) documentSnapshot.get(TEAMMATE_IDS_KEY);
+                                                                    teammateIds.add(userId);
+                                                                    db.collection(TEAMS_COLLECTION)
+                                                                            .document(hostUser.getString(TEAM_ID_KEY))
+                                                                            .update(TEAMMATE_IDS_KEY, teammateIds);
+                                                                }
+                                                            });
 
-                                                            invites.remove(hostUser.getId());
-                                                            db.collection(USERS_COLLECTION)
-                                                                    .document(userId)
-                                                                    .update(INVITES_KEY, invites);
+                                                    db.collection(USERS_COLLECTION)
+                                                            .document(userId)
+                                                            .get()
+                                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                                @Override
+                                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                                    String teamId = documentSnapshot.getString(TEAM_ID_KEY);
+                                                                    ArrayList<String> invites = (ArrayList<String>) documentSnapshot.get(INVITES_KEY);
+                                                                    db.collection(TEAMS_COLLECTION)
+                                                                            .document(teamId)
+                                                                            .get()
+                                                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                                                @Override
+                                                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                                                    ArrayList<String> teammateIds = (ArrayList<String>) documentSnapshot.get(TEAMMATE_IDS_KEY);
+                                                                                    teammateIds.remove(userId);
+                                                                                    db.collection(TEAMS_COLLECTION)
+                                                                                            .document(teamId)
+                                                                                            .update(TEAMMATE_IDS_KEY, teammateIds);
 
-                                                            db.collection(USERS_COLLECTION)
-                                                                    .document(userId)
-                                                                    .update(TEAM_ID_KEY, hostUser.getString(TEAM_ID_KEY))
-                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                        @Override
-                                                                        public void onSuccess(Void aVoid) {
-                                                                            acceptSubject.update("Team Joined");
-                                                                        }
-                                                                    });
-                                                        }
-                                                    });
-                                        }
-                                    });
+                                                                                    invites.remove(hostUser.getId());
+                                                                                    db.collection(USERS_COLLECTION)
+                                                                                            .document(userId)
+                                                                                            .update(INVITES_KEY, invites);
+
+                                                                                    db.collection(USERS_COLLECTION)
+                                                                                            .document(userId)
+                                                                                            .update(TEAM_ID_KEY, hostUser.getString(TEAM_ID_KEY))
+                                                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                                @Override
+                                                                                                public void onSuccess(Void aVoid) {
+                                                                                                    acceptSubject.update("Team Joined");
+                                                                                                }
+                                                                                            });
+                                                                                }
+                                                                            });
+                                                                }
+                                                            });
+                                                }
+                                            }
+                                        });
+                            }
                         }
                     }
                 });

@@ -11,13 +11,14 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.walkwalkrevolution.ui.main.routeslist.PersonalRouteSection;
 import com.example.walkwalkrevolution.R;
-import com.example.walkwalkrevolution.RouteItemAdapter;
-import com.example.walkwalkrevolution.RouteSection;
+import com.example.walkwalkrevolution.ui.main.routeslist.RouteSection;
 import com.example.walkwalkrevolution.cloud.ICloudAdapter;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
 import com.example.walkwalkrevolution.routemanagement.Route;
-import com.example.walkwalkrevolution.routemanagement.TeammateRoutes;
+import com.example.walkwalkrevolution.routemanagement.TeammateRoute;
+import com.example.walkwalkrevolution.ui.main.routeslist.TeamRouteSection;
 import com.example.walkwalkrevolution.walktracker.WalkInfo;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -26,10 +27,9 @@ import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
 
-import io.github.luizgrp.sectionedrecyclerviewadapter.Section;
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
 
-public class RoutesFragment extends Fragment implements Observer, ICloudAdapter.ITeammateRoutesSubject {
+public class RoutesFragment extends Fragment implements Observer, ICloudAdapter.ITeammateRoutesSubject, RouteSection.ClickListener {
     public static final String TAG = "RoutesFragment";
 
     TabFragment tabFragment;
@@ -37,10 +37,9 @@ public class RoutesFragment extends Fragment implements Observer, ICloudAdapter.
     WalkInfo walkInfo;
     RecyclerView rvRoutes;
     FloatingActionButton fab;
-    RouteItemAdapter routeAdapter;
     SectionedRecyclerViewAdapter sectionedAdapter;
-    RouteSection personalRoutes;
-    RouteSection teammateRoutes;
+    PersonalRouteSection personalRoutes;
+    TeamRouteSection teammateRoutes;
     View view;
     ICloudAdapter db;
 
@@ -50,15 +49,15 @@ public class RoutesFragment extends Fragment implements Observer, ICloudAdapter.
         this.walkInfo = walkInfo;
         this.db = db;
 
-        sectionedAdapter = new SectionedRecyclerViewAdapter();
-        personalRoutes = new RouteSection(tabFragment.tabActivity, true);
+        personalRoutes = new PersonalRouteSection(tabFragment.tabActivity, this);
         personalRoutes.setRoutes(((Iterable<Route>) routesManager).iterator());
 
-        teammateRoutes = new RouteSection(tabFragment.tabActivity, false);
+        teammateRoutes = new TeamRouteSection(tabFragment.tabActivity, this);
 
-
+        sectionedAdapter = new SectionedRecyclerViewAdapter();
         sectionedAdapter.addSection(personalRoutes);
         sectionedAdapter.addSection(teammateRoutes);
+
         ((Observable) routesManager).addObserver(this);
     }
 
@@ -100,8 +99,13 @@ public class RoutesFragment extends Fragment implements Observer, ICloudAdapter.
     }
 
     @Override
-    public void update(ArrayList<TeammateRoutes> teamRoutes) {
-        teammateRoutes.setTeamRoutes(teamRoutes);
+    public void update(ArrayList<TeammateRoute> teamRoutes) {
+        teammateRoutes.setRoutes(teamRoutes.iterator());
         sectionedAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onItemRootViewClicked(Route route) {
+        tabFragment.tabActivity.launchRouteInfo(route);
     }
 }

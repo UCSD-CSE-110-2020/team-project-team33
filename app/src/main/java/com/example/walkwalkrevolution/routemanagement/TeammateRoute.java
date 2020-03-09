@@ -2,11 +2,11 @@ package com.example.walkwalkrevolution.routemanagement;
 
 import com.example.walkwalkrevolution.account.IAccountInfo;
 
-public class TeammateRoutes {
+public class TeammateRoute {
     private IAccountInfo accountInfo;
     private Route route;
 
-    public TeammateRoutes(Route route, IAccountInfo info){
+    public TeammateRoute(Route route, IAccountInfo info){
         this.route = route;
         this.accountInfo = info;
     }

@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.routemanagement.Route;
-import com.example.walkwalkrevolution.routemanagement.TeammateRoutes;
+import com.example.walkwalkrevolution.routemanagement.TeammateRoute;
 
 import java.util.ArrayList;
 
@@ -36,7 +36,7 @@ public interface ICloudAdapter {
     }
 
     public interface ITeammateRoutesSubject {
-        public void update(ArrayList<TeammateRoutes> teamRoutes);
+        public void update(ArrayList<TeammateRoute> teamRoutes);
     }
 
     public interface IAcceptSubject {
