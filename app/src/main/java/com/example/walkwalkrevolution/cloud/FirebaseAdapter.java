@@ -40,6 +40,7 @@ public class FirebaseAdapter implements ICloudAdapter {
     private static final String INVITES_KEY = "INVITES";
 
     private static final String TEAMMATE_IDS_KEY = "TEAMMATE_IDS";
+    private static final String PENDING_KEY = "PENDING";
 
     private FirebaseFirestore db;
     private final String accountInfoKey;
@@ -103,6 +104,7 @@ public class FirebaseAdapter implements ICloudAdapter {
                                                 ArrayList<String> ids = new ArrayList<>();
                                                 ids.add(documentReference.getId());
                                                 team.put(TEAMMATE_IDS_KEY, ids);
+                                                team.put(PENDING_KEY, new ArrayList<String>());
                                                 db.collection(TEAMS_COLLECTION)
                                                         .add(team)
                                                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -170,20 +172,24 @@ public class FirebaseAdapter implements ICloudAdapter {
 
                                                             @Override
                                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                                ArrayList<String> teammateIds = (ArrayList<String>) task.getResult().get(TEAMMATE_IDS_KEY);
+                                                                DocumentSnapshot teamSnapshot = task.getResult();
+                                                                ArrayList<String> teammateIds = (ArrayList<String>) teamSnapshot.get(TEAMMATE_IDS_KEY);
+                                                                ArrayList<String> pendingIds = (ArrayList<String>) teamSnapshot.get(PENDING_KEY);
                                                                 db.collection(USERS_COLLECTION)
                                                                         .get()
                                                                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
 
                                                                             @Override
                                                                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                                                ArrayList<IAccountInfo> teammates = new ArrayList<>();
+                                                                                ArrayList<Teammate> teammates = new ArrayList<>();
                                                                                 for(QueryDocumentSnapshot user : task.getResult()) {
-                                                                                    if(teammateIds.contains(user.getId())) {
-                                                                                        teammates.add(AccountFactory.create(accountInfoKey,
+                                                                                    boolean isTeammate = teammateIds.contains(user.getId());
+                                                                                    boolean isPending = pendingIds.contains(user.getId());
+                                                                                    if(isPending || isTeammate) {
+                                                                                        teammates.add(new Teammate(AccountFactory.create(accountInfoKey,
                                                                                                 user.getString(FIRST_NAME_KEY),
                                                                                                 user.getString(LAST_NAME_KEY),
-                                                                                                user.getString(GMAIL_KEY)));
+                                                                                                user.getString(GMAIL_KEY)), isPending));
                                                                                     }
                                                                                 }
                                                                                 Log.i(TAG, "Teammates successfully found");
@@ -299,7 +305,7 @@ public class FirebaseAdapter implements ICloudAdapter {
                         if (task.isSuccessful()) {
 
                             if (!task.getResult().isEmpty()) {
-                                String userId = task.getResult().iterator().next().getId();
+                                QueryDocumentSnapshot userSnapshot = task.getResult().iterator().next();
 
                                 db.collection(USERS_COLLECTION)
                                         .whereEqualTo(FIRST_NAME_KEY, recipient.getFirstName())
@@ -311,30 +317,36 @@ public class FirebaseAdapter implements ICloudAdapter {
                                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                                 if (task.isSuccessful()) {
 
-                                                    QueryDocumentSnapshot document = null;
-                                                    if (!task.getResult().isEmpty()) {
-                                                        document = task.getResult().iterator().next();
-                                                    }
-
-                                                    if (document == null) {
+                                                    if (task.getResult().isEmpty()) {
                                                         Log.i(TAG, recipient.getGmail() + " not found");
                                                         Toast.makeText(context, "User not found", Toast.LENGTH_SHORT).show();
                                                     } else {
 
-                                                        DocumentReference dRecipient = db.collection(USERS_COLLECTION)
-                                                                .document(document.getId());
+                                                        QueryDocumentSnapshot recipientSnapshot = task.getResult().iterator().next();
 
-                                                        ArrayList<String> invites = (ArrayList<String>) document.get(INVITES_KEY);
-                                                        if (invites.contains(userId)) {
+                                                        DocumentReference dRecipient = db.collection(USERS_COLLECTION)
+                                                                .document(recipientSnapshot.getId());
+                                                        DocumentReference dTeam = db.collection(TEAMS_COLLECTION)
+                                                                .document(recipientSnapshot.getString(TEAM_ID_KEY));
+
+                                                        ArrayList<String> invites = (ArrayList<String>) recipientSnapshot.get(INVITES_KEY);
+                                                        if (invites.contains(userSnapshot.getId())) {
                                                             Toast.makeText(context, "You have already invited this user", Toast.LENGTH_SHORT).show();
                                                         } else {
-                                                            invites.add(userId);
+                                                            invites.add(userSnapshot.getId());
                                                             dRecipient.update(INVITES_KEY, invites)
                                                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                         @Override
                                                                         public void onComplete(@NonNull Task<Void> task) {
-                                                                            Log.i(TAG, "User found, sending invite...");
-                                                                            Toast.makeText(context, "Invite Sent", Toast.LENGTH_SHORT).show();
+
+                                                                            dTeam.get()
+                                                                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                                                        @Override
+                                                                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                                                            Log.i(TAG, "User found, sending invite...");
+                                                                                            Toast.makeText(context, "Invite Sent", Toast.LENGTH_SHORT).show();
+                                                                                        }
+                                                                                    });
 
                                                                         }
                                                                     }).addOnFailureListener(new OnFailureListener() {
@@ -343,6 +355,20 @@ public class FirebaseAdapter implements ICloudAdapter {
                                                                     Log.w(TAG, "Error updating invites", e);
                                                                 }
                                                             });
+
+                                                            db.collection(TEAMS_COLLECTION)
+                                                                    .document(userSnapshot.getString(TEAM_ID_KEY))
+                                                                    .get()
+                                                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                                        @Override
+                                                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                                            ArrayList<String> pending = (ArrayList<String>) documentSnapshot.get(PENDING_KEY);
+                                                                            pending.add(recipientSnapshot.getId());
+                                                                            db.collection(TEAMS_COLLECTION)
+                                                                                    .document(userSnapshot.getString(TEAM_ID_KEY))
+                                                                                    .update(PENDING_KEY, pending);
+                                                                        }
+                                                                    });
                                                         }
                                                     }
 
@@ -515,10 +541,15 @@ public class FirebaseAdapter implements ICloudAdapter {
                                                                 @Override
                                                                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                                                                     ArrayList<String> teammateIds = (ArrayList<String>) documentSnapshot.get(TEAMMATE_IDS_KEY);
+                                                                    ArrayList<String> pendingIds = (ArrayList<String>) documentSnapshot.get(PENDING_KEY);
                                                                     teammateIds.add(userId);
+                                                                    pendingIds.remove(userId);
                                                                     db.collection(TEAMS_COLLECTION)
                                                                             .document(hostUser.getString(TEAM_ID_KEY))
                                                                             .update(TEAMMATE_IDS_KEY, teammateIds);
+                                                                    db.collection(TEAMS_COLLECTION)
+                                                                            .document(hostUser.getString(TEAM_ID_KEY))
+                                                                            .update(PENDING_KEY, pendingIds);
                                                                 }
                                                             });
 
@@ -558,6 +589,70 @@ public class FirebaseAdapter implements ICloudAdapter {
                                                                                             });
                                                                                 }
                                                                             });
+                                                                }
+                                                            });
+                                                }
+                                            }
+                                        });
+                            }
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void declineInvite(IAccountInfo account, IAcceptSubject acceptSubject) {
+        db.collection(USERS_COLLECTION)
+                .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
+                .whereEqualTo(LAST_NAME_KEY, user.getLastName())
+                .whereEqualTo(GMAIL_KEY, user.getGmail())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+
+                            if (!task.getResult().isEmpty()) {
+                                String userId = task.getResult().iterator().next().getId();
+                                db.collection(USERS_COLLECTION)
+                                        .whereEqualTo(FIRST_NAME_KEY, account.getFirstName())
+                                        .whereEqualTo(LAST_NAME_KEY, account.getLastName())
+                                        .whereEqualTo(GMAIL_KEY, account.getGmail())
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                if (task.isSuccessful()) {
+
+                                                    QueryDocumentSnapshot hostUser;
+                                                    hostUser = task.getResult().iterator().next();
+
+                                                    db.collection(TEAMS_COLLECTION)
+                                                            .document(hostUser.getString(TEAM_ID_KEY))
+                                                            .get()
+                                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                                @Override
+                                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                                    ArrayList<String> pendingIds = (ArrayList<String>) documentSnapshot.get(PENDING_KEY);
+                                                                    pendingIds.remove(userId);
+                                                                    db.collection(TEAMS_COLLECTION)
+                                                                            .document(hostUser.getString(TEAM_ID_KEY))
+                                                                            .update(PENDING_KEY, pendingIds);
+                                                                }
+                                                            });
+
+                                                    db.collection(USERS_COLLECTION)
+                                                            .document(userId)
+                                                            .get()
+                                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                                @Override
+                                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                                    ArrayList<String> invites = (ArrayList<String>) documentSnapshot.get(INVITES_KEY);
+                                                                    invites.remove(hostUser.getId());
+                                                                    db.collection(USERS_COLLECTION)
+                                                                            .document(userId)
+                                                                            .update(INVITES_KEY, invites);
+                                                                    acceptSubject.update("Invite Declined");
                                                                 }
                                                             });
                                                 }

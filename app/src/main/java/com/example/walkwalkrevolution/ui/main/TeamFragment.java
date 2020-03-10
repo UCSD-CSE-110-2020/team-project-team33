@@ -15,6 +15,7 @@ import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.TeammateItemAdapter;
 import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.cloud.ICloudAdapter;
+import com.example.walkwalkrevolution.cloud.Teammate;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
@@ -67,7 +68,7 @@ public class TeamFragment extends Fragment implements ICloudAdapter.ITeamSubject
 
 
     @Override
-    public void update(ArrayList<IAccountInfo> teamMembers) {
+    public void update(ArrayList<Teammate> teamMembers) {
         teammateItemAdapter.setTeammates(teamMembers);
         teammateItemAdapter.notifyDataSetChanged();
     }

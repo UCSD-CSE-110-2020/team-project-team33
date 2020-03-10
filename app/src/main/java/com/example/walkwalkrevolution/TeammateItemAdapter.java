@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.walkwalkrevolution.account.IAccountInfo;
+import com.example.walkwalkrevolution.cloud.Teammate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +20,10 @@ import java.util.List;
 public class TeammateItemAdapter extends
         RecyclerView.Adapter<TeammateItemAdapter.ViewHolder>  {
 
-    protected List<IAccountInfo> teammates;
+    protected List<Teammate> teammates;
 
     public TeammateItemAdapter() {
-        this.teammates = new ArrayList<IAccountInfo>();
+        this.teammates = new ArrayList<Teammate>();
     }
 
     // Provide a direct reference to each of the views within a data item
@@ -55,7 +56,7 @@ public class TeammateItemAdapter extends
 
     @Override
     public void onBindViewHolder(TeammateItemAdapter.ViewHolder viewHolder, int position) {
-        IAccountInfo teammate = teammates.get(position);
+        IAccountInfo teammate = teammates.get(position).getAccount();
 
         String firstName = teammate.getFirstName();
         String lastName = teammate.getLastName();
@@ -70,6 +71,10 @@ public class TeammateItemAdapter extends
 
         viewHolder.initials.setBackground(icon);
         viewHolder.initials.setText( firstInitial + lastInitial );
+
+        if(teammates.get(position).isPending()) {
+            viewHolder.name.setTextAppearance(R.style.TextAppearance_AppCompat_Pending);
+        }
     }
 
     @Override
@@ -77,7 +82,7 @@ public class TeammateItemAdapter extends
         return teammates.size();
     }
 
-    public void setTeammates(List<IAccountInfo> teammates) {
+    public void setTeammates(List<Teammate> teammates) {
         this.teammates = teammates;
     }
 

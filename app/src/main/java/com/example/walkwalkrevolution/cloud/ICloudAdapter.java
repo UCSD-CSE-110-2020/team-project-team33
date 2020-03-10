@@ -27,12 +27,14 @@ public interface ICloudAdapter {
 
     public void acceptInvite(IAccountInfo account, IAcceptSubject acceptSubject);
 
+    public void declineInvite(IAccountInfo account, IAcceptSubject acceptSubject);
+
     public interface IInviteSubject {
         public void update(ArrayList<IAccountInfo> invites);
     }
 
     public interface ITeamSubject {
-        public void update(ArrayList<IAccountInfo> teamMembers);
+        public void update(ArrayList<Teammate> teamMembers);
     }
 
     public interface ITeammateRoutesSubject {
