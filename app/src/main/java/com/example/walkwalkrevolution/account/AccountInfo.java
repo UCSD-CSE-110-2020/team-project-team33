@@ -14,6 +14,7 @@ public class AccountInfo implements IAccountInfo {
     private String firstName;
     private String lastName;
     private String gmail;
+    private int height = -1;
 
     public AccountInfo(Context context) {
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(context);
@@ -39,6 +40,16 @@ public class AccountInfo implements IAccountInfo {
 
     public String getGmail() {
         return gmail;
+    }
+
+    @Override
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    @Override
+    public int getHeight() {
+        return height;
     }
 
     @Override

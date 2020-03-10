@@ -6,4 +6,8 @@ public interface IAccountInfo {
     public String getLastName();
 
     public String getGmail();
+
+    public void setHeight(int height);
+
+    public int getHeight();
 }

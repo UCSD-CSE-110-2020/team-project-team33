@@ -29,6 +29,10 @@ public interface ICloudAdapter {
 
     public void declineInvite(IAccountInfo account, IAcceptSubject acceptSubject);
 
+    public void getRoutes(IRouteSubject routeSubject);
+
+    public void getHeight(IHeightSubject heightSubject);
+
     public interface IInviteSubject {
         public void update(ArrayList<IAccountInfo> invites);
     }
@@ -43,5 +47,13 @@ public interface ICloudAdapter {
 
     public interface IAcceptSubject {
         public void update(String message);
+    }
+
+    public interface IRouteSubject {
+        public void update(ArrayList<Route> routes);
+    }
+
+    public interface IHeightSubject {
+        public void update(int height);
     }
 }

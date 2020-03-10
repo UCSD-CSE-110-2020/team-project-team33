@@ -38,6 +38,7 @@ public class FirebaseAdapter implements ICloudAdapter {
     private static final String GMAIL_KEY = "GMAIL";
     private static final String ROUTES_KEY = "ROUTES";
     private static final String INVITES_KEY = "INVITES";
+    private static final String HEIGHT_KEY = "HEIGHT";
 
     private static final String TEAMMATE_IDS_KEY = "TEAMMATE_IDS";
     private static final String PENDING_KEY = "PENDING";
@@ -69,6 +70,8 @@ public class FirebaseAdapter implements ICloudAdapter {
         Log.d(TAG, "Account Gmail: " + account.getGmail());
 
         user.put(TEAM_ID_KEY, "");
+
+        user.put(HEIGHT_KEY, account.getHeight());
 
         ArrayList<Route> routes = new ArrayList<>();
         user.put(ROUTES_KEY, gson.toJson(routes));
@@ -494,11 +497,7 @@ public class FirebaseAdapter implements ICloudAdapter {
 
 
     private ArrayList<TeammateRoute> stringToRoutes(String str, IAccountInfo info){
-        System.out.print("Inside StrToRoutes");
-        Gson gson = new Gson();
-        TypeToken<ArrayList<Route>> token = new TypeToken<ArrayList<Route>>(){};
-        ArrayList<Route> routesList = gson.fromJson(str, token.getType());
-
+        ArrayList<Route> routesList = stringToRoutes(str);
         ArrayList<TeammateRoute> teamRoutes = new ArrayList<TeammateRoute>();
 
         for(Route route : routesList){
@@ -506,6 +505,14 @@ public class FirebaseAdapter implements ICloudAdapter {
         }
 
         return teamRoutes;
+    }
+
+    private ArrayList<Route> stringToRoutes(String str){
+        System.out.print("Inside StrToRoutes");
+        Gson gson = new Gson();
+        TypeToken<ArrayList<Route>> token = new TypeToken<ArrayList<Route>>(){};
+        ArrayList<Route> routesList = gson.fromJson(str, token.getType());
+        return routesList;
     }
 
     public void acceptInvite(IAccountInfo account, IAcceptSubject acceptSubject) {
@@ -659,6 +666,50 @@ public class FirebaseAdapter implements ICloudAdapter {
                                             }
                                         });
                             }
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void getRoutes(IRouteSubject routeSubject) {
+        db.collection(USERS_COLLECTION)
+                .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
+                .whereEqualTo(LAST_NAME_KEY, user.getLastName())
+                .whereEqualTo(GMAIL_KEY, user.getGmail())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                            QueryDocumentSnapshot userSnapshot = task.getResult().iterator().next();
+
+                            routeSubject.update(stringToRoutes(userSnapshot.getString(ROUTES_KEY)));
+
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void getHeight(IHeightSubject heightSubject) {
+        db.collection(USERS_COLLECTION)
+                .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
+                .whereEqualTo(LAST_NAME_KEY, user.getLastName())
+                .whereEqualTo(GMAIL_KEY, user.getGmail())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful() && !task.getResult().isEmpty()) {
+                            QueryDocumentSnapshot userSnapshot = task.getResult().iterator().next();
+
+                            heightSubject.update(userSnapshot.getLong(HEIGHT_KEY).intValue());
+
+                        } else {
+
+                            Log.i(TAG, user.getGmail() + " not found");
+                            heightSubject.update(-1);
                         }
                     }
                 });

@@ -13,5 +13,5 @@ public class Distance {
         // strideLength in feet = strideLength in inches / 12
         this.strideLength = (height * STRIDE_RATIO) / INCHES_PER_FOOT;
     }
-    public double calculateDistance(long stepCount) {return stepCount * strideLength / FEET_PER_MILE;}
+    public double calculateDistance(long stepCount) {return Math.abs(stepCount * strideLength / FEET_PER_MILE);}
 }
