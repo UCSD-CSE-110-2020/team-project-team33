@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,11 +35,14 @@ public class InviteTeammateItemAdapter extends
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
-    public class ViewHolder extends RecyclerView.ViewHolder implements ICloudAdapter.IAcceptSubject, View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder implements ICloudAdapter.IAcceptSubject {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public TextView name;
         public TextView initials;
+        public Button acceptButton;
+        public Button declineButton;
+        public IAccountInfo account;
         Context context;
 
         // We also create a constructor that accepts the entire item row
@@ -47,10 +51,19 @@ public class InviteTeammateItemAdapter extends
             // Stores the itemView in a public final member variable that can be used
             // to access the context from any ViewHolder instance.
             super(itemView);
-            itemView.setOnClickListener(this);
             name = itemView.findViewById(R.id.name);
             initials = itemView.findViewById(R.id.initials);
+            acceptButton = itemView.findViewById(R.id.acceptButton);
+            declineButton = itemView.findViewById(R.id.declineButton);
             this.context = context;
+
+            ICloudAdapter.IAcceptSubject dbItem = this;
+            acceptButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    db.acceptInvite(account, dbItem);
+                }
+            });
         }
 
         @Override
@@ -61,12 +74,8 @@ public class InviteTeammateItemAdapter extends
             Toast.makeText(acceptInviteFragment.getContext(), message, Toast.LENGTH_SHORT).show();
         }
 
-        @Override
-        public void onClick(View view) {
-            int position = getAdapterPosition();
-            if(position != RecyclerView.NO_POSITION) {
-                db.acceptInvite(teammates.get(position), this);
-            }
+        public void setAccount(IAccountInfo account) {
+            this.account = account;
         }
     }
 
@@ -75,7 +84,7 @@ public class InviteTeammateItemAdapter extends
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View teammateView = inflater.inflate(R.layout.item_teammate, parent, false);
+        View teammateView = inflater.inflate(R.layout.item_invite, parent, false);
 
         ViewHolder viewHolder = new ViewHolder(teammateView.getContext(), teammateView);
         return viewHolder;
@@ -84,6 +93,7 @@ public class InviteTeammateItemAdapter extends
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         IAccountInfo teammate = teammates.get(position);
+        viewHolder.setAccount(teammate);
         String firstName = teammate.getFirstName();
         String lastName = teammate.getLastName();
         String firstInitial = firstName.substring(0, 1).toUpperCase();

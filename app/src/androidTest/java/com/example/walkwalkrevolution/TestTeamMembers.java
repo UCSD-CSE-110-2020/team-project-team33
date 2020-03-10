@@ -13,6 +13,7 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
 import com.example.walkwalkrevolution.account.AccountFactory;
+import com.example.walkwalkrevolution.account.AccountInfo;
 import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.cloud.CloudAdapterFactory;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
@@ -71,6 +72,9 @@ public class TestTeamMembers {
             
             CloudAdapterFactory.put(TEST_SERVICE, MockCloud::new);
             intent.putExtra(DataKeys.CLOUD_KEY, TEST_SERVICE);
+            MockCloud.resetArrays();
+            MockCloud.team.add(new AccountInfo("Leo", "Sack", "test1@gmail.com"));
+            MockCloud.team.add(new AccountInfo("wheres", "waldo", "test2@gmail.com"));
             
             intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, new RoutesManager());
             return intent;

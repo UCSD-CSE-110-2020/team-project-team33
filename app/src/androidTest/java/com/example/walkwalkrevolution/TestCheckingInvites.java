@@ -14,23 +14,24 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
 import com.example.walkwalkrevolution.account.AccountFactory;
+import com.example.walkwalkrevolution.account.AccountInfo;
 import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.cloud.CloudAdapterFactory;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
+import com.example.walkwalkrevolution.routemanagement.Route;
 import com.example.walkwalkrevolution.routemanagement.RoutesManager;
+import com.example.walkwalkrevolution.routemanagement.TeammateRoute;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
+import org.hamcrest.core.IsInstanceOf;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
@@ -42,16 +43,15 @@ import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class MockStepCountTest {
-
+public class TestCheckingInvites {
     private static final String TEST_SERVICE = "TEST_SERVICE";
 
     @Rule
-    public ActivityTestRule<HeightActivity> mActivityTestRule = new ActivityTestRule<HeightActivity>(HeightActivity.class) {
+    public ActivityTestRule<TabActivity> mActivityTestRule = new ActivityTestRule<TabActivity>(TabActivity.class) {
         @Override
         protected Intent getActivityIntent() {
             Context targetContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-            Intent intent = new Intent(targetContext, HeightActivity.class);
+            Intent intent = new Intent(targetContext, TabActivity.class);
 
             FitnessServiceFactory.put(TEST_SERVICE, MockFitnessService::new);
             intent.putExtra(DataKeys.FITNESS_SERVICE_KEY, TEST_SERVICE);
@@ -71,6 +71,7 @@ public class MockStepCountTest {
             CloudAdapterFactory.put(TEST_SERVICE, MockCloud::new);
             intent.putExtra(DataKeys.CLOUD_KEY, TEST_SERVICE);
             MockCloud.resetArrays();
+            MockCloud.invites.add(new AccountInfo("First", "Last", "first@last.com"));
 
             intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, new RoutesManager());
             return intent;
@@ -78,22 +79,7 @@ public class MockStepCountTest {
     };
 
     @Test
-    public void mockStepCountTest() {
-        MockFitnessService.nextStepCount = 0;
-
-        // Added a sleep statement to match the app's execution delay.
-        // The recommended way to handle such scenarios is to use Espresso idling resources:
-        // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
-        ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.save_button), withText("Save"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
-                                        0),
-                                2),
-                        isDisplayed()));
-        appCompatButton.perform(click());
-
+    public void testCheckingInvites() {
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
@@ -103,56 +89,34 @@ public class MockStepCountTest {
             e.printStackTrace();
         }
 
-        ViewInteraction tabView = onView(
-                allOf(withContentDescription("Mock"),
+        ViewInteraction overflowMenuButton = onView(
+                allOf(withContentDescription("More options"),
                         childAtPosition(
                                 childAtPosition(
-                                        withId(R.id.tabs),
-                                        0),
-                                3),
+                                        withId(R.id.tab_toolbar),
+                                        1),
+                                0),
                         isDisplayed()));
-        tabView.perform(click());
+        overflowMenuButton.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
         // https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
         try {
-            Thread.sleep(700);
+            Thread.sleep(250);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        ViewInteraction appCompatEditText = onView(
-                allOf(withId(R.id.editStepCount),
+        ViewInteraction appCompatTextView = onView(
+                allOf(withId(R.id.title), withText("Invites"),
                         childAtPosition(
                                 childAtPosition(
-                                        withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                        withId(R.id.content),
                                         0),
                                 0),
                         isDisplayed()));
-        appCompatEditText.perform(replaceText("100"), closeSoftKeyboard());
-
-        ViewInteraction appCompatEditText3 = onView(
-                allOf(withId(R.id.editStepCount), withText("100"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
-                                        0),
-                                0),
-                        isDisplayed()));
-        appCompatEditText3.perform(closeSoftKeyboard());
-        
-        pressBack();
-
-        ViewInteraction appCompatButton2 = onView(
-                allOf(withId(R.id.toggle_mock_button), withText("Start Mocking"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
-                                        0),
-                                4),
-                        isDisplayed()));
-        appCompatButton2.perform(click());
+        appCompatTextView.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
@@ -163,25 +127,15 @@ public class MockStepCountTest {
             e.printStackTrace();
         }
 
-        ViewInteraction appCompatButton3 = onView(
-                allOf(withId(R.id.button_set_step_count), withText("Set Step Count"),
+        ViewInteraction textView = onView(
+                allOf(withId(R.id.name), withText("First Last"),
                         childAtPosition(
                                 childAtPosition(
-                                        withClassName(is("androidx.constraintlayout.widget.ConstraintLayout")),
+                                        IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
                                         0),
                                 1),
                         isDisplayed()));
-        appCompatButton3.perform(click());
-
-        ViewInteraction tabView2 = onView(
-                allOf(withContentDescription("Home"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.tabs),
-                                        0),
-                                0),
-                        isDisplayed()));
-        tabView2.perform(click());
+        textView.check(matches(withText("First Last")));
 
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:
@@ -192,25 +146,15 @@ public class MockStepCountTest {
             e.printStackTrace();
         }
 
-        ViewInteraction textView = onView(
-                allOf(withId(R.id.overall_steps), withText("100"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.tableLayout),
-                                        1),
-                                1),
-                        isDisplayed()));
-        textView.check(matches(withText("100")));
-
         ViewInteraction textView2 = onView(
-                allOf(withId(R.id.overall_dist), withText("0.05 mi"),
+                allOf(withId(R.id.initials), withText("FL"),
                         childAtPosition(
                                 childAtPosition(
-                                        withId(R.id.tableLayout),
-                                        2),
-                                1),
+                                        IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
+                                        0),
+                                0),
                         isDisplayed()));
-        textView2.check(matches(withText("0.05 mi")));
+        textView2.check(matches(withText("FL")));
     }
 
     private static Matcher<View> childAtPosition(

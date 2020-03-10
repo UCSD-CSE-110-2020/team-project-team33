@@ -7,20 +7,30 @@ import com.example.walkwalkrevolution.account.AccountInfo;
 import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.cloud.ICloudAdapter;
 import com.example.walkwalkrevolution.routemanagement.Route;
+import com.example.walkwalkrevolution.routemanagement.TeammateRoute;
+
+import java.util.ArrayList;
 
 import java.util.ArrayList;
 
 public class MockCloud implements ICloudAdapter {
     public static IAccountInfo account;
     private String accountKey;
-    private ArrayList<IAccountInfo> testTeam;
-    
+
+    public static ArrayList<TeammateRoute> teamRoutes;
+    public static ArrayList<Route> route;
+    public static ArrayList<IAccountInfo> team;
+    public static ArrayList<IAccountInfo> invites;
     
     public MockCloud(String accountKey) {
-        testTeam = new ArrayList<>();
-        testTeam.add(new AccountInfo("Leo", "Sack", "test1@gmail.com"));
-        testTeam.add(new AccountInfo("wheres", "waldo", "test2@gmail.com"));
         this.accountKey = accountKey;
+    }
+
+    public static void resetArrays() {
+        teamRoutes = new ArrayList<>();
+        route = new ArrayList<>();
+        team = new ArrayList<>();
+        invites = new ArrayList<>();
     }
 
     @Override
@@ -30,17 +40,17 @@ public class MockCloud implements ICloudAdapter {
 
     @Override
     public void setUser(IAccountInfo account) {
-
+        this.account = account;
     }
     
     @Override
     public void getTeam(ITeamSubject teamSubject) {
-        teamSubject.update(testTeam);
+        teamSubject.update(team);
     }
 
     @Override
     public void getInvites(IInviteSubject inviteSubject) {
-
+        inviteSubject.update(invites);
     }
 
     @Override
@@ -60,7 +70,7 @@ public class MockCloud implements ICloudAdapter {
 
     @Override
     public void getTeamRoutes(ITeammateRoutesSubject teammateRoutesSubject) {
-
+        teammateRoutesSubject.update(teamRoutes);
     }
 
     @Override
