@@ -6,6 +6,7 @@ import android.util.Log;
 import com.example.walkwalkrevolution.account.AccountInfo;
 import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.cloud.ICloudAdapter;
+import com.example.walkwalkrevolution.cloud.Teammate;
 import com.example.walkwalkrevolution.routemanagement.Route;
 import com.example.walkwalkrevolution.routemanagement.TeammateRoute;
 
@@ -19,7 +20,7 @@ public class MockCloud implements ICloudAdapter {
 
     public static ArrayList<TeammateRoute> teamRoutes;
     public static ArrayList<Route> route;
-    public static ArrayList<IAccountInfo> team;
+    public static ArrayList<Teammate> team;
     public static ArrayList<IAccountInfo> invites;
     
     public MockCloud(String accountKey) {
@@ -75,6 +76,21 @@ public class MockCloud implements ICloudAdapter {
 
     @Override
     public void acceptInvite(IAccountInfo account, IAcceptSubject acceptSubject) {
+
+    }
+
+    @Override
+    public void declineInvite(IAccountInfo account, IAcceptSubject acceptSubject) {
+
+    }
+
+    @Override
+    public void getRoutes(IRouteSubject routeSubject) {
+
+    }
+
+    @Override
+    public void getHeight(IHeightSubject heightSubject) {
 
     }
 }

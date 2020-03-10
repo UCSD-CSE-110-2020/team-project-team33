@@ -9,6 +9,7 @@ public class MockAccountInfo implements IAccountInfo {
     public static String firstName;
     public static String lastName;
     public static String gmail;
+    public static int height;
 
     public MockAccountInfo(Context context) {
         super();
@@ -33,5 +34,15 @@ public class MockAccountInfo implements IAccountInfo {
     @Override
     public String getGmail() {
         return gmail;
+    }
+
+    @Override
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    @Override
+    public int getHeight() {
+        return height;
     }
 }

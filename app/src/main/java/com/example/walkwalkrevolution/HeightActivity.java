@@ -53,6 +53,7 @@ public class HeightActivity extends AppCompatActivity {
 
                 String accountKey = getIntent().getStringExtra(DataKeys.ACCOUNT_KEY);
                 IAccountInfo account = AccountFactory.create(accountKey, view.getContext());
+                account.setHeight(totalHeight);
 
                 String cloudKey = getIntent().getStringExtra(DataKeys.CLOUD_KEY);
                 ICloudAdapter db = CloudAdapterFactory.create(cloudKey, accountKey);

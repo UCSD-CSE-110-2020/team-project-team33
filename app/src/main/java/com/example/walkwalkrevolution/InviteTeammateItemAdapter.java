@@ -64,6 +64,13 @@ public class InviteTeammateItemAdapter extends
                     db.acceptInvite(account, dbItem);
                 }
             });
+
+            declineButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    db.declineInvite(account, dbItem);
+                }
+            });
         }
 
         @Override

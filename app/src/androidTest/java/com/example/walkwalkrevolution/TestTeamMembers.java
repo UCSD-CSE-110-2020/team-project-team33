@@ -16,6 +16,7 @@ import com.example.walkwalkrevolution.account.AccountFactory;
 import com.example.walkwalkrevolution.account.AccountInfo;
 import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.cloud.CloudAdapterFactory;
+import com.example.walkwalkrevolution.cloud.Teammate;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
 import com.example.walkwalkrevolution.routemanagement.RoutesManager;
 
@@ -73,8 +74,8 @@ public class TestTeamMembers {
             CloudAdapterFactory.put(TEST_SERVICE, MockCloud::new);
             intent.putExtra(DataKeys.CLOUD_KEY, TEST_SERVICE);
             MockCloud.resetArrays();
-            MockCloud.team.add(new AccountInfo("Leo", "Sack", "test1@gmail.com"));
-            MockCloud.team.add(new AccountInfo("wheres", "waldo", "test2@gmail.com"));
+            MockCloud.team.add(new Teammate(new AccountInfo("Leo", "Sack", "test1@gmail.com"), false));
+            MockCloud.team.add(new Teammate(new AccountInfo("wheres", "waldo", "test2@gmail.com"), true));
             
             intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, new RoutesManager());
             return intent;
