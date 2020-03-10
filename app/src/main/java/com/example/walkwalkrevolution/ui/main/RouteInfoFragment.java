@@ -28,6 +28,7 @@ public class RouteInfoFragment extends Fragment {
     public static final String TAG = "RouteInfoFragment";
 
     private Route route;
+    private boolean personalRoute;
     private TabActivity tabActivity;
     private WalkInfo walkInfo;
     private IRouteManagement routeManagement;
@@ -50,9 +51,10 @@ public class RouteInfoFragment extends Fragment {
 
     private Button startWalkButton;
 
-    public RouteInfoFragment(TabActivity t, Route r, WalkInfo w, IRouteManagement rm, ICloudAdapter c) {
+    public RouteInfoFragment(TabActivity t, Route r, boolean p, WalkInfo w, IRouteManagement rm, ICloudAdapter c) {
         tabActivity = t;
         route = r;
+        personalRoute = p;
         walkInfo = w;
         routeManagement = rm;
         db = c;
@@ -123,22 +125,26 @@ public class RouteInfoFragment extends Fragment {
         });
 
         startWalkButton = view.findViewById(R.id.buttonStartWalk);
-        startWalkButton.setEnabled((walkInfo.getCurrentRoute() == null && ! tabActivity.tabFragment.isWalkStarted()) || walkInfo.getCurrentRoute() == route);
-        startWalkButton.setText(walkInfo.getCurrentRoute() == route ? getString(R.string.stop_string) : getString(R.string.start_string));
-        startWalkButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(walkInfo.getCurrentRoute() == route) {
-                    startWalkButton.setText(getString(R.string.start_string));
-                    tabActivity.tabFragment.stopWalk();
-                } else {
-                    startWalkButton.setText(getString(R.string.stop_string));
-                    walkInfo.setCurrentRoute(route);
-                    tabActivity.tabFragment.startWalk();
-                    returnFromPage();
+        if(personalRoute) {
+            startWalkButton.setEnabled((walkInfo.getCurrentRoute() == null && !tabActivity.tabFragment.isWalkStarted()) || walkInfo.getCurrentRoute() == route);
+            startWalkButton.setText(walkInfo.getCurrentRoute() == route ? getString(R.string.stop_string) : getString(R.string.start_string));
+            startWalkButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (walkInfo.getCurrentRoute() == route) {
+                        startWalkButton.setText(getString(R.string.start_string));
+                        tabActivity.tabFragment.stopWalk();
+                    } else {
+                        startWalkButton.setText(getString(R.string.stop_string));
+                        walkInfo.setCurrentRoute(route);
+                        tabActivity.tabFragment.startWalk();
+                        returnFromPage();
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            startWalkButton.setVisibility(View.GONE);
+        }
 
         return view;
     }

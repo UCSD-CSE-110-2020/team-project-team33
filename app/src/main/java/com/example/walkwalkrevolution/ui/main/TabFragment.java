@@ -130,7 +130,7 @@ public class TabFragment extends Fragment {
             db.saveRoutes((Iterable<Route>) routesManager);
             Route tmp = walkInfo.getCurrentRoute();
             walkInfo.setCurrentRoute(null);
-            tabActivity.launchRouteInfo(tmp);
+            tabActivity.launchRouteInfo(tmp, true);
         }
     }
 
@@ -140,7 +140,7 @@ public class TabFragment extends Fragment {
         stepCountFragment = new StepCountFragment(walkInfo);
         adapter.addFragment(stepCountFragment, getString(R.string.home_tab));
 
-        routesFragment = new RoutesFragment(this, routesManager, walkInfo);
+        routesFragment = new RoutesFragment(this, routesManager, walkInfo, db);
         adapter.addFragment(routesFragment, getString(R.string.routes_tab));
 
         teamFragment = new TeamFragment(this, db);

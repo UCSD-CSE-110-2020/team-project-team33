@@ -151,7 +151,7 @@ public class TestStartingWalkFromRoute {
                                 childAtPosition(
                                         withId(R.id.constraintLayout),
                                         0)),
-                        0),
+                        1),
                         isDisplayed()));
         linearLayout.perform(click());
 
