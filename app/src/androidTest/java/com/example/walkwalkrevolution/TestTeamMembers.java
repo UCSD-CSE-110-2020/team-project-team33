@@ -88,6 +88,10 @@ public class TestTeamMembers {
                     2),
                 isDisplayed()));
         tabView.perform(click());
+
+        try {
+            Thread.sleep(2000);
+        } catch (Exception e) {}
         
         ViewInteraction textView = onView(
             allOf(withId(R.id.initials), withText("TT"),
