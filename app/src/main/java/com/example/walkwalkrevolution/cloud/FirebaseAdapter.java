@@ -42,6 +42,9 @@ public class FirebaseAdapter implements ICloudAdapter {
 
     private static final String TEAMMATE_IDS_KEY = "TEAMMATE_IDS";
     private static final String PENDING_KEY = "PENDING";
+    private static final String PROPOSED_WALK_KEY = "PROPOSED_WALK";
+    private static final String IS_WALK_PROPOSED_KEY = "IS_WALK_PROPOSED";
+    private static final String IS_WALK_SCHEDULED_KEY = "IS_WALK_SCHEDULED";
 
     private FirebaseFirestore db;
     private final String accountInfoKey;
@@ -104,10 +107,19 @@ public class FirebaseAdapter implements ICloudAdapter {
 
                                                 // Add the team the user is a part of
                                                 Map<String, Object> team = new HashMap<>();
+
                                                 ArrayList<String> ids = new ArrayList<>();
                                                 ids.add(documentReference.getId());
                                                 team.put(TEAMMATE_IDS_KEY, ids);
+
                                                 team.put(PENDING_KEY, new ArrayList<String>());
+
+                                                team.put(PROPOSED_WALK_KEY, null);
+
+                                                team.put(IS_WALK_PROPOSED_KEY, false);
+
+                                                team.put(IS_WALK_SCHEDULED_KEY, false);
+
                                                 db.collection(TEAMS_COLLECTION)
                                                         .add(team)
                                                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -508,11 +520,18 @@ public class FirebaseAdapter implements ICloudAdapter {
     }
 
     private ArrayList<Route> stringToRoutes(String str){
-        System.out.print("Inside StrToRoutes");
         Gson gson = new Gson();
         TypeToken<ArrayList<Route>> token = new TypeToken<ArrayList<Route>>(){};
         ArrayList<Route> routesList = gson.fromJson(str, token.getType());
         return routesList;
+    }
+
+    private TeammateRoute stringToTeammateRoute(String str) {
+        return new Gson().fromJson(str, TeammateRoute.class);
+    }
+
+    private String teammateRouteToString(TeammateRoute route) {
+        return new Gson().toJson(route);
     }
 
     public void acceptInvite(IAccountInfo account, IAcceptSubject acceptSubject) {
@@ -711,6 +730,109 @@ public class FirebaseAdapter implements ICloudAdapter {
                             Log.i(TAG, user.getGmail() + " not found");
                             heightSubject.update(-1);
                         }
+                    }
+                });
+    }
+
+    @Override
+    public void isWalkProposed(IProposedWalkSubject walkProposedSubject) {
+        db.collection(USERS_COLLECTION)
+                .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
+                .whereEqualTo(LAST_NAME_KEY, user.getLastName())
+                .whereEqualTo(GMAIL_KEY, user.getGmail())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        db.collection(TEAMS_COLLECTION)
+                                .document(queryDocumentSnapshots.getDocuments().get(0).getString(TEAM_ID_KEY))
+                                .get()
+                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                        walkProposedSubject.update(documentSnapshot.getBoolean(IS_WALK_PROPOSED_KEY));
+                                    }
+                                });
+                    }
+                });
+    }
+
+    @Override
+    public void isWalkScheduled(IProposedWalkSubject proposedWalkSubject) {
+        db.collection(USERS_COLLECTION)
+                .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
+                .whereEqualTo(LAST_NAME_KEY, user.getLastName())
+                .whereEqualTo(GMAIL_KEY, user.getGmail())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        db.collection(TEAMS_COLLECTION)
+                                .document(queryDocumentSnapshots.getDocuments().get(0).getString(TEAM_ID_KEY))
+                                .get()
+                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                        proposedWalkSubject.update(documentSnapshot.getBoolean(IS_WALK_SCHEDULED_KEY));
+                                    }
+                                });
+                    }
+                });
+    }
+
+    @Override
+    public void scheduleWalk() {
+        db.collection(USERS_COLLECTION)
+                .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
+                .whereEqualTo(LAST_NAME_KEY, user.getLastName())
+                .whereEqualTo(GMAIL_KEY, user.getGmail())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        db.collection(TEAMS_COLLECTION)
+                                .document(queryDocumentSnapshots.getDocuments().get(0).getString(TEAM_ID_KEY))
+                                .update(IS_WALK_SCHEDULED_KEY, true);
+                    }
+                });
+    }
+
+    @Override
+    public void cancelWalk() {
+        db.collection(USERS_COLLECTION)
+                .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
+                .whereEqualTo(LAST_NAME_KEY, user.getLastName())
+                .whereEqualTo(GMAIL_KEY, user.getGmail())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        db.collection(TEAMS_COLLECTION)
+                                .document(queryDocumentSnapshots.getDocuments().get(0).getString(TEAM_ID_KEY))
+                                .update(IS_WALK_PROPOSED_KEY, false);
+                        db.collection(TEAMS_COLLECTION)
+                                .document(queryDocumentSnapshots.getDocuments().get(0).getString(TEAM_ID_KEY))
+                                .update(IS_WALK_SCHEDULED_KEY, false);
+                    }
+                });
+    }
+
+    @Override
+    public void proposeWalk(TeammateRoute route) {
+        db.collection(USERS_COLLECTION)
+                .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
+                .whereEqualTo(LAST_NAME_KEY, user.getLastName())
+                .whereEqualTo(GMAIL_KEY, user.getGmail())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        db.collection(TEAMS_COLLECTION)
+                                .document(queryDocumentSnapshots.getDocuments().get(0).getString(TEAM_ID_KEY))
+                                .update(PROPOSED_WALK_KEY, teammateRouteToString(route));
+                        db.collection(TEAMS_COLLECTION)
+                                .document(queryDocumentSnapshots.getDocuments().get(0).getString(TEAM_ID_KEY))
+                                .update(IS_WALK_PROPOSED_KEY, true);
                     }
                 });
     }

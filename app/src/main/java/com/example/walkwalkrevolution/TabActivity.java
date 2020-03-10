@@ -77,7 +77,7 @@ public class TabActivity extends AppCompatActivity {
 
     public void launchRouteInfo(Route route, boolean personalRoute) {
         Log.i(TAG, "Launching route info fragment");
-        RouteInfoFragment fragment = new RouteInfoFragment(this, route, personalRoute, walkInfo, routesManager, db);
+        RouteInfoFragment fragment = new RouteInfoFragment(this, route, personalRoute, walkInfo, routesManager, db, account);
         launchFragment(fragment);
     }
 
