@@ -184,7 +184,6 @@ public class FirebaseAdapter implements ICloudAdapter {
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                         ArrayList<String> teammateIds = (ArrayList<String>) task.getResult().get(TEAMMATE_IDS_KEY);
-                                        System.out.println(teammateIds);
                                         db.collection(USERS_COLLECTION)
                                                 .get()
                                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -355,5 +354,77 @@ public class FirebaseAdapter implements ICloudAdapter {
                 Log.w(TAG, "Routes failed to saved: ", e);
             }
         });
+    }
+
+    @Override
+    public void acceptInvite(IAccountInfo account, IAcceptSubject acceptSubject) {
+        db.collection(USERS_COLLECTION)
+                .whereEqualTo(FIRST_NAME_KEY, account.getFirstName())
+                .whereEqualTo(LAST_NAME_KEY, account.getLastName())
+                .whereEqualTo(GMAIL_KEY, account.getGmail())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+
+                            QueryDocumentSnapshot hostUser;
+                            hostUser = task.getResult().iterator().next();
+
+                            db.collection(TEAMS_COLLECTION)
+                                    .document(hostUser.getString(TEAM_ID_KEY))
+                                    .get()
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            ArrayList<String> teammateIds = (ArrayList<String>) documentSnapshot.get(TEAMMATE_IDS_KEY);
+                                            teammateIds.add(userId);
+                                            db.collection(TEAMS_COLLECTION)
+                                                    .document(hostUser.getString(TEAM_ID_KEY))
+                                                    .update(TEAMMATE_IDS_KEY, teammateIds);
+                                        }
+                                    });
+
+                            db.collection(USERS_COLLECTION)
+                                    .document(userId)
+                                    .get()
+                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                        @Override
+                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                            String teamId = documentSnapshot.getString(TEAM_ID_KEY);
+                                            ArrayList<String> invites = (ArrayList<String>) documentSnapshot.get(INVITES_KEY);
+                                            db.collection(TEAMS_COLLECTION)
+                                                    .document(teamId)
+                                                    .get()
+                                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                        @Override
+                                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                            ArrayList<String> teammateIds = (ArrayList<String>) documentSnapshot.get(TEAMMATE_IDS_KEY);
+                                                            teammateIds.remove(userId);
+                                                            db.collection(TEAMS_COLLECTION)
+                                                                    .document(teamId)
+                                                                    .update(TEAMMATE_IDS_KEY,teammateIds);
+
+                                                            invites.remove(hostUser.getId());
+                                                            db.collection(USERS_COLLECTION)
+                                                                    .document(userId)
+                                                                    .update(INVITES_KEY, invites);
+
+                                                            db.collection(USERS_COLLECTION)
+                                                                    .document(userId)
+                                                                    .update(TEAM_ID_KEY, hostUser.getString(TEAM_ID_KEY))
+                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                        @Override
+                                                                        public void onSuccess(Void aVoid) {
+                                                                            acceptSubject.update("Team Joined");
+                                                                        }
+                                                                    });
+                                                        }
+                                                    });
+                                        }
+                                    });
+                        }
+                    }
+                });
     }
 }
