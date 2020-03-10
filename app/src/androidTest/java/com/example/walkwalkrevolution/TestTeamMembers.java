@@ -90,18 +90,18 @@ public class TestTeamMembers {
         tabView.perform(click());
 
         try {
-            Thread.sleep(2000);
+            Thread.sleep(700);
         } catch (Exception e) {}
         
         ViewInteraction textView = onView(
-            allOf(withId(R.id.initials), withText("TT"),
+            allOf(withId(R.id.initials), withText("LS"),
                 childAtPosition(
                     childAtPosition(
-                        withId(R.id.teammates_rv),
+                        IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
                             0),
                     0),
                 isDisplayed()));
-        textView.check(matches(withText("TT")));
+        textView.check(matches(withText("LS")));
     }
     
     private static Matcher<View> childAtPosition(

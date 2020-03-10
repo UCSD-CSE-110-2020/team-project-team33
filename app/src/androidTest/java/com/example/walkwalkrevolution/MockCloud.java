@@ -18,8 +18,8 @@ public class MockCloud implements ICloudAdapter {
     
     public MockCloud(String accountKey) {
         testTeam = new ArrayList<>();
-        testTeam.add(new AccountInfo("test1_first", "test1_last", "test1@gmail.com"));
-        testTeam.add(new AccountInfo("test2_first", "test2_last", "test2@gmail.com"));
+        testTeam.add(new AccountInfo("Leo", "Sack", "test1@gmail.com"));
+        testTeam.add(new AccountInfo("wheres", "waldo", "test2@gmail.com"));
         this.accountKey = accountKey;
     }
 
