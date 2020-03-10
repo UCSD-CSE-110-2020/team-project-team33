@@ -34,11 +34,7 @@ public class TeammateItemAdapter extends
         public TextView initials;
         Context context;
 
-        // We also create a constructor that accepts the entire item row
-        // and does the view lookups to find each subview
         public ViewHolder(Context context, View itemView) {
-            // Stores the itemView in a public final member variable that can be used
-            // to access the context from any ViewHolder instance.
             super(itemView);
             name = itemView.findViewById(R.id.name);
             initials = itemView.findViewById(R.id.initials);
@@ -60,13 +56,18 @@ public class TeammateItemAdapter extends
     @Override
     public void onBindViewHolder(TeammateItemAdapter.ViewHolder viewHolder, int position) {
         IAccountInfo teammate = teammates.get(position);
+
         String firstName = teammate.getFirstName();
         String lastName = teammate.getLastName();
+
         String firstInitial = firstName.substring(0, 1).toUpperCase();
         String lastInitial = lastName.substring(0,1).toUpperCase();
+
         Drawable icon = ContextCompat.getDrawable(viewHolder.context, R.drawable.teammate_icon);
         icon.setColorFilter(teammate.getGmail().hashCode(), PorterDuff.Mode.SRC_OVER);
+
         viewHolder.name.setText(firstInitial + firstName.substring(1) + " " + lastInitial + lastName.substring(1));
+
         viewHolder.initials.setBackground(icon);
         viewHolder.initials.setText( firstInitial + lastInitial );
     }

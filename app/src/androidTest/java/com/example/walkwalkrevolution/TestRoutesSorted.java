@@ -117,46 +117,16 @@ public class TestRoutesSorted {
                                         0),
                                 10)));
         appCompatButton2.perform(scrollTo(), click());
-        
-        ViewInteraction textView = onView(
+
+        ViewInteraction textView99 = onView(
                 allOf(withId(R.id.itemRouteName), withText("b"),
                         childAtPosition(
                                 childAtPosition(
-                                        withId(R.id.rvRoutes),
+                                        IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
                                         0),
                                 0),
                         isDisplayed()));
-        textView.check(matches(withText("b")));
-        
-        ViewInteraction textView2 = onView(
-                allOf(withId(R.id.itemRouteSteps), withText("0 steps"),
-                        childAtPosition(
-                                childAtPosition(
-                                        IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
-                                        2),
-                                0),
-                        isDisplayed()));
-        textView2.check(matches(withText("0 steps")));
-        
-        ViewInteraction textView3 = onView(
-                allOf(withId(R.id.itemRouteDist), withText("0.00 mi"),
-                        childAtPosition(
-                                childAtPosition(
-                                        IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
-                                        2),
-                                1),
-                        isDisplayed()));
-        textView3.check(matches(withText("0.00 mi")));
-        
-        ViewInteraction textView4 = onView(
-                allOf(withId(R.id.itemRouteTime), withText("00:00:00"),
-                        childAtPosition(
-                                childAtPosition(
-                                        IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
-                                        2),
-                                2),
-                        isDisplayed()));
-        textView4.check(matches(withText("00:00:00")));
+        textView99.check(matches(withText("b")));
         
         ViewInteraction floatingActionButton2 = onView(
                 allOf(withId(R.id.floatingActionButton),
@@ -190,12 +160,12 @@ public class TestRoutesSorted {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        
+
         ViewInteraction textView5 = onView(
                 allOf(withId(R.id.itemRouteName), withText("a"),
                         childAtPosition(
                                 childAtPosition(
-                                        withId(R.id.rvRoutes),
+                                        IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
                                         0),
                                 0),
                         isDisplayed()));

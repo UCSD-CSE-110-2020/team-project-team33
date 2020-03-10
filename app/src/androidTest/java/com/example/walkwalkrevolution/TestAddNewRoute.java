@@ -146,28 +146,18 @@ public class TestAddNewRoute {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        
+
         ViewInteraction textView = onView(
                 allOf(withId(R.id.itemRouteName), withText("a"),
                         childAtPosition(
                                 childAtPosition(
-                                        withId(R.id.rvRoutes),
+                                        IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
                                         0),
                                 0),
                         isDisplayed()));
         textView.check(matches(withText("a")));
 
         ViewInteraction textView2 = onView(
-                allOf(withId(R.id.itemRouteStart), withText("a"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.rvRoutes),
-                                        0),
-                                1),
-                        isDisplayed()));
-        textView2.check(matches(withText("a")));
-
-        ViewInteraction textView3 = onView(
                 allOf(withId(R.id.itemRouteSteps), withText("0 steps"),
                         childAtPosition(
                                 childAtPosition(
@@ -175,9 +165,9 @@ public class TestAddNewRoute {
                                         2),
                                 0),
                         isDisplayed()));
-        textView3.check(matches(withText("0 steps")));
+        textView2.check(matches(withText("0 steps")));
 
-        ViewInteraction textView4 = onView(
+        ViewInteraction textView3 = onView(
                 allOf(withId(R.id.itemRouteDist), withText("0.00 mi"),
                         childAtPosition(
                                 childAtPosition(
@@ -185,9 +175,9 @@ public class TestAddNewRoute {
                                         2),
                                 1),
                         isDisplayed()));
-        textView4.check(matches(withText("0.00 mi")));
+        textView3.check(matches(withText("0.00 mi")));
 
-        ViewInteraction textView5 = onView(
+        ViewInteraction textView4 = onView(
                 allOf(withId(R.id.itemRouteTime), withText("00:00:00"),
                         childAtPosition(
                                 childAtPosition(
@@ -195,7 +185,7 @@ public class TestAddNewRoute {
                                         2),
                                 2),
                         isDisplayed()));
-        textView5.check(matches(withText("00:00:00")));
+        textView4.check(matches(withText("00:00:00")));
     }
 
     private static Matcher<View> childAtPosition(

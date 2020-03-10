@@ -166,7 +166,7 @@ public class TestRouteInfoUI {
                     childAtPosition(
                         withId(R.id.constraintLayout),
                         0)),
-                0),
+                1),
                 isDisplayed()));
         linearLayout.perform(click());
     
