@@ -1,7 +1,6 @@
 package com.example.walkwalkrevolution;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
@@ -9,12 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.walkwalkrevolution.account.AccountInfo;
 import com.example.walkwalkrevolution.account.IAccountInfo;
 
 import java.util.ArrayList;
@@ -23,7 +19,7 @@ import java.util.List;
 public class TeammateItemAdapter extends
         RecyclerView.Adapter<TeammateItemAdapter.ViewHolder>  {
 
-    private List<IAccountInfo> teammates;
+    protected List<IAccountInfo> teammates;
 
     public TeammateItemAdapter() {
         this.teammates = new ArrayList<IAccountInfo>();
@@ -31,18 +27,14 @@ public class TeammateItemAdapter extends
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public TextView name;
         public TextView initials;
         Context context;
 
-        // We also create a constructor that accepts the entire item row
-        // and does the view lookups to find each subview
         public ViewHolder(Context context, View itemView) {
-            // Stores the itemView in a public final member variable that can be used
-            // to access the context from any ViewHolder instance.
             super(itemView);
             name = itemView.findViewById(R.id.name);
             initials = itemView.findViewById(R.id.initials);
@@ -63,15 +55,19 @@ public class TeammateItemAdapter extends
 
     @Override
     public void onBindViewHolder(TeammateItemAdapter.ViewHolder viewHolder, int position) {
-        System.out.println(getItemCount());
         IAccountInfo teammate = teammates.get(position);
+
         String firstName = teammate.getFirstName();
         String lastName = teammate.getLastName();
+
         String firstInitial = firstName.substring(0, 1).toUpperCase();
         String lastInitial = lastName.substring(0,1).toUpperCase();
+
         Drawable icon = ContextCompat.getDrawable(viewHolder.context, R.drawable.teammate_icon);
         icon.setColorFilter(teammate.getGmail().hashCode(), PorterDuff.Mode.SRC_OVER);
+
         viewHolder.name.setText(firstInitial + firstName.substring(1) + " " + lastInitial + lastName.substring(1));
+
         viewHolder.initials.setBackground(icon);
         viewHolder.initials.setText( firstInitial + lastInitial );
     }

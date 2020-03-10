@@ -14,6 +14,7 @@ import com.example.walkwalkrevolution.fitness.FitnessService;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
 import com.example.walkwalkrevolution.routemanagement.Route;
+import com.example.walkwalkrevolution.ui.main.AcceptInviteFragment;
 import com.example.walkwalkrevolution.ui.main.EnterRouteInfoFragment;
 import com.example.walkwalkrevolution.ui.main.InviteFragment;
 import com.example.walkwalkrevolution.ui.main.RouteInfoFragment;
@@ -74,9 +75,9 @@ public class TabActivity extends AppCompatActivity {
         launchFragment(fragment);
     }
 
-    public void launchRouteInfo(Route route) {
+    public void launchRouteInfo(Route route, boolean personalRoute) {
         Log.i(TAG, "Launching route info fragment");
-        RouteInfoFragment fragment = new RouteInfoFragment(this, route, walkInfo, routesManager, db);
+        RouteInfoFragment fragment = new RouteInfoFragment(this, route, personalRoute, walkInfo, routesManager, db);
         launchFragment(fragment);
     }
 
@@ -84,6 +85,12 @@ public class TabActivity extends AppCompatActivity {
         Log.i(TAG, "Launching invite fragment");
         InviteFragment inviteFragment = new InviteFragment(db, this);
         launchFragment(inviteFragment);
+    }
+
+    public void launchAcceptInvites() {
+        Log.i(TAG, "Launching AcceptInvites fragment");
+        AcceptInviteFragment acceptInviteFragment = new AcceptInviteFragment(db);
+        launchFragment(acceptInviteFragment);
     }
 
     public void launchFragment(Fragment fragment) {

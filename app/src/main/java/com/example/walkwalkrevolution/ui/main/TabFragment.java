@@ -3,11 +3,17 @@ package com.example.walkwalkrevolution.ui.main;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
@@ -58,6 +64,13 @@ public class TabFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tab, container, false);
 
+        Toolbar toolbar = view.findViewById(R.id.tab_toolbar);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        if (((AppCompatActivity) getActivity()).getSupportActionBar() != null){
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
+        }
+        setHasOptionsMenu(true);
+
         tabLayout = (TabLayout) view.findViewById(R.id.tabs);
         appbar = view.findViewById(R.id.appbar);
 
@@ -83,6 +96,18 @@ public class TabFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_invites, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        tabActivity.launchAcceptInvites();
+        return super.onOptionsItemSelected(item);
+    }
+
     public void startWalk() {
         walkStarted = !walkStarted;
         tabLayout.getTabAt(HOME_TAB_INDEX).select();
@@ -105,7 +130,7 @@ public class TabFragment extends Fragment {
             db.saveRoutes((Iterable<Route>) routesManager);
             Route tmp = walkInfo.getCurrentRoute();
             walkInfo.setCurrentRoute(null);
-            tabActivity.launchRouteInfo(tmp);
+            tabActivity.launchRouteInfo(tmp, true);
         }
     }
 
@@ -115,7 +140,7 @@ public class TabFragment extends Fragment {
         stepCountFragment = new StepCountFragment(walkInfo);
         adapter.addFragment(stepCountFragment, getString(R.string.home_tab));
 
-        routesFragment = new RoutesFragment(this, routesManager, walkInfo);
+        routesFragment = new RoutesFragment(this, routesManager, walkInfo, db);
         adapter.addFragment(routesFragment, getString(R.string.routes_tab));
 
         teamFragment = new TeamFragment(this, db);

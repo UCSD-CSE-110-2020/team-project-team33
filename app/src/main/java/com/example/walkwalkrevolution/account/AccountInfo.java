@@ -40,4 +40,13 @@ public class AccountInfo implements IAccountInfo {
     public String getGmail() {
         return gmail;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        IAccountInfo temp = (IAccountInfo) obj;
+        return getFirstName().equals(temp.getFirstName()) &&
+                getLastName().equals(temp.getLastName()) &&
+                getGmail().equals(temp.getGmail());
+    }
+
 }

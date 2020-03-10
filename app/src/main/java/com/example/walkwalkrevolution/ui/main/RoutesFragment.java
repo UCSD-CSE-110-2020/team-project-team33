@@ -11,18 +11,25 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.walkwalkrevolution.ui.main.routeslist.PersonalRouteSection;
 import com.example.walkwalkrevolution.R;
-import com.example.walkwalkrevolution.RouteItemAdapter;
+import com.example.walkwalkrevolution.ui.main.routeslist.RouteSection;
+import com.example.walkwalkrevolution.cloud.ICloudAdapter;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
 import com.example.walkwalkrevolution.routemanagement.Route;
+import com.example.walkwalkrevolution.routemanagement.TeammateRoute;
+import com.example.walkwalkrevolution.ui.main.routeslist.TeamRouteSection;
 import com.example.walkwalkrevolution.walktracker.WalkInfo;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
 
-public class RoutesFragment extends Fragment implements Observer {
+import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
+
+public class RoutesFragment extends Fragment implements Observer, ICloudAdapter.ITeammateRoutesSubject, RouteSection.ClickListener {
     public static final String TAG = "RoutesFragment";
 
     TabFragment tabFragment;
@@ -30,15 +37,27 @@ public class RoutesFragment extends Fragment implements Observer {
     WalkInfo walkInfo;
     RecyclerView rvRoutes;
     FloatingActionButton fab;
-    RouteItemAdapter routeAdapter;
+    SectionedRecyclerViewAdapter sectionedAdapter;
+    PersonalRouteSection personalRoutes;
+    TeamRouteSection teammateRoutes;
     View view;
+    ICloudAdapter db;
 
-    public RoutesFragment(TabFragment tabFragment, IRouteManagement routesManager, WalkInfo walkInfo) {
+    public RoutesFragment(TabFragment tabFragment, IRouteManagement routesManager, WalkInfo walkInfo, ICloudAdapter db) {
         this.tabFragment = tabFragment;
         this.routesManager = routesManager;
         this.walkInfo = walkInfo;
-        this.routeAdapter = new RouteItemAdapter(tabFragment.tabActivity);
-        routeAdapter.setRoutes(((Iterable<Route>) routesManager).iterator());
+        this.db = db;
+
+        personalRoutes = new PersonalRouteSection(tabFragment.tabActivity, this);
+        personalRoutes.setRoutes(((Iterable<Route>) routesManager).iterator());
+
+        teammateRoutes = new TeamRouteSection(tabFragment.tabActivity, this, personalRoutes);
+
+        sectionedAdapter = new SectionedRecyclerViewAdapter();
+        sectionedAdapter.addSection(personalRoutes);
+        sectionedAdapter.addSection(teammateRoutes);
+
         ((Observable) routesManager).addObserver(this);
     }
 
@@ -46,15 +65,18 @@ public class RoutesFragment extends Fragment implements Observer {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_routes, container, false);
 
+
         rvRoutes = view.findViewById(R.id.rvRoutes);
         rvRoutes.setHasFixedSize(true);
         rvRoutes.setLayoutManager(new LinearLayoutManager(view.getContext()));
         rvRoutes.addItemDecoration(new DividerItemDecoration(rvRoutes.getContext(), DividerItemDecoration.VERTICAL));
 
         // These are causing problems with Espresso
-        rvRoutes.setAdapter(routeAdapter);
+        rvRoutes.setAdapter(sectionedAdapter);
 
         fab = view.findViewById(R.id.floatingActionButton);
+
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,7 +84,9 @@ public class RoutesFragment extends Fragment implements Observer {
             }
         });
 
-
+        if(db.userSet()) {
+            db.getTeamRoutes(this);
+        }
         return view;
     }
 
@@ -70,7 +94,18 @@ public class RoutesFragment extends Fragment implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        routeAdapter.setRoutes((Iterator) arg);
-        routeAdapter.notifyDataSetChanged();
+        personalRoutes.setRoutes((Iterator) arg);
+        sectionedAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void update(ArrayList<TeammateRoute> teamRoutes) {
+        teammateRoutes.setRoutes(teamRoutes.iterator());
+        sectionedAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onItemRootViewClicked(Route route, RouteSection routeSection) {
+        tabFragment.tabActivity.launchRouteInfo(route, routeSection == personalRoutes);
     }
 }
