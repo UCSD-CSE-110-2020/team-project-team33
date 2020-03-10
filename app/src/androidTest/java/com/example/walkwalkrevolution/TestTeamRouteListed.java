@@ -14,10 +14,13 @@ import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 
 import com.example.walkwalkrevolution.account.AccountFactory;
+import com.example.walkwalkrevolution.account.AccountInfo;
 import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.cloud.CloudAdapterFactory;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
+import com.example.walkwalkrevolution.routemanagement.Route;
 import com.example.walkwalkrevolution.routemanagement.RoutesManager;
+import com.example.walkwalkrevolution.routemanagement.TeammateRoute;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -29,24 +32,18 @@ import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static androidx.test.espresso.action.ViewActions.longClick;
-import static androidx.test.espresso.action.ViewActions.pressImeActionButton;
-import static androidx.test.espresso.action.ViewActions.replaceText;
-import static androidx.test.espresso.action.ViewActions.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class TestAddNewRoute {
+public class TestTeamRouteListed {
     private static final String TEST_SERVICE = "TEST_SERVICE";
 
     @Rule
@@ -74,6 +71,8 @@ public class TestAddNewRoute {
             CloudAdapterFactory.put(TEST_SERVICE, MockCloud::new);
             intent.putExtra(DataKeys.CLOUD_KEY, TEST_SERVICE);
             MockCloud.resetArrays();
+            Route route = new Route("Test", "TestLoc", 0, 0.0, 0, null, null, null, null, null, null);
+            MockCloud.teamRoutes.add(new TeammateRoute(route, new AccountInfo("test_first", "test_last", "test@test.com")));
 
             intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, new RoutesManager());
             return intent;
@@ -81,8 +80,12 @@ public class TestAddNewRoute {
     };
 
     @Test
-    public void testAddNewRoute() {
-        MockFitnessService.nextStepCount = 0;
+    public void testTeamRouteListed() {
+        try{
+            Thread.sleep(700);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         ViewInteraction tabView = onView(
                 allOf(withContentDescription("Routes"),
@@ -94,71 +97,27 @@ public class TestAddNewRoute {
                         isDisplayed()));
         tabView.perform(click());
 
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        ViewInteraction floatingActionButton = onView(
-                allOf(withId(R.id.floatingActionButton),
-                        childAtPosition(
-                                allOf(withId(R.id.constraintLayout),
-                                        withParent(withId(R.id.view_pager))),
-                                1),
-                        isDisplayed()));
-        floatingActionButton.perform(click());
-
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        ViewInteraction appCompatEditText = onView(
-                allOf(withId(R.id.routeName),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.ScrollView")),
-                                        0),
-                                0)));
-        appCompatEditText.perform(scrollTo(), replaceText("a"), closeSoftKeyboard());
-
-        ViewInteraction appCompatEditText2 = onView(
-                allOf(withId(R.id.startLoc),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.ScrollView")),
-                                        0),
-                                1)));
-        appCompatEditText2.perform(scrollTo(), replaceText("a"), closeSoftKeyboard());
-
-        ViewInteraction appCompatButton2 = onView(
-                allOf(withId(R.id.saveButton), withText("Save"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.ScrollView")),
-                                        0),
-                                10)));
-        appCompatButton2.perform(scrollTo(), click());
-
-        try {
-            Thread.sleep(700);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         ViewInteraction textView = onView(
-                allOf(withId(R.id.itemRouteName), withText("a"),
+                allOf(withId(R.id.itemRouteName), withText("Test"),
                         childAtPosition(
                                 childAtPosition(
                                         IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
                                         0),
                                 0),
                         isDisplayed()));
-        textView.check(matches(withText("a")));
+        textView.check(matches(withText("Test")));
 
         ViewInteraction textView2 = onView(
+                allOf(withId(R.id.itemRouteStart), withText("TestLoc"),
+                        childAtPosition(
+                                childAtPosition(
+                                        withId(R.id.rvRoutes),
+                                        2),
+                                1),
+                        isDisplayed()));
+        textView2.check(matches(withText("TestLoc")));
+
+        ViewInteraction textView3 = onView(
                 allOf(withId(R.id.itemRouteSteps), withText("0 steps"),
                         childAtPosition(
                                 childAtPosition(
@@ -166,9 +125,9 @@ public class TestAddNewRoute {
                                         2),
                                 0),
                         isDisplayed()));
-        textView2.check(matches(withText("0 steps")));
+        textView3.check(matches(withText("0 steps")));
 
-        ViewInteraction textView3 = onView(
+        ViewInteraction textView4 = onView(
                 allOf(withId(R.id.itemRouteDist), withText("0.00 mi"),
                         childAtPosition(
                                 childAtPosition(
@@ -176,9 +135,9 @@ public class TestAddNewRoute {
                                         2),
                                 1),
                         isDisplayed()));
-        textView3.check(matches(withText("0.00 mi")));
+        textView4.check(matches(withText("0.00 mi")));
 
-        ViewInteraction textView4 = onView(
+        ViewInteraction textView5 = onView(
                 allOf(withId(R.id.itemRouteTime), withText("00:00:00"),
                         childAtPosition(
                                 childAtPosition(
@@ -186,7 +145,17 @@ public class TestAddNewRoute {
                                         2),
                                 2),
                         isDisplayed()));
-        textView4.check(matches(withText("00:00:00")));
+        textView5.check(matches(withText("00:00:00")));
+
+        ViewInteraction textView6 = onView(
+                allOf(withId(R.id.initialsIcon), withText("TT"),
+                        childAtPosition(
+                                childAtPosition(
+                                        IsInstanceOf.<View>instanceOf(android.widget.LinearLayout.class),
+                                        0),
+                                1),
+                        isDisplayed()));
+        textView6.check(matches(withText("TT")));
     }
 
     private static Matcher<View> childAtPosition(
