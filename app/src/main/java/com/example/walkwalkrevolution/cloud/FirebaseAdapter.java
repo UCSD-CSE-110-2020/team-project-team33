@@ -39,6 +39,11 @@ public class FirebaseAdapter implements ICloudAdapter {
     private static final String ROUTES_KEY = "ROUTES";
     private static final String INVITES_KEY = "INVITES";
     private static final String HEIGHT_KEY = "HEIGHT";
+    private static final String PLANNING_KEY = "PLANNING";
+
+    private static final int UNCOMMITED = 0;
+    private static final int PLANNING_TO_GO = 1;
+    private static final int NOT_PLANNING_TO_GO = 2;
 
     private static final String TEAMMATE_IDS_KEY = "TEAMMATE_IDS";
     private static final String PENDING_KEY = "PENDING";
@@ -75,6 +80,8 @@ public class FirebaseAdapter implements ICloudAdapter {
         user.put(TEAM_ID_KEY, "");
 
         user.put(HEIGHT_KEY, account.getHeight());
+
+        user.put(PLANNING_KEY, UNCOMMITED);
 
         ArrayList<Route> routes = new ArrayList<>();
         user.put(ROUTES_KEY, gson.toJson(routes));
@@ -321,6 +328,9 @@ public class FirebaseAdapter implements ICloudAdapter {
 
                             if (!task.getResult().isEmpty()) {
                                 QueryDocumentSnapshot userSnapshot = task.getResult().iterator().next();
+                                db.collection(USERS_COLLECTION)
+                                        .document(userSnapshot.getId())
+                                        .update(PLANNING_KEY, UNCOMMITED);
 
                                 db.collection(USERS_COLLECTION)
                                         .whereEqualTo(FIRST_NAME_KEY, recipient.getFirstName())
