@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -13,7 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.walkwalkrevolution.Constants;
 import com.example.walkwalkrevolution.DataKeys;
 import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.TabActivity;
@@ -152,7 +155,7 @@ public class RouteInfoFragment extends Fragment {
         }
 
         proposedWalkButton = view.findViewById(R.id.buttonProposeWalk);
-        db.isWalkProposed(new ICloudAdapter.IProposedWalkSubject() {
+        db.isWalkProposed(new ICloudAdapter.IBooleanListener() {
             @Override
             public void update(boolean result) {
                 proposedWalkButton.setEnabled(!result);
@@ -161,8 +164,7 @@ public class RouteInfoFragment extends Fragment {
         proposedWalkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                db.proposeWalk(new TeammateRoute(route, account));
-                proposedWalkButton.setEnabled(false);
+                showTimePickerDialog();
             }
         });
 
@@ -203,5 +205,26 @@ public class RouteInfoFragment extends Fragment {
     private void returnFromPage() {
         tabActivity.deleteFragment(this);
     }
-    
+
+    public void showTimePickerDialog() {
+        DialogFragment newFragment = new TimePickerFragment(this);
+        newFragment.show(getActivity().getSupportFragmentManager(), "timePicker");
+    }
+
+    public void showDatePickerDialog(int hour, int minute) {
+        DialogFragment newFragment = new DatePickerFragment(this, hour, minute);
+        newFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
+    }
+
+    public void scheduledTimeReturned(long timeMillis) {
+        TeammateRoute teammateRoute = new TeammateRoute(route, account, false, timeMillis);
+        Context context = getContext();
+        db.proposeWalk(teammateRoute, new ICloudAdapter.IBooleanListener() {
+            @Override
+            public void update(boolean result) {
+                proposedWalkButton.setEnabled(!result);
+                Toast.makeText(context, result ? Constants.ROUTE_PROPOSED : Constants.INVALID_TIME, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }

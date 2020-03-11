@@ -61,7 +61,7 @@ public class InviteUnitTests {
 
         CloudAdapterFactory.put(TEST_SERVICE, MockCloud::new);
         intent.putExtra(DataKeys.CLOUD_KEY, TEST_SERVICE);
-        MockCloud.resetArrays();
+        MockCloud.reset();
 
         intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, routesManager);
         intent.putExtra(DataKeys.USER_HEIGHT_KEY, DEFAULT_HEIGHT);

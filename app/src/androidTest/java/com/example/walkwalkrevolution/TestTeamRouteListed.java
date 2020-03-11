@@ -70,7 +70,7 @@ public class TestTeamRouteListed {
 
             CloudAdapterFactory.put(TEST_SERVICE, MockCloud::new);
             intent.putExtra(DataKeys.CLOUD_KEY, TEST_SERVICE);
-            MockCloud.resetArrays();
+            MockCloud.reset();
             Route route = new Route("Test", "TestLoc", 0, 0.0, 0, null, null, null, null, null, null);
             MockCloud.teamRoutes.add(new TeammateRoute(route, new AccountInfo("test_first", "test_last", "test@test.com")));
 

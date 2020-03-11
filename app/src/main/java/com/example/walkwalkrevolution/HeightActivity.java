@@ -57,9 +57,12 @@ public class HeightActivity extends AppCompatActivity {
 
                 String cloudKey = getIntent().getStringExtra(DataKeys.CLOUD_KEY);
                 ICloudAdapter db = CloudAdapterFactory.create(cloudKey, accountKey);
-                db.addAccount(account);
-
-                launchStepCountActivity();
+                db.addAccount(account, new ICloudAdapter.IBooleanListener() {
+                    @Override
+                    public void update(boolean result) {
+                        launchStepCountActivity();
+                    }
+                });
             }
         });
     }

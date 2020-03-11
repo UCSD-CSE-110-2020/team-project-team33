@@ -73,7 +73,7 @@ public class TestRouteNotes {
 
             CloudAdapterFactory.put(TEST_SERVICE, MockCloud::new);
             intent.putExtra(DataKeys.CLOUD_KEY, TEST_SERVICE);
-            MockCloud.resetArrays();
+            MockCloud.reset();
 
             intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, new RoutesManager());
             return intent;
