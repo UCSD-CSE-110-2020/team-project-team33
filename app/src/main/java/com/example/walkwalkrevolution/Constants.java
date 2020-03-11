@@ -12,4 +12,8 @@ public class Constants {
     public static final int FEATURE_TERRAIN_INDEX = 4;
 
     public static final int MAX_NAME_LENGTH = 24;
+
+    public static final int UNCOMMITED = 0;
+    public static final int PLANNING_TO_GO = 1;
+    public static final int NOT_PLANNING_TO_GO = 2;
 }

@@ -33,12 +33,14 @@ public class TeammateItemAdapter extends
         // for any view that will be set as you render a row
         public TextView name;
         public TextView initials;
+        public TextView status;
         Context context;
 
         public ViewHolder(Context context, View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.name);
             initials = itemView.findViewById(R.id.initials);
+            status = itemView.findViewById(R.id.planning);
             this.context = context;
         }
     }
@@ -74,6 +76,24 @@ public class TeammateItemAdapter extends
 
         if(teammates.get(position).isPending()) {
             viewHolder.name.setTextAppearance(R.style.TextAppearance_AppCompat_Pending);
+        } else {
+            switch (teammates.get(position).getStatus()) {
+                case Constants.PLANNING_TO_GO:
+                    viewHolder.status.setText(R.string.accept_button);
+                    viewHolder.status.setTextAppearance(R.style.TextAppearance_AppCompat_Accept);
+                    viewHolder.status.setVisibility(View.VISIBLE);
+                    break;
+
+                case Constants.NOT_PLANNING_TO_GO:
+                    viewHolder.status.setText(R.string.decline_button);
+                    viewHolder.status.setTextAppearance(R.style.TextAppearance_AppCompat_Decline);
+                    viewHolder.status.setVisibility(View.VISIBLE);
+                    break;
+
+                case Constants.UNCOMMITED:
+                default:
+                    viewHolder.status.setVisibility(View.GONE);
+            }
         }
     }
 

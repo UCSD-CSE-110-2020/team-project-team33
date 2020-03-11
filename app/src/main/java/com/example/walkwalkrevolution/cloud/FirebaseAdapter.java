@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.walkwalkrevolution.Constants;
 import com.example.walkwalkrevolution.account.AccountFactory;
 import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.routemanagement.Route;
@@ -40,10 +41,6 @@ public class FirebaseAdapter implements ICloudAdapter {
     private static final String INVITES_KEY = "INVITES";
     private static final String HEIGHT_KEY = "HEIGHT";
     private static final String PLANNING_KEY = "PLANNING";
-
-    private static final int UNCOMMITED = 0;
-    private static final int PLANNING_TO_GO = 1;
-    private static final int NOT_PLANNING_TO_GO = 2;
 
     private static final String TEAMMATE_IDS_KEY = "TEAMMATE_IDS";
     private static final String PENDING_KEY = "PENDING";
@@ -81,7 +78,7 @@ public class FirebaseAdapter implements ICloudAdapter {
 
         user.put(HEIGHT_KEY, account.getHeight());
 
-        user.put(PLANNING_KEY, UNCOMMITED);
+        user.put(PLANNING_KEY, Constants.UNCOMMITED);
 
         ArrayList<Route> routes = new ArrayList<>();
         user.put(ROUTES_KEY, gson.toJson(routes));
@@ -211,7 +208,9 @@ public class FirebaseAdapter implements ICloudAdapter {
                                                                                         teammates.add(new Teammate(AccountFactory.create(accountInfoKey,
                                                                                                 user.getString(FIRST_NAME_KEY),
                                                                                                 user.getString(LAST_NAME_KEY),
-                                                                                                user.getString(GMAIL_KEY)), isPending));
+                                                                                                user.getString(GMAIL_KEY)),
+                                                                                                isPending,
+                                                                                                user.getLong(PLANNING_KEY).intValue()));
                                                                                     }
                                                                                 }
                                                                                 Log.i(TAG, "Teammates successfully found");
@@ -330,7 +329,7 @@ public class FirebaseAdapter implements ICloudAdapter {
                                 QueryDocumentSnapshot userSnapshot = task.getResult().iterator().next();
                                 db.collection(USERS_COLLECTION)
                                         .document(userSnapshot.getId())
-                                        .update(PLANNING_KEY, UNCOMMITED);
+                                        .update(PLANNING_KEY, Constants.UNCOMMITED);
 
                                 db.collection(USERS_COLLECTION)
                                         .whereEqualTo(FIRST_NAME_KEY, recipient.getFirstName())
