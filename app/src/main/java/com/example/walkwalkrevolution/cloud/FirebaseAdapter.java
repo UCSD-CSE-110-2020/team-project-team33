@@ -831,6 +831,22 @@ public class FirebaseAdapter implements ICloudAdapter {
                         db.collection(TEAMS_COLLECTION)
                                 .document(queryDocumentSnapshots.getDocuments().get(0).getString(TEAM_ID_KEY))
                                 .update(IS_WALK_SCHEDULED_KEY, false);
+
+                        db.collection(TEAMS_COLLECTION)
+                                .document(queryDocumentSnapshots.getDocuments().get(0).getString(TEAM_ID_KEY))
+                                .get()
+                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                        ArrayList<String> teammateIds = (ArrayList<String>) documentSnapshot.get(TEAMMATE_IDS_KEY);
+
+                                        for(String teammateId : teammateIds) {
+                                            db.collection(USERS_COLLECTION)
+                                                    .document(teammateId)
+                                                    .update(PLANNING_KEY, Constants.UNCOMMITED);
+                                        }
+                                    }
+                                });
                     }
                 });
     }

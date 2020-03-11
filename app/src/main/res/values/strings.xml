@@ -73,4 +73,7 @@
 
     <string name="scheduled_time_text">Scheduled Time:</string>
     <string name="proposed_time_text">Proposed Time:</string>
+
+    <string name="withdraw_button_text">Withdraw</string>
+    <string name="schedule_button_text">Schedule</string>
 </resources>
