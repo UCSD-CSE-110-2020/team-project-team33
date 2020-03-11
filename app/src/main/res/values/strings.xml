@@ -70,4 +70,7 @@
     <string name="decline_button">Decline</string>
 
     <string name="propose_button">Propose Walk</string>
+
+    <string name="scheduled_time_text">Scheduled Time:</string>
+    <string name="proposed_time_text">Proposed Time:</string>
 </resources>

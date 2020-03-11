@@ -14,6 +14,7 @@ import com.example.walkwalkrevolution.fitness.FitnessService;
 import com.example.walkwalkrevolution.fitness.FitnessServiceFactory;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
 import com.example.walkwalkrevolution.routemanagement.Route;
+import com.example.walkwalkrevolution.routemanagement.TeammateRoute;
 import com.example.walkwalkrevolution.ui.main.AcceptInviteFragment;
 import com.example.walkwalkrevolution.ui.main.EnterRouteInfoFragment;
 import com.example.walkwalkrevolution.ui.main.InviteFragment;
@@ -91,6 +92,10 @@ public class TabActivity extends AppCompatActivity {
         Log.i(TAG, "Launching AcceptInvites fragment");
         AcceptInviteFragment acceptInviteFragment = new AcceptInviteFragment(db);
         launchFragment(acceptInviteFragment);
+    }
+
+    public void launchProposedRouteFragment(TeammateRoute route) {
+        Log.i(TAG, "Launching ProposedRouteFragment");
     }
 
     public void launchFragment(Fragment fragment) {

@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 
 import com.example.walkwalkrevolution.Constants;
 import com.example.walkwalkrevolution.account.AccountFactory;
+import com.example.walkwalkrevolution.account.AccountInfo;
 import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.routemanagement.Route;
 import com.example.walkwalkrevolution.routemanagement.TeammateRoute;
@@ -60,7 +61,7 @@ public class FirebaseAdapter implements ICloudAdapter {
     }
 
     @Override
-    public void addAccount(IAccountInfo account) {
+    public void addAccount(IAccountInfo account, ICloudAdapter.IBooleanListener booleanListener) {
         user = account;
 
         Gson gson = new Gson();
@@ -127,6 +128,10 @@ public class FirebaseAdapter implements ICloudAdapter {
 
                                                 team.put(SCHEDULED_TIME_KEY, 0);
 
+                                                team.put(FIRST_NAME_KEY, "");
+                                                team.put(LAST_NAME_KEY, "");
+                                                team.put(GMAIL_KEY, "");
+
                                                 db.collection(TEAMS_COLLECTION)
                                                         .add(team)
                                                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -136,7 +141,13 @@ public class FirebaseAdapter implements ICloudAdapter {
 
                                                                 db.collection(USERS_COLLECTION)
                                                                         .document(userId)
-                                                                        .update(TEAM_ID_KEY, documentReference.getId());
+                                                                        .update(TEAM_ID_KEY, documentReference.getId())
+                                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                            @Override
+                                                                            public void onSuccess(Void aVoid) {
+                                                                                booleanListener.update(true);
+                                                                            }
+                                                                        });
                                                             }
                                                         }).addOnFailureListener(new OnFailureListener() {
                                                     @Override
@@ -470,7 +481,6 @@ public class FirebaseAdapter implements ICloudAdapter {
                                         .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                             @Override
                                             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                System.out.println("Inside Get TeamRoutes 2");
 
                                                 db.collection(TEAMS_COLLECTION)
                                                         .document(documentSnapshot.getString(TEAM_ID_KEY))
@@ -479,7 +489,6 @@ public class FirebaseAdapter implements ICloudAdapter {
 
                                                             @Override
                                                             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                                System.out.println("Inside Get TeamRoutes 3");
                                                                 ArrayList<String> teammateIds = (ArrayList<String>) documentSnapshot.get(TEAMMATE_IDS_KEY);
 
                                                                 db.collection(USERS_COLLECTION)
@@ -488,14 +497,11 @@ public class FirebaseAdapter implements ICloudAdapter {
 
                                                                             @Override
                                                                             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                                                                System.out.println("Inside Get TeamRoutes 4");
                                                                                 ArrayList<TeammateRoute> teamRoutes = new ArrayList<>();
 
                                                                                 for (String teammateId : teammateIds) {
                                                                                     for (QueryDocumentSnapshot user : queryDocumentSnapshots) {
-                                                                                        System.out.println("Printing TeammateID:" + teammateId);
                                                                                         if (teammateId.equals(user.getId()) && !teammateId.equals(userId)) {
-                                                                                            System.out.println("I should be calling strToRoutes");
 
                                                                                             teamRoutes.addAll(stringToRoutes(user.getString(ROUTES_KEY),
                                                                                                     AccountFactory.create(accountInfoKey,
@@ -538,12 +544,12 @@ public class FirebaseAdapter implements ICloudAdapter {
         return routesList;
     }
 
-    private TeammateRoute stringToTeammateRoute(String str) {
-        return new Gson().fromJson(str, TeammateRoute.class);
+    private String routeToString(Route route) {
+        return new Gson().toJson(route);
     }
 
-    private String teammateRouteToString(TeammateRoute route) {
-        return new Gson().toJson(route);
+    private Route stringToRoute(String str) {
+        return new Gson().fromJson(str, Route.class);
     }
 
     public void acceptInvite(IAccountInfo account, IStringListener acceptSubject) {
@@ -845,7 +851,18 @@ public class FirebaseAdapter implements ICloudAdapter {
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         db.collection(TEAMS_COLLECTION)
                                 .document(queryDocumentSnapshots.getDocuments().get(0).getString(TEAM_ID_KEY))
-                                .update(PROPOSED_WALK_KEY, teammateRouteToString(route));
+                                .update(PROPOSED_WALK_KEY, routeToString(route.getRoute()));
+
+                        db.collection(TEAMS_COLLECTION)
+                                .document(queryDocumentSnapshots.getDocuments().get(0).getString(TEAM_ID_KEY))
+                                .update(FIRST_NAME_KEY, route.getAccountInfo().getFirstName());
+                        db.collection(TEAMS_COLLECTION)
+                                .document(queryDocumentSnapshots.getDocuments().get(0).getString(TEAM_ID_KEY))
+                                .update(LAST_NAME_KEY, route.getAccountInfo().getLastName());
+                        db.collection(TEAMS_COLLECTION)
+                                .document(queryDocumentSnapshots.getDocuments().get(0).getString(TEAM_ID_KEY))
+                                .update(GMAIL_KEY, route.getAccountInfo().getGmail());
+
                         db.collection(TEAMS_COLLECTION)
                                 .document(queryDocumentSnapshots.getDocuments().get(0).getString(TEAM_ID_KEY))
                                 .update(IS_WALK_PROPOSED_KEY, true);
@@ -853,6 +870,38 @@ public class FirebaseAdapter implements ICloudAdapter {
                                 .document(queryDocumentSnapshots.getDocuments().get(0).getString(TEAM_ID_KEY))
                                 .update(SCHEDULED_TIME_KEY, route.getScheduledTime());
                         accept.update(true);
+                    }
+                });
+    }
+
+    @Override
+    public void getProposedWalk(ITeammateRouteListener teammateRouteListener) {
+        db.collection(USERS_COLLECTION)
+                .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
+                .whereEqualTo(LAST_NAME_KEY, user.getLastName())
+                .whereEqualTo(GMAIL_KEY, user.getGmail())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        DocumentReference teamReference = db.collection(TEAMS_COLLECTION)
+                                .document(queryDocumentSnapshots.getDocuments().get(0).getString(TEAM_ID_KEY));
+
+                        teamReference.get()
+                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                        Route route = stringToRoute(documentSnapshot.getString(PROPOSED_WALK_KEY));
+                                        IAccountInfo accountInfo = AccountFactory.create(accountInfoKey,
+                                                documentSnapshot.getString(FIRST_NAME_KEY),
+                                                documentSnapshot.getString(LAST_NAME_KEY),
+                                                documentSnapshot.getString(GMAIL_KEY));
+                                        teammateRouteListener.update(new TeammateRoute(route,
+                                                accountInfo,
+                                                documentSnapshot.getBoolean(IS_WALK_SCHEDULED_KEY),
+                                                documentSnapshot.getLong(SCHEDULED_TIME_KEY)));
+                                    }
+                                });
                     }
                 });
     }

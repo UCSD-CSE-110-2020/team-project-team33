@@ -9,7 +9,7 @@ import com.example.walkwalkrevolution.routemanagement.TeammateRoute;
 import java.util.ArrayList;
 
 public interface ICloudAdapter {
-    public void addAccount(IAccountInfo account);
+    public void addAccount(IAccountInfo account, IBooleanListener booleanListener);
 
     public void setUser(IAccountInfo account);
     
@@ -43,6 +43,8 @@ public interface ICloudAdapter {
 
     public void proposeWalk(TeammateRoute route, IBooleanListener accept);
 
+    public void getProposedWalk(ITeammateRouteListener teammateRouteListener);
+
     public interface IAccountInfoListener {
         public void update(ArrayList<IAccountInfo> invites);
     }
@@ -53,6 +55,10 @@ public interface ICloudAdapter {
 
     public interface ITeammateRoutesListener {
         public void update(ArrayList<TeammateRoute> teamRoutes);
+    }
+
+    public interface ITeammateRouteListener {
+        public void update(TeammateRoute teammateRoute);
     }
 
     public interface IStringListener {
