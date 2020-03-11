@@ -272,6 +272,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/start_string" />
+
+        <Button
+            android:id="@+id/buttonProposeWalk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:text="@string/propose_button" />
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

@@ -68,4 +68,6 @@
     <string name="invites_string">Invites</string>
     <string name="accept_button">Accept</string>
     <string name="decline_button">Decline</string>
+
+    <string name="propose_button">Propose Walk</string>
 </resources>

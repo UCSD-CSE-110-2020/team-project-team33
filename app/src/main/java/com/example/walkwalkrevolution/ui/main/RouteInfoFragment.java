@@ -17,9 +17,11 @@ import android.widget.TextView;
 import com.example.walkwalkrevolution.DataKeys;
 import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.TabActivity;
+import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.cloud.ICloudAdapter;
 import com.example.walkwalkrevolution.routemanagement.IRouteManagement;
 import com.example.walkwalkrevolution.routemanagement.Route;
+import com.example.walkwalkrevolution.routemanagement.TeammateRoute;
 import com.example.walkwalkrevolution.walktracker.WalkInfo;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -33,6 +35,7 @@ public class RouteInfoFragment extends Fragment {
     private WalkInfo walkInfo;
     private IRouteManagement routeManagement;
     private ICloudAdapter db;
+    private IAccountInfo account;
 
     private TextView textSteps;
     private TextView textDistance;
@@ -50,14 +53,16 @@ public class RouteInfoFragment extends Fragment {
     private FloatingActionButton favoriteButton;
 
     private Button startWalkButton;
+    private Button proposedWalkButton;
 
-    public RouteInfoFragment(TabActivity t, Route r, boolean p, WalkInfo w, IRouteManagement rm, ICloudAdapter c) {
+    public RouteInfoFragment(TabActivity t, Route r, boolean p, WalkInfo w, IRouteManagement rm, ICloudAdapter c, IAccountInfo a) {
         tabActivity = t;
         route = r;
         personalRoute = p;
         walkInfo = w;
         routeManagement = rm;
         db = c;
+        account = a;
     }
 
     @Nullable
@@ -145,6 +150,21 @@ public class RouteInfoFragment extends Fragment {
         } else {
             startWalkButton.setVisibility(View.GONE);
         }
+
+        proposedWalkButton = view.findViewById(R.id.buttonProposeWalk);
+        db.isWalkProposed(new ICloudAdapter.IProposedWalkSubject() {
+            @Override
+            public void update(boolean result) {
+                proposedWalkButton.setEnabled(!result);
+            }
+        });
+        proposedWalkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                db.proposeWalk(new TeammateRoute(route, account));
+                proposedWalkButton.setEnabled(false);
+            }
+        });
 
         return view;
     }

@@ -90,4 +90,29 @@ public class MockCloud implements ICloudAdapter {
     public void getHeight(IHeightSubject heightSubject) {
 
     }
+
+    @Override
+    public void isWalkProposed(IProposedWalkSubject walkProposedSubject) {
+
+    }
+
+    @Override
+    public void isWalkScheduled(IProposedWalkSubject proposedWalkSubject) {
+
+    }
+
+    @Override
+    public void scheduleWalk() {
+
+    }
+
+    @Override
+    public void cancelWalk() {
+
+    }
+
+    @Override
+    public void proposeWalk(TeammateRoute route) {
+
+    }
 }

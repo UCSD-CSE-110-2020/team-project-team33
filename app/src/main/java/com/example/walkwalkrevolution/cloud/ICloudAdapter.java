@@ -33,6 +33,16 @@ public interface ICloudAdapter {
 
     public void getHeight(IHeightSubject heightSubject);
 
+    public void isWalkProposed(IProposedWalkSubject walkProposedSubject);
+
+    public void isWalkScheduled(IProposedWalkSubject proposedWalkSubject);
+
+    public void scheduleWalk();
+
+    public void cancelWalk();
+
+    public void proposeWalk(TeammateRoute route);
+
     public interface IInviteSubject {
         public void update(ArrayList<IAccountInfo> invites);
     }
@@ -55,5 +65,9 @@ public interface ICloudAdapter {
 
     public interface IHeightSubject {
         public void update(int height);
+    }
+
+    public interface IProposedWalkSubject {
+        public void update(boolean result);
     }
 }
