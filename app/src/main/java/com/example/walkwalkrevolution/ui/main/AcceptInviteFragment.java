@@ -19,7 +19,7 @@ import com.example.walkwalkrevolution.cloud.ICloudAdapter;
 
 import java.util.ArrayList;
 
-public class AcceptInviteFragment extends Fragment implements ICloudAdapter.IInviteSubject {
+public class AcceptInviteFragment extends Fragment implements ICloudAdapter.IAccountInfoListener {
     private static final String TAG = "[AcceptInviteFragment]";
 
     private ICloudAdapter db;

@@ -16,4 +16,7 @@ public class Constants {
     public static final int UNCOMMITED = 0;
     public static final int PLANNING_TO_GO = 1;
     public static final int NOT_PLANNING_TO_GO = 2;
+
+    public static final String ROUTE_PROPOSED = "Route proposed";
+    public static final String INVALID_TIME = "Invalid time";
 }

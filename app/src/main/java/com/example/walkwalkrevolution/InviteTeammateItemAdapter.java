@@ -35,7 +35,7 @@ public class InviteTeammateItemAdapter extends
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
-    public class ViewHolder extends RecyclerView.ViewHolder implements ICloudAdapter.IAcceptSubject {
+    public class ViewHolder extends RecyclerView.ViewHolder implements ICloudAdapter.IStringListener {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public TextView name;
@@ -57,7 +57,7 @@ public class InviteTeammateItemAdapter extends
             declineButton = itemView.findViewById(R.id.declineButton);
             this.context = context;
 
-            ICloudAdapter.IAcceptSubject dbItem = this;
+            ICloudAdapter.IStringListener dbItem = this;
             acceptButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

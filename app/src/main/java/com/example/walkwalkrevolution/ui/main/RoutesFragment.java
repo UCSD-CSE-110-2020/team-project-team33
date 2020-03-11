@@ -29,7 +29,7 @@ import java.util.Observer;
 
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
 
-public class RoutesFragment extends Fragment implements Observer, ICloudAdapter.ITeammateRoutesSubject, RouteSection.ClickListener {
+public class RoutesFragment extends Fragment implements Observer, ICloudAdapter.ITeammateRoutesListener, RouteSection.ClickListener {
     public static final String TAG = "RoutesFragment";
 
     TabFragment tabFragment;

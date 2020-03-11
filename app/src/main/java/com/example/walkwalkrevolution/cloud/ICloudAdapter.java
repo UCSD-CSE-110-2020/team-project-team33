@@ -13,9 +13,9 @@ public interface ICloudAdapter {
 
     public void setUser(IAccountInfo account);
     
-    public void getTeam(ITeamSubject teamSubject);
+    public void getTeam(ITeammateListener teamSubject);
     
-    public void getInvites(IInviteSubject inviteSubject);
+    public void getInvites(IAccountInfoListener inviteSubject);
 
     public boolean userSet();
 
@@ -23,51 +23,51 @@ public interface ICloudAdapter {
     
     public void saveRoutes(Iterable<Route> routeManager);
 
-    public void getTeamRoutes(ITeammateRoutesSubject teammateRoutesSubject);
+    public void getTeamRoutes(ITeammateRoutesListener teammateRoutesSubject);
 
-    public void acceptInvite(IAccountInfo account, IAcceptSubject acceptSubject);
+    public void acceptInvite(IAccountInfo account, IStringListener acceptSubject);
 
-    public void declineInvite(IAccountInfo account, IAcceptSubject acceptSubject);
+    public void declineInvite(IAccountInfo account, IStringListener acceptSubject);
 
-    public void getRoutes(IRouteSubject routeSubject);
+    public void getRoutes(IRouteListener routeSubject);
 
-    public void getHeight(IHeightSubject heightSubject);
+    public void getHeight(IIntListener heightSubject);
 
-    public void isWalkProposed(IProposedWalkSubject walkProposedSubject);
+    public void isWalkProposed(IBooleanListener walkProposedSubject);
 
-    public void isWalkScheduled(IProposedWalkSubject proposedWalkSubject);
+    public void isWalkScheduled(IBooleanListener proposedWalkSubject);
 
     public void scheduleWalk();
 
     public void cancelWalk();
 
-    public void proposeWalk(TeammateRoute route);
+    public void proposeWalk(TeammateRoute route, IBooleanListener accept);
 
-    public interface IInviteSubject {
+    public interface IAccountInfoListener {
         public void update(ArrayList<IAccountInfo> invites);
     }
 
-    public interface ITeamSubject {
+    public interface ITeammateListener {
         public void update(ArrayList<Teammate> teamMembers);
     }
 
-    public interface ITeammateRoutesSubject {
+    public interface ITeammateRoutesListener {
         public void update(ArrayList<TeammateRoute> teamRoutes);
     }
 
-    public interface IAcceptSubject {
+    public interface IStringListener {
         public void update(String message);
     }
 
-    public interface IRouteSubject {
+    public interface IRouteListener {
         public void update(ArrayList<Route> routes);
     }
 
-    public interface IHeightSubject {
+    public interface IIntListener {
         public void update(int height);
     }
 
-    public interface IProposedWalkSubject {
+    public interface IBooleanListener {
         public void update(boolean result);
     }
 }

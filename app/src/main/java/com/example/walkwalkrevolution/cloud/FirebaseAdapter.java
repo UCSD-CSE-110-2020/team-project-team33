@@ -47,6 +47,7 @@ public class FirebaseAdapter implements ICloudAdapter {
     private static final String PROPOSED_WALK_KEY = "PROPOSED_WALK";
     private static final String IS_WALK_PROPOSED_KEY = "IS_WALK_PROPOSED";
     private static final String IS_WALK_SCHEDULED_KEY = "IS_WALK_SCHEDULED";
+    private static final String SCHEDULED_TIME_KEY = "SCHEDULED_TIME";
 
     private FirebaseFirestore db;
     private final String accountInfoKey;
@@ -124,6 +125,8 @@ public class FirebaseAdapter implements ICloudAdapter {
 
                                                 team.put(IS_WALK_SCHEDULED_KEY, false);
 
+                                                team.put(SCHEDULED_TIME_KEY, 0);
+
                                                 db.collection(TEAMS_COLLECTION)
                                                         .add(team)
                                                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -163,7 +166,7 @@ public class FirebaseAdapter implements ICloudAdapter {
     }
     
     @Override
-    public void getTeam(ITeamSubject teamSubject) {
+    public void getTeam(ITeammateListener teamSubject) {
         db.collection(USERS_COLLECTION)
                 .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
                 .whereEqualTo(LAST_NAME_KEY, user.getLastName())
@@ -244,7 +247,7 @@ public class FirebaseAdapter implements ICloudAdapter {
     }
     
     @Override
-    public void getInvites(IInviteSubject inviteSubject) {
+    public void getInvites(IAccountInfoListener inviteSubject) {
         db.collection(USERS_COLLECTION)
                 .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
                 .whereEqualTo(LAST_NAME_KEY, user.getLastName())
@@ -448,7 +451,7 @@ public class FirebaseAdapter implements ICloudAdapter {
     }
 
     @Override
-    public void getTeamRoutes(ITeammateRoutesSubject teammateRoutesSubject) {
+    public void getTeamRoutes(ITeammateRoutesListener teammateRoutesSubject) {
         db.collection(USERS_COLLECTION)
                 .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
                 .whereEqualTo(LAST_NAME_KEY, user.getLastName())
@@ -543,7 +546,7 @@ public class FirebaseAdapter implements ICloudAdapter {
         return new Gson().toJson(route);
     }
 
-    public void acceptInvite(IAccountInfo account, IAcceptSubject acceptSubject) {
+    public void acceptInvite(IAccountInfo account, IStringListener acceptSubject) {
         db.collection(USERS_COLLECTION)
                 .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
                 .whereEqualTo(LAST_NAME_KEY, user.getLastName())
@@ -636,7 +639,7 @@ public class FirebaseAdapter implements ICloudAdapter {
     }
 
     @Override
-    public void declineInvite(IAccountInfo account, IAcceptSubject acceptSubject) {
+    public void declineInvite(IAccountInfo account, IStringListener acceptSubject) {
         db.collection(USERS_COLLECTION)
                 .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
                 .whereEqualTo(LAST_NAME_KEY, user.getLastName())
@@ -700,7 +703,7 @@ public class FirebaseAdapter implements ICloudAdapter {
     }
 
     @Override
-    public void getRoutes(IRouteSubject routeSubject) {
+    public void getRoutes(IRouteListener routeSubject) {
         db.collection(USERS_COLLECTION)
                 .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
                 .whereEqualTo(LAST_NAME_KEY, user.getLastName())
@@ -720,7 +723,7 @@ public class FirebaseAdapter implements ICloudAdapter {
     }
 
     @Override
-    public void getHeight(IHeightSubject heightSubject) {
+    public void getHeight(IIntListener heightSubject) {
         db.collection(USERS_COLLECTION)
                 .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
                 .whereEqualTo(LAST_NAME_KEY, user.getLastName())
@@ -744,7 +747,7 @@ public class FirebaseAdapter implements ICloudAdapter {
     }
 
     @Override
-    public void isWalkProposed(IProposedWalkSubject walkProposedSubject) {
+    public void isWalkProposed(IBooleanListener walkProposedSubject) {
         db.collection(USERS_COLLECTION)
                 .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
                 .whereEqualTo(LAST_NAME_KEY, user.getLastName())
@@ -767,7 +770,7 @@ public class FirebaseAdapter implements ICloudAdapter {
     }
 
     @Override
-    public void isWalkScheduled(IProposedWalkSubject proposedWalkSubject) {
+    public void isWalkScheduled(IBooleanListener proposedWalkSubject) {
         db.collection(USERS_COLLECTION)
                 .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
                 .whereEqualTo(LAST_NAME_KEY, user.getLastName())
@@ -827,7 +830,11 @@ public class FirebaseAdapter implements ICloudAdapter {
     }
 
     @Override
-    public void proposeWalk(TeammateRoute route) {
+    public void proposeWalk(TeammateRoute route, IBooleanListener accept) {
+        if(route.getScheduledTime() < System.currentTimeMillis()) {
+            accept.update(false);
+            return;
+        }
         db.collection(USERS_COLLECTION)
                 .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
                 .whereEqualTo(LAST_NAME_KEY, user.getLastName())
@@ -842,6 +849,10 @@ public class FirebaseAdapter implements ICloudAdapter {
                         db.collection(TEAMS_COLLECTION)
                                 .document(queryDocumentSnapshots.getDocuments().get(0).getString(TEAM_ID_KEY))
                                 .update(IS_WALK_PROPOSED_KEY, true);
+                        db.collection(TEAMS_COLLECTION)
+                                .document(queryDocumentSnapshots.getDocuments().get(0).getString(TEAM_ID_KEY))
+                                .update(SCHEDULED_TIME_KEY, route.getScheduledTime());
+                        accept.update(true);
                     }
                 });
     }

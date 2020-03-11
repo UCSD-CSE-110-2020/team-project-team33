@@ -2,7 +2,6 @@ package com.example.walkwalkrevolution;
 
 import android.content.Context;
 
-import com.example.walkwalkrevolution.account.AccountInfo;
 import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.cloud.ICloudAdapter;
 import com.example.walkwalkrevolution.cloud.Teammate;
@@ -42,12 +41,12 @@ public class MockCloud implements ICloudAdapter {
     }
 
     @Override
-    public void getTeam(ITeamSubject teamSubject) {
+    public void getTeam(ITeammateListener teamSubject) {
         teamSubject.update(team);
     }
 
     @Override
-    public void getInvites(IInviteSubject inviteSubject) {
+    public void getInvites(IAccountInfoListener inviteSubject) {
         inviteSubject.update(invites);
     }
 
@@ -67,37 +66,37 @@ public class MockCloud implements ICloudAdapter {
     }
 
     @Override
-    public void getTeamRoutes(ITeammateRoutesSubject teammateRoutesSubject) {
+    public void getTeamRoutes(ITeammateRoutesListener teammateRoutesSubject) {
         teammateRoutesSubject.update(teamRoutes);
     }
 
     @Override
-    public void acceptInvite(IAccountInfo account, IAcceptSubject acceptSubject) {
+    public void acceptInvite(IAccountInfo account, IStringListener acceptSubject) {
 
     }
 
     @Override
-    public void declineInvite(IAccountInfo account, IAcceptSubject acceptSubject) {
+    public void declineInvite(IAccountInfo account, IStringListener acceptSubject) {
 
     }
 
     @Override
-    public void getRoutes(IRouteSubject routeSubject) {
+    public void getRoutes(IRouteListener routeSubject) {
 
     }
 
     @Override
-    public void getHeight(IHeightSubject heightSubject) {
+    public void getHeight(IIntListener heightSubject) {
 
     }
 
     @Override
-    public void isWalkProposed(IProposedWalkSubject walkProposedSubject) {
+    public void isWalkProposed(IBooleanListener walkProposedSubject) {
 
     }
 
     @Override
-    public void isWalkScheduled(IProposedWalkSubject proposedWalkSubject) {
+    public void isWalkScheduled(IBooleanListener proposedWalkSubject) {
 
     }
 

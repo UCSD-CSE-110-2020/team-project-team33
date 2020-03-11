@@ -92,14 +92,14 @@ public class MainActivity extends AppCompatActivity {
 
                 ICloudAdapter firebaseAdapter = new FirebaseAdapter(ACCOUNT_INFO_KEY);
                 firebaseAdapter.setUser(new AccountInfo(this));
-                firebaseAdapter.getHeight(new ICloudAdapter.IHeightSubject() {
+                firebaseAdapter.getHeight(new ICloudAdapter.IIntListener() {
                     @Override
                     public void update(int height) {
                         if(height == -1) {
                             launchHeightActivity();
                         } else {
                             sharedPreferences.edit().putInt(DataKeys.USER_HEIGHT_KEY, height).apply();
-                            firebaseAdapter.getRoutes(new ICloudAdapter.IRouteSubject() {
+                            firebaseAdapter.getRoutes(new ICloudAdapter.IRouteListener() {
                                 @Override
                                 public void update(ArrayList<Route> routes) {
                                     for(Route route : routes) {

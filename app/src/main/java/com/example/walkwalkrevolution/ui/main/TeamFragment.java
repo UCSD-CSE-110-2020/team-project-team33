@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 
 import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.TeammateItemAdapter;
-import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.cloud.ICloudAdapter;
 import com.example.walkwalkrevolution.cloud.Teammate;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -21,7 +20,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 
 
-public class TeamFragment extends Fragment implements ICloudAdapter.ITeamSubject {
+public class TeamFragment extends Fragment implements ICloudAdapter.ITeammateListener {
 
     private TabFragment tabFragment;
     private ICloudAdapter db;
