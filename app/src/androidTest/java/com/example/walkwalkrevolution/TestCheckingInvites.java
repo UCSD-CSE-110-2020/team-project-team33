@@ -70,7 +70,7 @@ public class TestCheckingInvites {
 
             CloudAdapterFactory.put(TEST_SERVICE, MockCloud::new);
             intent.putExtra(DataKeys.CLOUD_KEY, TEST_SERVICE);
-            MockCloud.resetArrays();
+            MockCloud.reset();
             MockCloud.invites.add(new AccountInfo("First", "Last", "first@last.com"));
 
             intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, new RoutesManager());

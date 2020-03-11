@@ -54,7 +54,7 @@ public class DistanceUnitTest {
 
         CloudAdapterFactory.put(TEST_SERVICE, MockCloud::new);
         intent.putExtra(DataKeys.CLOUD_KEY, TEST_SERVICE);
-        MockCloud.resetArrays();
+        MockCloud.reset();
 
         intent.putExtra(DataKeys.USER_HEIGHT_KEY, VALID_HEIGHT);
         intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, new MockRoutesManager());
