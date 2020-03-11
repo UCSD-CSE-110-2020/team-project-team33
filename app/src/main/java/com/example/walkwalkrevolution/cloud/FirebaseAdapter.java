@@ -16,7 +16,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
@@ -25,6 +27,8 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.annotation.Nullable;
 
 public class FirebaseAdapter implements ICloudAdapter {
     private static final String TAG = "[FirebaseAdapter]";
@@ -156,6 +160,78 @@ public class FirebaseAdapter implements ICloudAdapter {
     @Override
     public void setUser(IAccountInfo account) {
         user = account;
+    }
+
+    @Override
+    public void setUserListener() {
+        db.collection(USERS_COLLECTION)
+                .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
+                .whereEqualTo(LAST_NAME_KEY, user.getLastName())
+                .whereEqualTo(GMAIL_KEY, user.getGmail())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if(!task.getResult().isEmpty()) {
+                                String userId = task.getResult().iterator().next().getId();
+
+                                db.collection(USERS_COLLECTION).document(userId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                                        if (e != null) {
+                                            Log.e(TAG, "User listener failed", e);
+                                            return;
+                                        }
+
+                                        // do something here
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void setTeamListener() {
+        db.collection(USERS_COLLECTION)
+                .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
+                .whereEqualTo(LAST_NAME_KEY, user.getLastName())
+                .whereEqualTo(GMAIL_KEY, user.getGmail())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if(!task.getResult().isEmpty()) {
+                                String userId = task.getResult().iterator().next().getId();
+
+                                db.collection(USERS_COLLECTION)
+                                        .document(userId)
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                db.collection(TEAMS_COLLECTION)
+                                                        .document(task.getResult().getString(TEAM_ID_KEY))
+                                                        .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                                            @Override
+                                                            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                                                                if (e != null) {
+                                                                    Log.e(TAG, "Team listener failed", e);
+                                                                    return;
+                                                                }
+
+                                                                // do something here
+                                                            }
+                                                        });
+                                            }
+                                        });
+                            }
+                        }
+                    }
+                });
     }
     
     @Override

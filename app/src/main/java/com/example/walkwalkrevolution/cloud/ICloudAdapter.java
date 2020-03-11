@@ -17,6 +17,10 @@ public interface ICloudAdapter {
     
     public void getInvites(IInviteSubject inviteSubject);
 
+    public void setUserListener();
+
+    public void setTeamListener();
+
     public boolean userSet();
 
     public void invite(IAccountInfo recipient, Context context);
