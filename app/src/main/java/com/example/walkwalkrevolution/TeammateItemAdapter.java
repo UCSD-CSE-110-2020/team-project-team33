@@ -76,6 +76,7 @@ public class TeammateItemAdapter extends
 
         if(teammates.get(position).isPending()) {
             viewHolder.name.setTextAppearance(R.style.TextAppearance_AppCompat_Pending);
+            viewHolder.status.setVisibility(View.GONE);
         } else {
             switch (teammates.get(position).getStatus()) {
                 case Constants.PLANNING_TO_GO:

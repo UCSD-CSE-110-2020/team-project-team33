@@ -73,9 +73,9 @@ public class TestTeamMembers {
             
             CloudAdapterFactory.put(TEST_SERVICE, MockCloud::new);
             intent.putExtra(DataKeys.CLOUD_KEY, TEST_SERVICE);
-            MockCloud.resetArrays();
-            MockCloud.team.add(new Teammate(new AccountInfo("Leo", "Sack", "test1@gmail.com"), false));
-            MockCloud.team.add(new Teammate(new AccountInfo("wheres", "waldo", "test2@gmail.com"), true));
+            MockCloud.reset();
+            MockCloud.team.add(new Teammate(new AccountInfo("Leo", "Sack", "test1@gmail.com"), false, Constants.UNCOMMITED));
+            MockCloud.team.add(new Teammate(new AccountInfo("wheres", "waldo", "test2@gmail.com"), true, Constants.UNCOMMITED));
             
             intent.putExtra(DataKeys.ROUTE_MANAGER_KEY, new RoutesManager());
             return intent;
