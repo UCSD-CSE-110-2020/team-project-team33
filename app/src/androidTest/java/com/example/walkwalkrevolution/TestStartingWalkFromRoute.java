@@ -165,15 +165,16 @@ public class TestStartingWalkFromRoute {
             e.printStackTrace();
         }
 
-        ViewInteraction appCompatButton3 = onView(
+        ViewInteraction appCompatButton = onView(
                 allOf(withId(R.id.buttonStartWalk), withText("Start new walk/run"),
                         childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("androidx.core.widget.NestedScrollView")),
-                                        0),
-                                3),
+                                allOf(withId(R.id.routeButtons),
+                                        childAtPosition(
+                                                withClassName(is("android.widget.LinearLayout")),
+                                                3)),
+                                0),
                         isDisplayed()));
-        appCompatButton3.perform(click());
+        appCompatButton.perform(click());
 
         // Added a sleep statement to match the app's execution delay.
         // The recommended way to handle such scenarios is to use Espresso idling resources:

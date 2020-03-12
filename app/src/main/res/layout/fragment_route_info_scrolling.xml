@@ -267,18 +267,72 @@
                 android:text="@string/general_placeholder" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/buttonStartWalk"
+        <LinearLayout
+            android:id="@+id/routeButtons"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/start_string" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/buttonProposeWalk"
+            <Button
+                android:id="@+id/buttonStartWalk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/start_string" />
+
+            <Button
+                android:id="@+id/buttonProposeWalk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="false"
+                android:text="@string/propose_button" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/recieverActions"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:enabled="false"
-            android:text="@string/propose_button" />
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/acceptButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/accept_button" />
+
+            <Button
+                android:id="@+id/declineButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/decline_button" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ownerActions"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/withdrawButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/withdraw_button_text" />
+
+            <Button
+                android:id="@+id/scheduleButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:enabled="false"
+                android:text="@string/schedule_button_text" />
+        </LinearLayout>
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

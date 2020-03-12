@@ -45,6 +45,14 @@ public interface ICloudAdapter {
 
     public void getProposedWalk(ITeammateRouteListener teammateRouteListener);
 
+    public void addObserver(IDatabaseObserver observer);
+
+    public void notifyObservers();
+
+    public void acceptWalkInvite();
+
+    public void declineWalkInvite();
+
     public interface IAccountInfoListener {
         public void update(ArrayList<IAccountInfo> invites);
     }
@@ -75,5 +83,9 @@ public interface ICloudAdapter {
 
     public interface IBooleanListener {
         public void update(boolean result);
+    }
+
+    public interface IDatabaseObserver {
+        public void update();
     }
 }

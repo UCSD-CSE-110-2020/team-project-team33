@@ -104,7 +104,11 @@ public class TabFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        tabActivity.launchAcceptInvites();
+        if(item.getItemId() == R.id.invites_menu_option) {
+            tabActivity.launchAcceptInvites();
+        } else if(item.getItemId() == R.id.refresh_menu_option){
+            db.notifyObservers();
+        }
         return super.onOptionsItemSelected(item);
     }
 
