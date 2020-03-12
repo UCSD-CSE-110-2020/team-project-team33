@@ -13,6 +13,7 @@ import java.util.ArrayList;
 public class MockCloud implements ICloudAdapter {
     public static IAccountInfo account;
     private String accountKey;
+    private ArrayList<ICloudAdapter.IDatabaseObserver> observers;
 
     public static ArrayList<TeammateRoute> teamRoutes;
     public static ArrayList<Route> routes;
@@ -26,6 +27,7 @@ public class MockCloud implements ICloudAdapter {
 
     public MockCloud(String accountKey) {
         this.accountKey = accountKey;
+        observers = new ArrayList<>();
     }
 
     public static void reset() {
@@ -74,7 +76,7 @@ public class MockCloud implements ICloudAdapter {
     @Override
     public void saveRoutes(Iterable<Route> routeManager) {
         routes = new ArrayList<>();
-        for(Route route : routeManager) {
+        for (Route route : routeManager) {
             routes.add(route);
         }
     }
@@ -88,12 +90,14 @@ public class MockCloud implements ICloudAdapter {
     public void acceptInvite(IAccountInfo account, IStringListener acceptSubject) {
         invites.remove(account);
         acceptSubject.update("Invite accepted");
+        notifyObservers();
     }
 
     @Override
     public void declineInvite(IAccountInfo account, IStringListener acceptSubject) {
         invites.remove(account);
         acceptSubject.update("Invite declined");
+        notifyObservers();
     }
 
     @Override
@@ -119,21 +123,36 @@ public class MockCloud implements ICloudAdapter {
     @Override
     public void scheduleWalk() {
         walkScheduled = true;
+        notifyObservers();
     }
 
     @Override
     public void cancelWalk() {
         walkProposed = false;
+        notifyObservers();
     }
 
     @Override
     public void proposeWalk(TeammateRoute route, IBooleanListener accept) {
         proposedWalk = route;
         walkProposed = true;
+        notifyObservers();
     }
 
     @Override
     public void getProposedWalk(ITeammateRouteListener teammateRouteListener) {
         teammateRouteListener.update(new TeammateRoute(proposedWalk.getRoute(), proposedAccount, walkScheduled, scheduledTime));
+    }
+
+    @Override
+    public void addObserver(IDatabaseObserver observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for(IDatabaseObserver observer : observers) {
+            observer.update();
+        }
     }
 }

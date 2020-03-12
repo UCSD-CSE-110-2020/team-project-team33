@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 
 import com.example.walkwalkrevolution.Constants;
 import com.example.walkwalkrevolution.account.AccountFactory;
-import com.example.walkwalkrevolution.account.AccountInfo;
 import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.routemanagement.Route;
 import com.example.walkwalkrevolution.routemanagement.TeammateRoute;
@@ -52,12 +51,14 @@ public class FirebaseAdapter implements ICloudAdapter {
 
     private FirebaseFirestore db;
     private final String accountInfoKey;
+    private ArrayList<IDatabaseObserver> observers;
 
     private IAccountInfo user;
 
     public FirebaseAdapter(String ACKey) {
         accountInfoKey = ACKey;
         db = FirebaseFirestore.getInstance();
+        observers = new ArrayList<>();
     }
 
     @Override
@@ -382,6 +383,7 @@ public class FirebaseAdapter implements ICloudAdapter {
                                                                                         @Override
                                                                                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                                                                                             Log.i(TAG, "User found, sending invite...");
+                                                                                            notifyObservers();
                                                                                             Toast.makeText(context, "Invite Sent", Toast.LENGTH_SHORT).show();
                                                                                         }
                                                                                     });
@@ -628,6 +630,7 @@ public class FirebaseAdapter implements ICloudAdapter {
                                                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                                                 @Override
                                                                                                 public void onSuccess(Void aVoid) {
+                                                                                                    notifyObservers();
                                                                                                     acceptSubject.update("Team Joined");
                                                                                                 }
                                                                                             });
@@ -810,7 +813,13 @@ public class FirebaseAdapter implements ICloudAdapter {
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         db.collection(TEAMS_COLLECTION)
                                 .document(queryDocumentSnapshots.getDocuments().get(0).getString(TEAM_ID_KEY))
-                                .update(IS_WALK_SCHEDULED_KEY, true);
+                                .update(IS_WALK_SCHEDULED_KEY, true)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        notifyObservers();
+                                    }
+                                });
                     }
                 });
     }
@@ -843,7 +852,13 @@ public class FirebaseAdapter implements ICloudAdapter {
                                         for(String teammateId : teammateIds) {
                                             db.collection(USERS_COLLECTION)
                                                     .document(teammateId)
-                                                    .update(PLANNING_KEY, Constants.UNCOMMITED);
+                                                    .update(PLANNING_KEY, Constants.UNCOMMITED)
+                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            notifyObservers();
+                                                        }
+                                                    });
                                         }
                                     }
                                 });
@@ -884,7 +899,13 @@ public class FirebaseAdapter implements ICloudAdapter {
                                 .update(IS_WALK_PROPOSED_KEY, true);
                         db.collection(TEAMS_COLLECTION)
                                 .document(queryDocumentSnapshots.getDocuments().get(0).getString(TEAM_ID_KEY))
-                                .update(SCHEDULED_TIME_KEY, route.getScheduledTime());
+                                .update(SCHEDULED_TIME_KEY, route.getScheduledTime())
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        notifyObservers();
+                                    }
+                                });
                         accept.update(true);
                     }
                 });
@@ -920,6 +941,18 @@ public class FirebaseAdapter implements ICloudAdapter {
                                 });
                     }
                 });
+    }
+
+    @Override
+    public void addObserver(IDatabaseObserver observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for(IDatabaseObserver observer : observers) {
+            observer.update();
+        }
     }
 }
 

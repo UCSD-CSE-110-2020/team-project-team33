@@ -66,6 +66,7 @@
     <string name="invite_email_error">Please enter a GMail</string>
 
     <string name="invites_string">Invites</string>
+    <string name="refresh_menu_string">Refresh</string>
     <string name="accept_button">Accept</string>
     <string name="decline_button">Decline</string>
 
