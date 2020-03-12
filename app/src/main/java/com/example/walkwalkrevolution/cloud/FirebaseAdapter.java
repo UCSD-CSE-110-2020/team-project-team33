@@ -765,10 +765,9 @@ public class FirebaseAdapter implements ICloudAdapter {
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         db.collection(TEAMS_COLLECTION)
                                 .document(queryDocumentSnapshots.getDocuments().get(0).getString(TEAM_ID_KEY))
-                                .get()
-                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                                     @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                                         walkProposedSubject.update(documentSnapshot.getBoolean(IS_WALK_PROPOSED_KEY));
                                     }
                                 });
@@ -788,10 +787,9 @@ public class FirebaseAdapter implements ICloudAdapter {
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         db.collection(TEAMS_COLLECTION)
                                 .document(queryDocumentSnapshots.getDocuments().get(0).getString(TEAM_ID_KEY))
-                                .get()
-                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                                     @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                                         proposedWalkSubject.update(documentSnapshot.getBoolean(IS_WALK_SCHEDULED_KEY));
                                     }
                                 });
