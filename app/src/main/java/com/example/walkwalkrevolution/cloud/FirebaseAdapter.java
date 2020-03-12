@@ -954,6 +954,38 @@ public class FirebaseAdapter implements ICloudAdapter {
             observer.update();
         }
     }
+
+    @Override
+    public void acceptWalkInvite() {
+        walkInvite(Constants.PLANNING_TO_GO);
+    }
+
+    @Override
+    public void declineWalkInvite() {
+        walkInvite(Constants.NOT_PLANNING_TO_GO);
+    }
+
+    private void walkInvite(int num) {
+        db.collection(USERS_COLLECTION)
+                .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
+                .whereEqualTo(LAST_NAME_KEY, user.getLastName())
+                .whereEqualTo(GMAIL_KEY, user.getGmail())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        db.collection(USERS_COLLECTION)
+                                .document(queryDocumentSnapshots.getDocuments().get(0).getId())
+                                .update(PLANNING_KEY, num)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        notifyObservers();
+                                    }
+                                });
+                    }
+                });
+    }
 }
 
 

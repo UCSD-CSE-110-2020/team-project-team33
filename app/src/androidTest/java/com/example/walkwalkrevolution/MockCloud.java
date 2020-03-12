@@ -155,4 +155,14 @@ public class MockCloud implements ICloudAdapter {
             observer.update();
         }
     }
+
+    @Override
+    public void acceptWalkInvite() {
+
+    }
+
+    @Override
+    public void declineWalkInvite() {
+
+    }
 }
