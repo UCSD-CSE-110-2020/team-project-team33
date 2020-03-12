@@ -3,6 +3,7 @@ package com.example.walkwalkrevolution.ui.main;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -179,9 +180,13 @@ public class ProposedWalkFragment extends Fragment {
     public void launchGoogleMaps(View view) {
         TextView startLoc = view.findViewById(R.id.route_info_startLoc_value);
         String address = startLoc.getText().toString();
-        String map = Constants.GOOGLE_MAP_URL + address;
-        Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(map));
+        Intent i = new Intent(Intent.ACTION_VIEW, getGoogleMapsURL(address));
+        Log.i(TAG, "Launching google maps activity");
         startActivity(i);
+    }
+
+    public static Uri getGoogleMapsURL(String address) {
+        return Uri.parse(Constants.GOOGLE_MAP_URL + address);
     }
 
     private void determineFeatures(View view, TextView text, String feature, int id) {
