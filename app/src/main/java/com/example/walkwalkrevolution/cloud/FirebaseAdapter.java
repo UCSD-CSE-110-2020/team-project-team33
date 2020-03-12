@@ -975,7 +975,7 @@ public class FirebaseAdapter implements ICloudAdapter {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         db.collection(USERS_COLLECTION)
-                                .document(queryDocumentSnapshots.getDocuments().get(0).getString(TEAM_ID_KEY))
+                                .document(queryDocumentSnapshots.getDocuments().get(0).getId())
                                 .update(PLANNING_KEY, num)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
