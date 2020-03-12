@@ -181,38 +181,7 @@ public class FirebaseAdapter implements ICloudAdapter {
     }
 
     @Override
-    public void setUserListener() {
-        db.collection(USERS_COLLECTION)
-                .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
-                .whereEqualTo(LAST_NAME_KEY, user.getLastName())
-                .whereEqualTo(GMAIL_KEY, user.getGmail())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            if(!task.getResult().isEmpty()) {
-                                String userId = task.getResult().iterator().next().getId();
-
-                                db.collection(USERS_COLLECTION).document(userId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
-                                        if (e != null) {
-                                            Log.e(TAG, "User listener failed", e);
-                                            return;
-                                        }
-
-                                        // do something here
-                                    }
-                                });
-                            }
-                        }
-                    }
-                });
-    }
-
-    @Override
-    public void setTeamListener() {
+    public void getTeam(ITeammateListener teamSubject) {
         db.collection(USERS_COLLECTION)
                 .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
                 .whereEqualTo(LAST_NAME_KEY, user.getLastName())
@@ -240,50 +209,10 @@ public class FirebaseAdapter implements ICloudAdapter {
                                                                     Log.e(TAG, "Team listener failed", e);
                                                                     return;
                                                                 }
+                                                                Log.i(TAG, "Team Document Listener added!");
 
-                                                                // do something here
-                                                            }
-                                                        });
-                                            }
-                                        });
-                            }
-                        }
-                    }
-                });
-    }
-    
-    @Override
-    public void getTeam(ITeammateListener teamSubject) {
-        db.collection(USERS_COLLECTION)
-                .whereEqualTo(FIRST_NAME_KEY, user.getFirstName())
-                .whereEqualTo(LAST_NAME_KEY, user.getLastName())
-                .whereEqualTo(GMAIL_KEY, user.getGmail())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-
-                            if (!task.getResult().isEmpty()) {
-                                String userId = task.getResult().iterator().next().getId();
-
-                                db.collection(USERS_COLLECTION)
-                                        .document(userId)
-                                        .get()
-                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-
-                                            @Override
-                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                db.collection(TEAMS_COLLECTION)
-                                                        .document(task.getResult().getString(TEAM_ID_KEY))
-                                                        .get()
-                                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                                DocumentSnapshot teamSnapshot = task.getResult();
-                                                                ArrayList<String> teammateIds = (ArrayList<String>) teamSnapshot.get(TEAMMATE_IDS_KEY);
-                                                                ArrayList<String> pendingIds = (ArrayList<String>) teamSnapshot.get(PENDING_KEY);
+                                                                ArrayList<String> teammateIds = (ArrayList<String>) documentSnapshot.get(TEAMMATE_IDS_KEY);
+                                                                ArrayList<String> pendingIds = (ArrayList<String>) documentSnapshot.get(PENDING_KEY);
                                                                 db.collection(USERS_COLLECTION)
                                                                         .get()
                                                                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -313,24 +242,18 @@ public class FirebaseAdapter implements ICloudAdapter {
                                                                     }
                                                                 });
                                                             }
-                                                        }).addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        Log.w(TAG, "Error retrieving teams collection", e);
-                                                    }
-                                                });
+                                                        });
                                             }
                                         }).addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Log.w(TAG, "Error retrieving user collection", e);
+                                        Log.w(TAG, "Error retrieving user collections e");
                                     }
                                 });
                             }
                         }
                     }
                 });
-
     }
     
     @Override
