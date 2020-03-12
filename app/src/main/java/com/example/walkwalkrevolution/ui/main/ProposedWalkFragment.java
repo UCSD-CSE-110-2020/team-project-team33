@@ -148,24 +148,14 @@ public class ProposedWalkFragment extends Fragment {
             acceptButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    db.acceptInvite(account, new ICloudAdapter.IStringListener() {
-                        @Override
-                        public void update(String message) {
-                            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT);
-                        }
-                    });
+                    db.acceptWalkInvite();
                 }
             });
 
             declineButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    db.declineInvite(account, new ICloudAdapter.IStringListener() {
-                        @Override
-                        public void update(String message) {
-                            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT);
-                        }
-                    });
+                    db.declineWalkInvite();
                 }
             });
         }

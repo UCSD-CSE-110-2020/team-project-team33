@@ -49,6 +49,10 @@ public interface ICloudAdapter {
 
     public void notifyObservers();
 
+    public void acceptWalkInvite();
+
+    public void declineWalkInvite();
+
     public interface IAccountInfoListener {
         public void update(ArrayList<IAccountInfo> invites);
     }
