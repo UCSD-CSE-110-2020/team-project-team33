@@ -140,7 +140,7 @@ public class ProposedWalkFragment extends Fragment {
                 }
             });
         } else {
-            view.findViewById(R.id.routeButtons).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.recieverActions).setVisibility(View.VISIBLE);
 
             acceptButton = view.findViewById(R.id.acceptButton);
             declineButton = view.findViewById(R.id.declineButton);
