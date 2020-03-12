@@ -85,7 +85,7 @@ public class TeamFragment extends Fragment implements ICloudAdapter.ITeammateLis
 
     @Override
     public void update() {
-        db.getTeam(this);
+
         db.isWalkProposed(new ICloudAdapter.IBooleanListener() {
             @Override
             public void update(boolean result) {
@@ -103,5 +103,7 @@ public class TeamFragment extends Fragment implements ICloudAdapter.ITeammateLis
                 }
             }
         });
+
+        db.getTeam(this);
     }
 }

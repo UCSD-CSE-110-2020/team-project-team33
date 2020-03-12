@@ -17,7 +17,9 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
@@ -26,6 +28,8 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.annotation.Nullable;
 
 public class FirebaseAdapter implements ICloudAdapter {
     private static final String TAG = "[FirebaseAdapter]";
@@ -176,7 +180,7 @@ public class FirebaseAdapter implements ICloudAdapter {
     public void setUser(IAccountInfo account) {
         user = account;
     }
-    
+
     @Override
     public void getTeam(ITeammateListener teamSubject) {
         db.collection(USERS_COLLECTION)
@@ -188,27 +192,28 @@ public class FirebaseAdapter implements ICloudAdapter {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-
-                            if (!task.getResult().isEmpty()) {
+                            if(!task.getResult().isEmpty()) {
                                 String userId = task.getResult().iterator().next().getId();
 
                                 db.collection(USERS_COLLECTION)
                                         .document(userId)
                                         .get()
                                         .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-
                                             @Override
                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                                 db.collection(TEAMS_COLLECTION)
                                                         .document(task.getResult().getString(TEAM_ID_KEY))
-                                                        .get()
-                                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-
+                                                        .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                                                             @Override
-                                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                                DocumentSnapshot teamSnapshot = task.getResult();
-                                                                ArrayList<String> teammateIds = (ArrayList<String>) teamSnapshot.get(TEAMMATE_IDS_KEY);
-                                                                ArrayList<String> pendingIds = (ArrayList<String>) teamSnapshot.get(PENDING_KEY);
+                                                            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                                                                if (e != null) {
+                                                                    Log.e(TAG, "Team listener failed", e);
+                                                                    return;
+                                                                }
+                                                                Log.i(TAG, "Updating teammates...");
+
+                                                                ArrayList<String> teammateIds = (ArrayList<String>) documentSnapshot.get(TEAMMATE_IDS_KEY);
+                                                                ArrayList<String> pendingIds = (ArrayList<String>) documentSnapshot.get(PENDING_KEY);
                                                                 db.collection(USERS_COLLECTION)
                                                                         .get()
                                                                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -238,24 +243,18 @@ public class FirebaseAdapter implements ICloudAdapter {
                                                                     }
                                                                 });
                                                             }
-                                                        }).addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        Log.w(TAG, "Error retrieving teams collection", e);
-                                                    }
-                                                });
+                                                        });
                                             }
                                         }).addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Log.w(TAG, "Error retrieving user collection", e);
+                                        Log.w(TAG, "Error retrieving user collections e");
                                     }
                                 });
                             }
                         }
                     }
                 });
-
     }
     
     @Override
@@ -274,12 +273,16 @@ public class FirebaseAdapter implements ICloudAdapter {
                                 String userId = task.getResult().iterator().next().getId();
                                 db.collection(USERS_COLLECTION)
                                         .document(userId)
-                                        .get()
-                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-
+                                        .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                                             @Override
-                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                ArrayList<String> invites = (ArrayList<String>) task.getResult().get(INVITES_KEY);
+                                            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                                                if (e != null) {
+                                                    Log.e(TAG, "Error listening to user document", e);
+                                                    return;
+                                                }
+
+                                                Log.i(TAG, "Updating user invites...");
+                                                ArrayList<String> invites = (ArrayList<String>) documentSnapshot.get(INVITES_KEY);
                                                 db.collection(USERS_COLLECTION)
                                                         .get()
                                                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -306,12 +309,7 @@ public class FirebaseAdapter implements ICloudAdapter {
                                                     }
                                                 });
                                             }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.w(TAG, "Error retrieving users collection", e);
-                                    }
-                                });
+                                        });
                             }
                         }
                     }
