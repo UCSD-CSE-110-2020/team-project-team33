@@ -22,7 +22,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 
 
-public class TeamFragment extends Fragment implements ICloudAdapter.ITeammateListener {
+public class TeamFragment extends Fragment implements ICloudAdapter.ITeammateListener, ICloudAdapter.IDatabaseObserver {
 
     private TabFragment tabFragment;
     private ICloudAdapter db;
@@ -68,23 +68,9 @@ public class TeamFragment extends Fragment implements ICloudAdapter.ITeammateLis
         rvProposedRoute.addItemDecoration(new DividerItemDecoration(rvProposedRoute.getContext(), DividerItemDecoration.VERTICAL));
         rvProposedRoute.setAdapter(personalRouteAdapter);
 
-
+        db.addObserver(this);
         if(db.userSet()) {
-            db.getTeam(this);
-            db.isWalkProposed(new ICloudAdapter.IBooleanListener() {
-                @Override
-                public void update(boolean result) {
-                    if(result) {
-                        rvProposedRoute.setVisibility(View.VISIBLE);
-                        db.getProposedWalk(new ICloudAdapter.ITeammateRouteListener() {
-                            @Override
-                            public void update(TeammateRoute teammateRoute) {
-                                personalRouteAdapter.setRoute(teammateRoute);
-                            }
-                        });
-                    }
-                }
-            });
+            update();
         }
 
         return view;
@@ -95,5 +81,27 @@ public class TeamFragment extends Fragment implements ICloudAdapter.ITeammateLis
     public void update(ArrayList<Teammate> teamMembers) {
         teammateItemAdapter.setTeammates(teamMembers);
         teammateItemAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void update() {
+        db.getTeam(this);
+        db.isWalkProposed(new ICloudAdapter.IBooleanListener() {
+            @Override
+            public void update(boolean result) {
+                if(result) {
+                    rvProposedRoute.setVisibility(View.VISIBLE);
+                    db.getProposedWalk(new ICloudAdapter.ITeammateRouteListener() {
+                        @Override
+                        public void update(TeammateRoute teammateRoute) {
+                            personalRouteAdapter.setRoute(teammateRoute);
+                            personalRouteAdapter.notifyDataSetChanged();
+                        }
+                    });
+                } else {
+                    rvProposedRoute.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 }

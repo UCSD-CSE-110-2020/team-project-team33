@@ -18,6 +18,7 @@ import com.example.walkwalkrevolution.routemanagement.TeammateRoute;
 import com.example.walkwalkrevolution.ui.main.AcceptInviteFragment;
 import com.example.walkwalkrevolution.ui.main.EnterRouteInfoFragment;
 import com.example.walkwalkrevolution.ui.main.InviteFragment;
+import com.example.walkwalkrevolution.ui.main.ProposedWalkFragment;
 import com.example.walkwalkrevolution.ui.main.RouteInfoFragment;
 import com.example.walkwalkrevolution.ui.main.TabFragment;
 import com.example.walkwalkrevolution.walktracker.WalkInfo;
@@ -96,6 +97,8 @@ public class TabActivity extends AppCompatActivity {
 
     public void launchProposedRouteFragment(TeammateRoute route) {
         Log.i(TAG, "Launching ProposedRouteFragment");
+        ProposedWalkFragment proposedWalkFragment = new ProposedWalkFragment(this, route, db, account);
+        launchFragment(proposedWalkFragment);
     }
 
     public void launchFragment(Fragment fragment) {

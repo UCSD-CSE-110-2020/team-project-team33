@@ -29,7 +29,7 @@ import java.util.Observer;
 
 import io.github.luizgrp.sectionedrecyclerviewadapter.SectionedRecyclerViewAdapter;
 
-public class RoutesFragment extends Fragment implements Observer, ICloudAdapter.ITeammateRoutesListener, RouteSection.ClickListener {
+public class RoutesFragment extends Fragment implements Observer, ICloudAdapter.ITeammateRoutesListener, RouteSection.ClickListener, ICloudAdapter.IDatabaseObserver {
     public static final String TAG = "RoutesFragment";
 
     TabFragment tabFragment;
@@ -84,8 +84,9 @@ public class RoutesFragment extends Fragment implements Observer, ICloudAdapter.
             }
         });
 
+        db.addObserver(this);
         if(db.userSet()) {
-            db.getTeamRoutes(this);
+            update();
         }
         return view;
     }
@@ -107,5 +108,10 @@ public class RoutesFragment extends Fragment implements Observer, ICloudAdapter.
     @Override
     public void onItemRootViewClicked(Route route, RouteSection routeSection) {
         tabFragment.tabActivity.launchRouteInfo(route, routeSection == personalRoutes);
+    }
+
+    @Override
+    public void update() {
+        db.getTeamRoutes(this);
     }
 }
