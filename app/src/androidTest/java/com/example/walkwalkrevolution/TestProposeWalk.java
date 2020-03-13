@@ -61,7 +61,7 @@ public class TestProposeWalk {
             
             FitnessServiceFactory.put(TEST_SERVICE, MockFitnessService::new);
             intent.putExtra(DataKeys.FITNESS_SERVICE_KEY, TEST_SERVICE);
-            
+
             AccountFactory.put(TEST_SERVICE, new AccountFactory.BluePrint() {
                 @Override
                 public IAccountInfo create(Context context) {
