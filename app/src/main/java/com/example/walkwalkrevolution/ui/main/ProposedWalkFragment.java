@@ -1,6 +1,9 @@
 package com.example.walkwalkrevolution.ui.main;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
+import com.example.walkwalkrevolution.Constants;
 import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.TabActivity;
 import com.example.walkwalkrevolution.account.IAccountInfo;
@@ -20,6 +24,8 @@ import com.example.walkwalkrevolution.cloud.ICloudAdapter;
 import com.example.walkwalkrevolution.routemanagement.Route;
 import com.example.walkwalkrevolution.routemanagement.TeammateRoute;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
+
+import java.util.zip.CheckedOutputStream;
 
 public class ProposedWalkFragment extends Fragment {
     public static final String TAG = "ProposedWalkFragment";
@@ -160,7 +166,27 @@ public class ProposedWalkFragment extends Fragment {
             });
         }
 
+        textStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchGoogleMaps(view);
+            }
+        });
+
+
         return view;
+    }
+
+    public void launchGoogleMaps(View view) {
+        TextView startLoc = view.findViewById(R.id.route_info_startLoc_value);
+        String address = startLoc.getText().toString();
+        Intent i = new Intent(Intent.ACTION_VIEW, getGoogleMapsURL(address));
+        Log.i(TAG, "Launching google maps activity");
+        startActivity(i);
+    }
+
+    public static Uri getGoogleMapsURL(String address) {
+        return Uri.parse(Constants.GOOGLE_MAP_URL + address);
     }
 
     private void determineFeatures(View view, TextView text, String feature, int id) {
