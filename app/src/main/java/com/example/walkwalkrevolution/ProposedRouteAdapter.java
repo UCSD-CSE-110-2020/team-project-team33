@@ -3,6 +3,7 @@ package com.example.walkwalkrevolution;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +18,12 @@ import com.example.walkwalkrevolution.routemanagement.TeammateRoute;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class PersonalRouteAdapter extends RecyclerView.Adapter<PersonalRouteAdapter.ViewHolder> {
+public class ProposedRouteAdapter extends RecyclerView.Adapter<ProposedRouteAdapter.ViewHolder> {
     private TabActivity tabActivity;
     private TeammateRoute route;
+    private static final String TAG = "[ProposedRouteAdapter]";
 
-    public PersonalRouteAdapter(TabActivity t) {
+    public ProposedRouteAdapter(TabActivity t) {
         tabActivity = t;
     }
 
@@ -53,7 +55,7 @@ public class PersonalRouteAdapter extends RecyclerView.Adapter<PersonalRouteAdap
     }
 
     @Override
-    public PersonalRouteAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ProposedRouteAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
@@ -64,7 +66,12 @@ public class PersonalRouteAdapter extends RecyclerView.Adapter<PersonalRouteAdap
     }
 
     @Override
-    public void onBindViewHolder(PersonalRouteAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(ProposedRouteAdapter.ViewHolder viewHolder, int position) {
+        if (route == null) {
+            Log.w(TAG, "route is null");
+        } else if (route.getAccountInfo() == null) {
+            Log.w(TAG, "Route account info is null");
+        }
         String firstName = route.getAccountInfo().getFirstName();
         String lastName = route.getAccountInfo().getLastName();
 

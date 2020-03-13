@@ -3,6 +3,7 @@ package com.example.walkwalkrevolution;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -50,6 +51,7 @@ import static org.hamcrest.Matchers.is;
 public class TestProposeWalk {
     
     private static final String TEST_SERVICE = "TEST_SERVICE";
+    private static final String TAG = "[TestProposeWalk]";
     
     @Rule
     public ActivityTestRule<TabActivity> mActivityTestRule = new ActivityTestRule<TabActivity>(TabActivity.class) {
@@ -64,12 +66,12 @@ public class TestProposeWalk {
             AccountFactory.put(TEST_SERVICE, new AccountFactory.BluePrint() {
                 @Override
                 public IAccountInfo create(Context context) {
-                    return new MockAccountInfo(context);
+                    return new AccountInfo("First", "Last", "user@gmail.com");
                 }
                 
                 @Override
                 public IAccountInfo create(String first, String last, String gmail) {
-                    return new MockAccountInfo(first, last, gmail);
+                    return new AccountInfo(first, last, gmail);
                 }
             });
             intent.putExtra(DataKeys.ACCOUNT_KEY, TEST_SERVICE);
@@ -77,8 +79,10 @@ public class TestProposeWalk {
             CloudAdapterFactory.put(TEST_SERVICE, MockCloud::new);
             intent.putExtra(DataKeys.CLOUD_KEY, TEST_SERVICE);
             MockCloud.reset();
-            MockCloud.account = new AccountInfo("First", "Last", "user@gmail.com");
-            MockCloud.setUserAccount(new AccountInfo("First", "Last", "user@gmail.com"));
+            MockAccountInfo.firstName = "First";
+            MockAccountInfo.lastName = "Last";
+            MockAccountInfo.gmail = "user@gmail.com";
+            MockCloud.proposedAccount = new AccountInfo("First", "Last", "user@gmail.com");
             MockCloud.team.add(new Teammate(new AccountInfo("Leo", "Sack", "test1@gmail.com"), false, Constants.UNCOMMITED));
             MockCloud.team.add(new Teammate(new AccountInfo("wheres", "waldo", "test2@gmail.com"), true, Constants.UNCOMMITED));
             
@@ -90,6 +94,7 @@ public class TestProposeWalk {
     @Test
     public void testProposeWalk() {
         MockCloud.account = new AccountInfo("First", "Last", "user@gmail.com");
+        Log.i(TAG, "Mock account is: " + MockCloud.account.getFirstName());
     
         ViewInteraction tabView = onView(
             allOf(withContentDescription("Routes"),

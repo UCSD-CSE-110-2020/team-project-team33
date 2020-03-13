@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.walkwalkrevolution.PersonalRouteAdapter;
+import com.example.walkwalkrevolution.ProposedRouteAdapter;
 import com.example.walkwalkrevolution.R;
 import com.example.walkwalkrevolution.TeammateItemAdapter;
 import com.example.walkwalkrevolution.cloud.ICloudAdapter;
@@ -29,7 +29,7 @@ public class TeamFragment extends Fragment implements ICloudAdapter.ITeammateLis
     private RecyclerView rvTeammates;
     private RecyclerView rvProposedRoute;
     private TeammateItemAdapter teammateItemAdapter;
-    private PersonalRouteAdapter personalRouteAdapter;
+    private ProposedRouteAdapter proposedRouteAdapter;
 
     private FloatingActionButton FAB;
 
@@ -37,7 +37,7 @@ public class TeamFragment extends Fragment implements ICloudAdapter.ITeammateLis
         tabFragment = t;
         db = c;
         this.teammateItemAdapter = new TeammateItemAdapter();
-        this.personalRouteAdapter = new PersonalRouteAdapter(tabFragment.tabActivity);
+        this.proposedRouteAdapter = new ProposedRouteAdapter(tabFragment.tabActivity);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class TeamFragment extends Fragment implements ICloudAdapter.ITeammateLis
         rvProposedRoute = view.findViewById(R.id.proposed_walk_rv);
         rvProposedRoute.setLayoutManager(new LinearLayoutManager(view.getContext()));
         rvProposedRoute.addItemDecoration(new DividerItemDecoration(rvProposedRoute.getContext(), DividerItemDecoration.VERTICAL));
-        rvProposedRoute.setAdapter(personalRouteAdapter);
+        rvProposedRoute.setAdapter(proposedRouteAdapter);
 
         db.addObserver(this);
         if(db.userSet()) {
@@ -94,8 +94,8 @@ public class TeamFragment extends Fragment implements ICloudAdapter.ITeammateLis
                     db.getProposedWalk(new ICloudAdapter.ITeammateRouteListener() {
                         @Override
                         public void update(TeammateRoute teammateRoute) {
-                            personalRouteAdapter.setRoute(teammateRoute);
-                            personalRouteAdapter.notifyDataSetChanged();
+                            proposedRouteAdapter.setRoute(teammateRoute);
+                            proposedRouteAdapter.notifyDataSetChanged();
                         }
                     });
                 } else {

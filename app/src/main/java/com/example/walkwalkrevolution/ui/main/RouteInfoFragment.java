@@ -9,6 +9,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -217,6 +218,7 @@ public class RouteInfoFragment extends Fragment {
     }
 
     public void scheduledTimeReturned(long timeMillis) {
+        Log.i(TAG, "Route proposed by: " + account.getFirstName());
         TeammateRoute teammateRoute = new TeammateRoute(route, account, false, timeMillis);
         Context context = getContext();
         db.proposeWalk(teammateRoute, new ICloudAdapter.IBooleanListener() {
