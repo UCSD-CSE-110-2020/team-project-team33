@@ -41,6 +41,10 @@ public class MockCloud implements ICloudAdapter {
         proposedAccount = null;
         scheduledTime = 0;
     }
+    
+    public static void setUserAccount(IAccountInfo newAccount) {
+        account = newAccount;
+    }
 
     @Override
     public void addAccount(IAccountInfo account, IBooleanListener booleanListener) {
