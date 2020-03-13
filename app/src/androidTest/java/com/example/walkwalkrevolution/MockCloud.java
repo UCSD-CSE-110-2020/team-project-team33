@@ -1,6 +1,7 @@
 package com.example.walkwalkrevolution;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.walkwalkrevolution.account.IAccountInfo;
 import com.example.walkwalkrevolution.cloud.ICloudAdapter;
@@ -11,6 +12,7 @@ import com.example.walkwalkrevolution.routemanagement.TeammateRoute;
 import java.util.ArrayList;
 
 public class MockCloud implements ICloudAdapter {
+    private static final String TAG = "[MockCloud]";
     public static IAccountInfo account;
     private String accountKey;
     private ArrayList<ICloudAdapter.IDatabaseObserver> observers;
@@ -40,6 +42,10 @@ public class MockCloud implements ICloudAdapter {
         proposedWalk = null;
         proposedAccount = null;
         scheduledTime = 0;
+    }
+    
+    public static void setUserAccount(IAccountInfo newAccount) {
+        account = newAccount;
     }
 
     @Override
@@ -134,6 +140,7 @@ public class MockCloud implements ICloudAdapter {
 
     @Override
     public void proposeWalk(TeammateRoute route, IBooleanListener accept) {
+        Log.i(TAG, "Route is proposed by: " + route.getAccountInfo().getFirstName());
         proposedWalk = route;
         walkProposed = true;
         notifyObservers();

@@ -215,33 +215,30 @@ public class FirebaseAdapter implements ICloudAdapter {
                                                                 ArrayList<String> teammateIds = (ArrayList<String>) documentSnapshot.get(TEAMMATE_IDS_KEY);
                                                                 ArrayList<String> pendingIds = (ArrayList<String>) documentSnapshot.get(PENDING_KEY);
                                                                 db.collection(USERS_COLLECTION)
-                                                                        .get()
-                                                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-
+                                                                        .addSnapshotListener(new EventListener<QuerySnapshot>() {
                                                                             @Override
-                                                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                                                                                if (e != null) {
+                                                                                    Log.e(TAG, "Error listening to users collection", e);
+                                                                                    return;
+                                                                                }
                                                                                 ArrayList<Teammate> teammates = new ArrayList<>();
-                                                                                for(QueryDocumentSnapshot user : task.getResult()) {
+                                                                                for(QueryDocumentSnapshot user : queryDocumentSnapshots) {
                                                                                     boolean isTeammate = teammateIds.contains(user.getId());
                                                                                     boolean isPending = pendingIds.contains(user.getId());
                                                                                     if(isPending || isTeammate) {
                                                                                         teammates.add(new Teammate(AccountFactory.create(accountInfoKey,
-                                                                                                user.getString(FIRST_NAME_KEY),
-                                                                                                user.getString(LAST_NAME_KEY),
-                                                                                                user.getString(GMAIL_KEY)),
-                                                                                                isPending,
-                                                                                                user.getLong(PLANNING_KEY).intValue()));
+                                                                                            user.getString(FIRST_NAME_KEY),
+                                                                                            user.getString(LAST_NAME_KEY),
+                                                                                            user.getString(GMAIL_KEY)),
+                                                                                            isPending,
+                                                                                            user.getLong(PLANNING_KEY).intValue()));
                                                                                     }
                                                                                 }
                                                                                 Log.i(TAG, "Teammates successfully found");
                                                                                 teamSubject.update(teammates);
                                                                             }
-                                                                        }).addOnFailureListener(new OnFailureListener() {
-                                                                    @Override
-                                                                    public void onFailure(@NonNull Exception e) {
-                                                                        Log.w(TAG, "Error retrieving user collection", e);
-                                                                    }
-                                                                });
+                                                                        });
                                                             }
                                                         });
                                             }
@@ -765,10 +762,9 @@ public class FirebaseAdapter implements ICloudAdapter {
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         db.collection(TEAMS_COLLECTION)
                                 .document(queryDocumentSnapshots.getDocuments().get(0).getString(TEAM_ID_KEY))
-                                .get()
-                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                                     @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                                         walkProposedSubject.update(documentSnapshot.getBoolean(IS_WALK_PROPOSED_KEY));
                                     }
                                 });
@@ -788,10 +784,9 @@ public class FirebaseAdapter implements ICloudAdapter {
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         db.collection(TEAMS_COLLECTION)
                                 .document(queryDocumentSnapshots.getDocuments().get(0).getString(TEAM_ID_KEY))
-                                .get()
-                                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                                     @Override
-                                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
                                         proposedWalkSubject.update(documentSnapshot.getBoolean(IS_WALK_SCHEDULED_KEY));
                                     }
                                 });
@@ -811,13 +806,7 @@ public class FirebaseAdapter implements ICloudAdapter {
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         db.collection(TEAMS_COLLECTION)
                                 .document(queryDocumentSnapshots.getDocuments().get(0).getString(TEAM_ID_KEY))
-                                .update(IS_WALK_SCHEDULED_KEY, true)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        notifyObservers();
-                                    }
-                                });
+                                .update(IS_WALK_SCHEDULED_KEY, true);
                     }
                 });
     }
@@ -850,13 +839,7 @@ public class FirebaseAdapter implements ICloudAdapter {
                                         for(String teammateId : teammateIds) {
                                             db.collection(USERS_COLLECTION)
                                                     .document(teammateId)
-                                                    .update(PLANNING_KEY, Constants.UNCOMMITED)
-                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                        @Override
-                                                        public void onSuccess(Void aVoid) {
-                                                            notifyObservers();
-                                                        }
-                                                    });
+                                                    .update(PLANNING_KEY, Constants.UNCOMMITED);
                                         }
                                     }
                                 });
@@ -897,13 +880,7 @@ public class FirebaseAdapter implements ICloudAdapter {
                                 .update(IS_WALK_PROPOSED_KEY, true);
                         db.collection(TEAMS_COLLECTION)
                                 .document(queryDocumentSnapshots.getDocuments().get(0).getString(TEAM_ID_KEY))
-                                .update(SCHEDULED_TIME_KEY, route.getScheduledTime())
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        notifyObservers();
-                                    }
-                                });
+                                .update(SCHEDULED_TIME_KEY, route.getScheduledTime());
                         accept.update(true);
                     }
                 });
