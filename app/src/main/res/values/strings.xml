@@ -77,4 +77,5 @@
 
     <string name="withdraw_button_text">Withdraw</string>
     <string name="schedule_button_text">Schedule</string>
+
 </resources>

@@ -23,4 +23,6 @@ public class Constants {
     public static final String INVALID_TIME = "Invalid time";
 
     public static final String DATE_FORMAT_STRING = "hh:mm MM/dd/yyyy";
+
+    public static final String CHANNEL_ID = "WWR Channel";
 }
